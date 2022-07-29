@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "387221907236",
+    "project_id": "feisty-lamp-326013",
+    "storage_bucket": "feisty-lamp-326013.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387221907236:android:b82d1fcf211bf224e9b5b1",
+        "android_client_info": {
+          "package_name": "com.example.denning_portal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "387221907236-dsmoh3h36negktgfk5qqi7ltkmob1hah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK5ricFZxo552czsgYSCphHqCC8W70nYM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "387221907236-dsmoh3h36negktgfk5qqi7ltkmob1hah.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
