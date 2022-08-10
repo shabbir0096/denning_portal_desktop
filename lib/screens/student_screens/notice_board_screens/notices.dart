@@ -226,6 +226,7 @@ class _NoticesState extends State<Notices> {
                                                 ),
 
                                                 Spacer(),
+                                                if("${snapshot.data!['notices'][index]['notice']}" != null && "${snapshot.data!['notices'][index]['notice'] }" != "")
                                                 Text(
                                                   "Description :",
                                                   style: TextStyle(

@@ -11,7 +11,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../component/webview_display.dart';
 import '../../../component/webview_display_desktop.dart';
 import '../../../custom_widgets/custom_textStyle.dart';
 import '../../../custom_widgets/scaffold_messenge_snackbar.dart';
@@ -40,7 +39,7 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
   ScrollController(initialScrollOffset: 99999999.0);
   TextEditingController message = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
+  var file_size;
   PlatformFile? objFile;
   DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
   String? studentId;
@@ -97,7 +96,7 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
       if (objFile == null) {
         request.fields["attached_file_name"] = '';
       } else {
-        request.files.add(new http.MultipartFile(
+        request.files.add(http.MultipartFile(
             "attached_file_name", objFile!.readStream!, objFile!.size,
             filename: objFile!.name));
       }
@@ -209,6 +208,7 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
     setState(() {
       _isVisible = !_isVisible;
       loader_visible = false;
+      objFile = null;
     });
   }
   @override
@@ -528,6 +528,7 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
                             onPressed: () async {
                               setState((){
                                 _isVisible = true;
+
                               });
                               var result = await FilePicker.platform.pickFiles(
                                 type: FileType.custom,
@@ -596,11 +597,11 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
                           ),
                           FloatingActionButton(
                             onPressed: () {
-                              var file_size = objFile?.size;
+                               file_size = objFile?.size;
                               if (message.text.isEmpty) {
                                 CustomScaffoldWidget.buildErrorSnackbar(
                                     context, "Type your message");
-                              } else if(file_size !=null && file_size! > 1000000){
+                              } else if(file_size !=null && file_size > 1000000){
                                 CustomScaffoldWidget.buildErrorSnackbar(
                                     context, "image size is too large select less than 1 MB");
                               }else if (_formKey.currentState!.validate()) {

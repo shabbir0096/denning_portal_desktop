@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'component/custom_scroll_behavior.dart';
 import 'custom_widgets/custom_animations.dart';
-import 'enums/enum.dart';
+
 
 String get name => 'foo';
 

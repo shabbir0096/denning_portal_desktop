@@ -69,7 +69,6 @@ class _EventDetailsState extends State<EventDetails> {
   }
   @override
   Widget build(BuildContext context) {
-    DateTime? currentDate = DateTime.tryParse(widget.data['notice_date']);
 
     final _height = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
@@ -185,7 +184,7 @@ class _EventDetailsState extends State<EventDetails> {
                                         widget.data['notice_date']))),
                               ],
                               onTap: () {
-                                print("Tap Event");
+
                               },
                             ),
                           ),

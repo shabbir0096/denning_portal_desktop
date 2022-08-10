@@ -93,12 +93,13 @@ class _NoticeDescriptionState extends State<NoticeDescription> {
               ),
               Row(
                 children: [
+                  if(widget.data['notice_time'] != null && widget.data['notice_time'] != "")
                   Text(
                     "Time : ",
                     style: CustomTextStyle.bodySemiBold(context , theme.isDark? white : black),
 
                   ),
-                  if(widget.data['notice_time'] != null)
+                  if(widget.data['notice_time'] != null && widget.data['notice_time'] != "")
                   Text(
                     " ${widget.data['notice_time']}",
                     style: CustomTextStyle.bodyRegular(context , theme.isDark? white : black),
@@ -109,11 +110,13 @@ class _NoticeDescriptionState extends State<NoticeDescription> {
               SizedBox(
                 height: 10.h,
               ),
+              if(widget.data['notice'] != null && widget.data['notice'] != "")
               Text(
                 "Description : ",
                 style: CustomTextStyle.titleSemiBold(context , theme.isDark? white : black),
 
               ),
+              if(widget.data['notice'] != null && widget.data['notice'] != "" )
               Text(
                 "${widget.data['notice']}",
                 style: CustomTextStyle.bodyRegular2(context , theme.isDark? white : black),

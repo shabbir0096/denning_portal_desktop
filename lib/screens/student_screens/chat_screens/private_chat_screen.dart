@@ -216,6 +216,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
     setState(() {
       _isVisible = !_isVisible;
       loader_visible = false;
+      objFile = null;
     });
   }
 
