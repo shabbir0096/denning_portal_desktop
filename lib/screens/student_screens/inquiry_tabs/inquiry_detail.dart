@@ -129,7 +129,7 @@ class _InquiryDetailState extends State<InquiryDetail> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => WebviewDsiplayDesktop(Uri.encodeFull(widget.data['history'][0]['attached_file_name']))));
+                              builder: (context) => WebviewDsiplayDesktop('${widget.data['history'][0]['attached_file_name']}')));
                     },
                     child: Text(
                       "Preview",

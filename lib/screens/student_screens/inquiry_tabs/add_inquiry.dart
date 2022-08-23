@@ -63,9 +63,9 @@ class _AddInquiryState extends State<AddInquiry> {
   Future<void> getUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      token = prefs.getString('token')!;
-      studentId = prefs.getString('studentId')!;
-      status = prefs.getString('status')!;
+      // token = prefs.getString('token')!;
+      // studentId = prefs.getString('studentId')!;
+      // status = prefs.getString('status')!;
     });
   }
 
@@ -98,7 +98,7 @@ class _AddInquiryState extends State<AddInquiry> {
       if (objFile == null) {
         request.fields["attached_file_name"] = '';
       } else {
-        request.files.add(new http.MultipartFile(
+        request.files.add(http.MultipartFile(
             "attached_file_name", objFile!.readStream!, objFile!.size,
             filename: objFile!.name));
       }
@@ -552,6 +552,9 @@ class _AddInquiryState extends State<AddInquiry> {
                                 _formKey.currentState!.save();
                                 uploadSelectedFile();
                                 _formKey.currentState!.reset();
+                              }
+                              else {
+                                loader_visible = false;
                               }
                             }
                           },

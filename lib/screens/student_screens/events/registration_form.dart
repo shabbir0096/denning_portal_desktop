@@ -21,7 +21,7 @@ class RegistratioFormEvents extends StatefulWidget {
 
 class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
   WebviewController _controller = WebviewController();
-    String? googleFormLink_new;
+    String? googleFormLink_new ="https://www.google.com";
   String refineUrl(String googleFormLink) {
 
     if(googleFormLink.contains("STUDENT_NAME")) {
@@ -38,7 +38,7 @@ class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
     }
 
     // repeat the above check for all the dynamic values
-    googleFormLink_new = googleFormLink;
+   // googleFormLink_new = googleFormLink;
     initPlatformState(googleFormLink_new!);
     return googleFormLink;
   }
@@ -52,32 +52,31 @@ class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
 
   Future<void> initPlatformState(String url) async {
     await _controller.initialize();
-    _controller.url.listen((url) {});
-    _controller.loadUrl(googleFormLink_new!);
+    setState(()  {
+      _controller.url.listen((url) {});
+      _controller.loadUrl(Uri.encodeFull(googleFormLink_new!));
+      if (!mounted) return;
 
-    if (!mounted) return;
-
-    setState(() {});
+    });
   }
   Widget compositeView() {
-    if (!_controller.value.isInitialized) {
-      return const Text(
-        'Loading...',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 24.0,
-        ),
-      );
-    } else {
-      return Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            Expanded(child: Webview(_controller)),
-          ],
-        ),
-      );
-    }
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          StreamBuilder<LoadingState>(
+              stream: _controller.loadingState,
+              builder: (context, snapshot) {
+                if (snapshot.hasData ) {
+                  return   Expanded(child: Webview(_controller));
+                } else {
+                  return LinearProgressIndicator();
+                }
+              }),
+
+        ],
+      ),
+    );
   }
   @override
   Widget build(BuildContext context) {

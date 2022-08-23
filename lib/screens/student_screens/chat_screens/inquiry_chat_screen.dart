@@ -268,11 +268,11 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
                         snapshot.data['messages'][0]['history'].length,
                         itemBuilder: (context, int index) {
                           DateTime date =
-                          new DateTime.fromMillisecondsSinceEpoch(int.parse(
+                          DateTime.fromMillisecondsSinceEpoch(int.parse(
                               snapshot.data['messages'][0]['history']
                               [index]['timestamp']) *
                               1000);
-                          var format = new DateFormat("MMM d – hh:mm a");
+                          var format =DateFormat("hh:mm a | d MMM, y");
                           var dateString = format.format(date);
                           return Column(
                             children: [
@@ -359,6 +359,7 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
                                             )
                                                 : GestureDetector(
                                               onTap: () {
+
                                                 Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -367,24 +368,41 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
                                                                 Uri.decodeFull(snapshot.data['messages'][0]['history'][index]['attached_file_name']))));
                                               },
                                               child: Container(
-                                                height: 100.h,
-                                                width : 100.w,
-                                                child: fileTypes_list.contains("${snapshot.data['messages'][0]['history'][index]['attached_file_type']}")
-                                                ? Image.network("${snapshot.data['messages'][0]['history'][index]['attached_file_name']}", fit: BoxFit.contain,)
-                                                    : Column(
-                                                  children: [
-                                                    Container(
-                                                      height: 70.h,
-                                                      width: 70.w,
-                                                      child: Image.asset(
-                                                        "assets/images/pdf_icon.png",
-                                                        fit: BoxFit.contain,
+                                                height: 70.h,
+                                                width: 70.w,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                  BorderRadius
+                                                      .circular(
+                                                      10.0),
+                                                  child: fileTypes_list
+                                                      .contains(
+                                                      "${snapshot.data['messages'][0]['history'][index]['attached_file_type']}")
+                                                      ? Image
+                                                      .network(
+                                                    "${snapshot.data['messages'][0]['history'][index]['attached_file_name']}",
+                                                    fit: BoxFit
+                                                        .cover,
+                                                  )
+                                                      : Column(
+                                                    children: [
+                                                      Container(
+                                                        height:
+                                                        50.h,
+                                                        width:
+                                                        100.w,
+                                                        child:
+                                                        Image.asset(
+                                                          "assets/images/pdf_icon.png",
+                                                          fit:
+                                                          BoxFit.contain,
+                                                        ),
                                                       ),
-                                                    ),
-
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),),
+                                              ),
+                                            ),
                                             SizedBox(
                                               height: 5.h,
                                             ),
@@ -426,46 +444,50 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
                     children: <Widget>[
                       // Max Size Widget
                       Visibility(
-                        visible: _isVisible !=true ? false : true,
+                        visible: _isVisible != true ? false : true,
                         child: Visibility(
                           visible: objFile?.path != null ? true : false,
                           child: Container(
-                            height: 130,
+                            height: 120,
                             width: double.infinity,
                             color: theme.isDark == true
                                 ? cardColor
                                 : whiteBottomBar,
                             child: Center(
-                              child: Container(
-                                height: 130.h,
-                                width: double.infinity,
-
-                                child: fileTypes_list.contains("${objFile?.extension}")
-                                    ?
-                                Image.file(
-                                  File("${objFile?.path}"),
-                                  fit: BoxFit.contain,
-                                )
-                                    : Column(
-                                  children: [
-                                    Image.asset(
-                                      "assets/images/pdf_icon.png",
-                                      fit: BoxFit.contain,
-                                    ),
-                                    SizedBox(
-                                      height: 2.h,
-                                    ),
-                                    Text(
-                                      "${objFile?.name}",
-                                      style: CustomTextStyle
-                                          .bodyRegular2(
-                                          context,
-                                          theme.isDark
-                                              ? white
-                                              : black),maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    )
-                                  ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ClipRRect(
+                                  borderRadius:
+                                  BorderRadius.circular(10.0),
+                                  child: fileTypes_list.contains(
+                                      "${objFile?.extension}")
+                                      ? Image.file(
+                                    File("${objFile?.path}"),
+                                    fit: BoxFit.contain,
+                                  )
+                                      : Column(
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/pdf_icon.png",
+                                        fit: BoxFit.contain,
+                                      ),
+                                      SizedBox(
+                                        height: 2.h,
+                                      ),
+                                      Text(
+                                        "${objFile?.name}",
+                                        style: CustomTextStyle
+                                            .bodyRegular2(
+                                            context,
+                                            theme.isDark
+                                                ? white
+                                                : black),
+                                        maxLines: 2,
+                                        overflow:
+                                        TextOverflow.ellipsis,
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -476,7 +498,6 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
                       Positioned(
                         top: 10,
                         right: 20,
-
                         child: Container(
                           decoration: BoxDecoration(
                             color: white,
@@ -545,6 +566,7 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
                               if (result != null) {
                                 setState(() {
                                   objFile = result.files.single;
+
                                 });
                               } else {
                                 objFile = null;

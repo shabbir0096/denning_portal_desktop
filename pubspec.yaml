@@ -52,13 +52,11 @@ dependencies:
   provider: ^6.0.2
   image_picker: ^0.8.5
   camera: ^0.9.4+19
-  dio: ^4.0.6
   random_string: ^2.3.1
   device_info_plus: ^3.2.3
   macadress_gen: ^0.0.4
   get_ip_address: ^0.0.5
   modal_progress_hud_nsn: ^0.1.0-nullsafety-1
-  webview_flutter: ^3.0.4
   file_picker: ^4.6.0
   camera_windows: ^0.1.0+2
   platform_device_id: ^1.0.1
@@ -70,7 +68,6 @@ dependencies:
   easy_encryption: ^0.0.1
   bitsdojo_window: ^0.1.2
   filepicker_windows: ^2.0.2
-
 
 dev_dependencies:
   flutter_test:

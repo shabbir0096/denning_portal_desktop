@@ -288,7 +288,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
       cameraId = await CameraPlatform.instance.createCamera(
         camera,
         _resolutionPreset,
-        enableAudio: _recordAudio,
+        enableAudio: false,
       );
 
       _errorStreamSubscription?.cancel();
@@ -334,7 +334,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
 
       //Reset state.
       if (mounted) {
-        setState(() async {
+        setState(()  {
           _initialized = false;
           _cameraId = -1;
           _cameraIndex = 0;
@@ -413,7 +413,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
 
     Map data = {
       "base1": "data:image/png;base64,${imgBase64Str}",
-      "base2": "data:image/png;base64,${convertedImage}"
+      "base2": "data:image/png;base64,$convertedImage"
     };
 
     final response = await http
@@ -441,7 +441,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
         });
         print(cameraCount);
         _showInSnackBar(
-            "Try again by taking the photo (${cameraCount}) out of 3");
+            "Try again by taking the photo ($cameraCount) out of 3");
       }
     } else {
       print("-----------------------------");
@@ -451,7 +451,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
       });
       print(cameraCount);
       _showInSnackBar(
-          "Try again by taking the photo (${cameraCount}) out of 3");
+          "Try again by taking the photo ($cameraCount) out of 3");
     }
   }
 
@@ -696,9 +696,6 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
                               builder: (BuildContext context) =>
                               new StudentBottomNavigation()),
                               (Route<dynamic> route) => false);
-
-                      CustomScaffoldWidget.buildSuccessSnackbar(
-                          context, "Login Successful");
                     } else {
                       checkStatus();
                     }

@@ -113,7 +113,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
               context, "${result['message']}");
         } else if (result['status'] == 401) {
           CustomScaffoldWidget.buildErrorSnackbar(
-              context, "sdsdsd${result['message']}");
+              context, "${result['message']}");
         } else {
           CustomScaffoldWidget.buildErrorSnackbar(
               context, "Something went wrong");
@@ -280,7 +280,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                                     ['history'][index]
                                                 ['timestamp']) *
                                             1000);
-                                var format = new DateFormat("MMM d – hh:mm a");
+                                var format =DateFormat("hh:mm a | d MMM, y");
                                 var dateString = format.format(date);
                                 return Column(
                                   children: [
@@ -383,32 +383,41 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                                                         WebviewDsiplayDesktop(
                                                                             Uri.encodeFull(widget.data['history'][index]['attached_file_name']))));
                                                           },
-                                                          child: Container(
+                                                          child:  Container(
                                                             height: 100.h,
                                                             width: 100.w,
-                                                            child: fileTypes_list.contains("${snapshot.data['messages'][0]['history'][index]['attached_file_type']}")
-                                                                ? Image.network(
-                                                                    "${snapshot.data['messages'][0]['history'][index]['attached_file_name']}",
-                                                                    fit: BoxFit
-                                                                        .contain,
-                                                                  )
-                                                                : Column(
-                                                                    children: [
-                                                                      Container(
-                                                                        height:
-                                                                            70.h,
-                                                                        width:
-                                                                            70.w,
-                                                                        child: Image
-                                                                            .asset(
-                                                                          "assets/images/pdf_icon.png",
-                                                                          fit: BoxFit
-                                                                              .contain,
-                                                                        ),
-                                                                      ),
-                                                                    ],
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  10.0),
+                                                              child: fileTypes_list
+                                                                  .contains(
+                                                                  "${snapshot.data['messages'][0]['history'][index]['attached_file_type']}")
+                                                                  ? Image.network(
+                                                                "${snapshot.data['messages'][0]['history'][index]['attached_file_name']}",
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )
+                                                                  : Column(
+                                                                children: [
+                                                                  Container(
+                                                                    height:
+                                                                    50.h,
+                                                                    width:
+                                                                    100.w,
+                                                                    child: Image
+                                                                        .asset(
+                                                                      "assets/images/pdf_icon.png",
+                                                                      fit: BoxFit
+                                                                          .contain,
+                                                                    ),
                                                                   ),
-                                                          )),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                  ),
                                                   SizedBox(
                                                     height: 5.h,
                                                   ),
@@ -455,43 +464,46 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                               child: Visibility(
                                 visible: objFile?.path != null ? true : false,
                                 child: Container(
-                                  height: 130,
+                                  height: 120,
                                   width: double.infinity,
                                   color: theme.isDark == true
                                       ? cardColor
                                       : whiteBottomBar,
                                   child: Center(
-                                    child: Container(
-                                      height: 120.h,
-                                      width: double.infinity,
-                                      child: fileTypes_list.contains("${objFile?.extension}")
-                                          ? Image.file(
-                                              File("${objFile?.path}"),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                        BorderRadius.circular(10.0),
+                                        child: fileTypes_list.contains("${objFile?.extension}")
+                                            ? Image.file(
+                                          File("${objFile?.path}"),
+                                          fit: BoxFit.contain,
+                                        )
+                                            : Column(
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/pdf_icon.png",
                                               fit: BoxFit.contain,
-                                            )
-                                          : Column(
-                                              children: [
-                                                Image.asset(
-                                                  "assets/images/pdf_icon.png",
-                                                  fit: BoxFit.contain,
-                                                ),
-                                                SizedBox(
-                                                  height: 2.h,
-                                                ),
-                                                Text(
-                                                  "${objFile?.name}",
-                                                  style: CustomTextStyle
-                                                      .bodyRegular2(
-                                                          context,
-                                                          theme.isDark
-                                                              ? white
-                                                              : black),
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                )
-                                              ],
                                             ),
+                                            SizedBox(
+                                              height: 2.h,
+                                            ),
+                                            Text(
+                                              "${objFile?.name}",
+                                              style: CustomTextStyle
+                                                  .bodyRegular2(
+                                                  context,
+                                                  theme.isDark
+                                                      ? white
+                                                      : black),
+                                              maxLines: 2,
+                                              overflow:
+                                              TextOverflow.ellipsis,
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),

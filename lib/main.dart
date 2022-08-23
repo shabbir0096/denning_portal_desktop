@@ -27,7 +27,7 @@ Future<void> main() async {
   configLoading();
   doWhenWindowReady(() {
     final initialSize = Size(1024 , 720);
-    final minSize = Size(600, 700);
+    final minSize = Size(1024, 720);
     final maxSize = Size(1920 , 1200);
     appWindow.maxSize = maxSize;
     appWindow.minSize = minSize;
@@ -65,8 +65,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    print("Hi this$status");
-    print("token $token");
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeChanger(),),

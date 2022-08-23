@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:denning_portal/screens/student_screens/setting_screen.dart';
 import 'package:denning_portal/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_windows/webview_windows.dart';
 import '../../custom_widgets/custom_textStyle.dart';
 import '../../custom_widgets/no_internet_screen.dart';
+import '../../custom_widgets/scaffold_messenge_snackbar.dart';
 import '../../providers/internet_checker.dart';
 import '../../providers/theme.dart';
+import '../../services/utilities/authication_check.dart';
 import '../profile_screens/change_password.dart';
 import 'package:http/http.dart' as http;
-
 import '../login_screens/email_login.dart';
 
 class Vle extends StatefulWidget {
@@ -42,32 +44,34 @@ class _VleState extends State<Vle> {
 
   Future getUrl() async {
     var convertedData;
-
+    try {
     Map data = {"user[email]": "${email}"};
     final response = await http.post(
       Uri.parse(
           "https://www.denningportal.com/vle/webservice/rest/server.php?wstoken=7ec7ce8f1b1afea19a63361b34a99dd8&wsfunction=auth_userkey_request_login_url&moodlewsrestformat=json"),
       body: data,
     );
-
     if (response.statusCode == 200) {
       convertedData = json.decode(response.body);
-      print(convertedData);
-
-      setState(() {
-        url_link = convertedData['loginurl'].toString();
-        if (url_link != null) {
-          initPlatformState(url_link);
-        } else {
-          Container(
-            child: Center(
-              child: Text("Loading..."),
-            ),
-          );
+        if (convertedData != null) {
+          url_link = convertedData['loginurl'].toString();
+          if (convertedData['loginurl'] == null) {
+            CustomScaffoldWidget.buildErrorSnackbar(
+                context, "${convertedData['message']}"+"$data");
+          } else {
+            initPlatformState(url_link);
+          }
         }
-      });
-    } else {
-      print("Error");
+      } else {
+      AuthChecker.exceptionHandling(context, response.statusCode);
+    }
+  } on TimeoutException catch (e) {
+      CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
+    } on SocketException catch (e) {
+      CustomScaffoldWidget.buildErrorSnackbar(
+          context, "Please enable your internet connection");
+    } on Error catch (e) {
+      CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
   }
 
@@ -82,46 +86,34 @@ class _VleState extends State<Vle> {
 
 
   Future<void> initPlatformState(String url) async {
-    print("++++++++++++++++++++++++++");
     await _controller.initialize();
-    _controller.url.listen((url) {});
-    _controller.loadUrl(Uri.encodeFull(url_link));
-    print("------=-=-=-=---");
-    print("url is:  $url_link");
+    setState(()  {
+      _controller.url.listen((url) {});
+      _controller.loadUrl(Uri.encodeFull(url_link));
+      if (!mounted) return;
 
-    if (!mounted) return;
-
-    setState(() {});
+    });
   }
 
   Widget compositeView() {
-    if (!_controller.value.isInitialized) {
-      return const Text(
-        'Loading...',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 24.0,
-        ),
-      );
-    } else {
       return Container(
         color: Colors.white,
         child: Column(
           children: [
-            // StreamBuilder<LoadingState>(
-            //     stream: _controller.loadingState,
-            //     builder: (context, snapshot) {
-            //       if (snapshot.hasData ) {
-            //         return LinearProgressIndicator();
-            //       } else {
-            //         return Text("asdasdasd");
-            //       }
-            //     }),
-            Expanded(child: Webview(_controller)),
+            StreamBuilder<LoadingState>(
+                stream: _controller.loadingState,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData ) {
+                    return   Expanded(child: Webview(_controller));
+                  } else {
+                    return LinearProgressIndicator();
+                  }
+                }),
+
           ],
         ),
       );
-    }
+
   }
 
   @override

@@ -9,7 +9,7 @@ import '../utils/colors.dart';
 import '../providers/theme.dart';
 
 class WebviewDsiplayDesktop extends StatefulWidget {
-  String url="";
+    String  url;
   WebviewDsiplayDesktop(this.url);
 
   @override
@@ -17,8 +17,7 @@ class WebviewDsiplayDesktop extends StatefulWidget {
 }
 
 class _WebviewDsiplayDesktopState extends State<WebviewDsiplayDesktop> {
-  late WebviewController _controller;
-  String url_link ='';
+  WebviewController _controller = WebviewController();
   @override
   void initState() {
     // TODO: implement initState
@@ -26,36 +25,33 @@ class _WebviewDsiplayDesktopState extends State<WebviewDsiplayDesktop> {
     initPlatformState();
   }
   Future<void> initPlatformState() async {
-    _controller = WebviewController();
     await _controller.initialize();
-    _controller.url.listen((url) {
+    print("url is ${widget.url}");
+    setState(()  {
+      _controller.url.listen((url) {});
+      _controller.loadUrl(Uri.encodeFull(widget.url));
+      if (!mounted) return;
+
     });
-    _controller.loadUrl(
-        widget.url);
-
-    if (!mounted) return;
-
-    setState(() {});
   }
   Widget compositeView() {
-    if (!_controller.value.isInitialized) {
-      return const Text(
-        'Loading...',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 24.0,
-          fontWeight: FontWeight.w900,
-        ),
-      );
-    } else {
-      return Container(
-        child: Column(
-          children: [
-            Expanded(child: Webview(_controller)),
-          ],
-        ),
-      );
-    }
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          StreamBuilder<LoadingState>(
+              stream: _controller.loadingState,
+              builder: (context, snapshot) {
+                if (snapshot.hasData ) {
+                  return   Expanded(child: Webview(_controller));
+                } else {
+                  return LinearProgressIndicator();
+                }
+              }),
+
+        ],
+      ),
+    );
   }
   @override
   Widget build(BuildContext context) {
@@ -64,7 +60,7 @@ class _WebviewDsiplayDesktopState extends State<WebviewDsiplayDesktop> {
     final theme = Provider.of<ThemeChanger>(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text("Details",
+          title: Text("Preview",
             style: CustomTextStyle.AppBarHeading(context , theme.isDark? white: black),),
           elevation: 0,
           backgroundColor: theme.isDark? cardColor: whiteBottomBar,

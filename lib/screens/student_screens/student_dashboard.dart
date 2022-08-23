@@ -1474,7 +1474,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      "Till:",
+                                                      "Due Date:",
                                                       style: CustomTextStyle
                                                           .bodyRegular2(
                                                               context,
@@ -1483,26 +1483,27 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                   : black),
                                                     ),
                                                     Spacer(),
-                                                    snapshot.data!['fees'] ==
-                                                            null
+                                                    snapshot.data![
+                                                    'fees'] ==
+                                                        null
                                                         ? Text(
-                                                            "Nill",
-                                                            style: CustomTextStyle
-                                                                .bodyRegular2(
-                                                                    context,
-                                                                    theme.isDark
-                                                                        ? white
-                                                                        : purple),
-                                                          )
+                                                      "",
+                                                      style: CustomTextStyle
+                                                          .bodyRegular2(
+                                                          context,
+                                                          theme.isDark
+                                                              ? white
+                                                              : purple),
+                                                    )
                                                         : Text(
-                                                            "${DateFormat('').format(DateTime.parse(snapshot.data!['fees'][0]['payment_deadline']))}",
-                                                            style: CustomTextStyle
-                                                                .bodyRegular2(
-                                                                    context,
-                                                                    theme.isDark
-                                                                        ? white
-                                                                        : purple),
-                                                          ),
+                                                      "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!['fees'][0]['payment_deadline']))}",
+                                                      style: CustomTextStyle
+                                                          .bodyRegular2(
+                                                          context,
+                                                          theme.isDark
+                                                              ? white
+                                                              : purple),
+                                                    ),
                                                   ],
                                                 ),
                                               ],
