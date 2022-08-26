@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:webview_windows/webview_windows.dart';
 import '../../../custom_widgets/custom_textStyle.dart';
 import '../../../custom_widgets/no_internet_screen.dart';
+import '../../../custom_widgets/scaffold_messenge_snackbar.dart';
 import '../../../providers/internet_checker.dart';
 import '../../../providers/theme.dart';
 import '../../../utils/colors.dart';
@@ -21,7 +22,7 @@ class RegistratioFormEvents extends StatefulWidget {
 
 class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
   WebviewController _controller = WebviewController();
-    String? googleFormLink_new ="https://www.google.com";
+    String? googleFormLink_new;
   String refineUrl(String googleFormLink) {
 
     if(googleFormLink.contains("STUDENT_NAME")) {
@@ -38,7 +39,7 @@ class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
     }
 
     // repeat the above check for all the dynamic values
-   // googleFormLink_new = googleFormLink;
+    googleFormLink_new = googleFormLink;
     initPlatformState(googleFormLink_new!);
     return googleFormLink;
   }
@@ -53,6 +54,7 @@ class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
   Future<void> initPlatformState(String url) async {
     await _controller.initialize();
     setState(()  {
+      CustomScaffoldWidget.buildErrorSnackbar(context, "Url link is $googleFormLink_new");
       _controller.url.listen((url) {});
       _controller.loadUrl(Uri.encodeFull(googleFormLink_new!));
       if (!mounted) return;

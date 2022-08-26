@@ -124,6 +124,7 @@ class _VleState extends State<Vle> {
     final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.isDark ? cardColor : whiteBottomBar,
