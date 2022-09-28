@@ -7,7 +7,9 @@ import Foundation
 
 import bitsdojo_window_macos
 import connectivity_plus_macos
+import desktop_webview_window
 import device_info_plus_macos
+import flutter_macos_webview
 import flutter_platform_alert
 import path_provider_macos
 import platform_device_id
@@ -18,7 +20,9 @@ import smart_auth
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   BitsdojoWindowPlugin.register(with: registry.registrar(forPlugin: "BitsdojoWindowPlugin"))
   ConnectivityPlugin.register(with: registry.registrar(forPlugin: "ConnectivityPlugin"))
+  DesktopWebviewWindowPlugin.register(with: registry.registrar(forPlugin: "DesktopWebviewWindowPlugin"))
   DeviceInfoPlusMacosPlugin.register(with: registry.registrar(forPlugin: "DeviceInfoPlusMacosPlugin"))
+  FlutterMacOSWebViewPlugin.register(with: registry.registrar(forPlugin: "FlutterMacOSWebViewPlugin"))
   FlutterPlatformAlertPlugin.register(with: registry.registrar(forPlugin: "FlutterPlatformAlertPlugin"))
   PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
   PlatformDeviceIdMacosPlugin.register(with: registry.registrar(forPlugin: "PlatformDeviceIdMacosPlugin"))

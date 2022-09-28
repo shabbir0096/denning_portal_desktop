@@ -9,6 +9,7 @@
 #include <bitsdojo_window_windows/bitsdojo_window_plugin.h>
 #include <camera_windows/camera_windows.h>
 #include <connectivity_plus_windows/connectivity_plus_windows_plugin.h>
+#include <desktop_webview_window/desktop_webview_window_plugin.h>
 #include <flutter_platform_alert/flutter_platform_alert_plugin.h>
 #include <platform_device_id_windows/platform_device_id_windows_plugin.h>
 #include <smart_auth/smart_auth_plugin.h>
@@ -21,6 +22,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("CameraWindows"));
   ConnectivityPlusWindowsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("ConnectivityPlusWindowsPlugin"));
+  DesktopWebviewWindowPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("DesktopWebviewWindowPlugin"));
   FlutterPlatformAlertPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FlutterPlatformAlertPlugin"));
   PlatformDeviceIdWindowsPluginRegisterWithRegistrar(

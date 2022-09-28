@@ -64,11 +64,15 @@ dependencies:
   webview_windows: ^0.0.8
   flutter_html: ^3.0.0-alpha.3
   flutter_platform_alert: ^0.2.7
-  connectivity_plus: ^2.3.4
+  connectivity_plus: ^2.3.7
   easy_encryption: ^0.0.1
   bitsdojo_window: ^0.1.2
   filepicker_windows: ^2.0.2
   path_provider: ^2.0.11
+  flutter_macos_webview: ^0.0.6
+
+
+
 
 dev_dependencies:
   flutter_test:

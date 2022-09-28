@@ -9,6 +9,7 @@ import 'package:denning_portal/screens/student_screens/notice_board_screens/noti
 import 'package:denning_portal/screens/student_screens/student_dashboard.dart';
 import 'package:denning_portal/screens/student_screens/time_table.dart';
 import 'package:denning_portal/screens/student_screens/vle.dart';
+import 'package:denning_portal/screens/student_screens/vle_macos.dart';
 import 'package:denning_portal/utils/icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,7 +38,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
       select: onTapped,
     ),
     TimeTableScreen(),
-    Vle(),
+    VleMacos(),
     NoticeBoard()
   ];
 

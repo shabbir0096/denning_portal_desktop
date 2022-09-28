@@ -523,7 +523,6 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
 
     return MaterialApp(
-      color: Colors.red,
       builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: _scaffoldMessengerKey,
@@ -757,7 +756,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => new OtpResgister()),
+                  builder: (BuildContext context) => new OtpResgister(),),
               (Route<dynamic> route) => false);
         } else {
           checkImage(profileImageLink);

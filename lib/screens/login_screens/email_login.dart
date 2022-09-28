@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:denning_portal/screens/login_screens/forget_screen.dart';
 import 'package:denning_portal/screens/login_screens/image_verification_desktop.dart';
+import 'package:denning_portal/screens/login_screens/image_verification_macos.dart';
 import 'package:denning_portal/services/utilities/app_url.dart';
 import 'package:denning_portal/services/utilities/basic_auth.dart';
 import 'package:denning_portal/utils/colors.dart';
@@ -52,18 +53,16 @@ class _EmailLoginState extends State<EmailLogin> {
     });
 
     try {
-
-
       Map data = {"email": email, "password": password};
       http.Response response = await http
           .post(
-        Uri.parse("${AppUrl.login}"),
-        headers: <String, String>{'authorization': BasicAuth.basicAuth},
-        body: data,
-      )
+            Uri.parse("${AppUrl.login}"),
+            headers: <String, String>{'authorization': BasicAuth.basicAuth},
+            body: data,
+          )
           .timeout(const Duration(seconds: 60));
       if (response.statusCode == 200) {
-        if(response.body.isNotEmpty) {
+        if (response.body.isNotEmpty) {
           final result = json.decode(response.body);
           if (result['status'] == 200) {
             final loginModelValues = LoginModel.fromJson(result);
@@ -82,14 +81,29 @@ class _EmailLoginState extends State<EmailLogin> {
             prefs.setBool('validity', loginModelValues.validity!);
             prefs.setString('token', loginModelValues.token!);
             prefs.setString('academicYear', loginModelValues.academicYear!);
-            loginModelValues.programmeName == null ? prefs.setString('programmeName','') : prefs.setString('programmeName',loginModelValues.programmeName!);
-            loginModelValues.schoolName == null ? prefs.setString('schoolName',"Denning") : prefs.setString('schoolName',loginModelValues.schoolName! );
-            loginModelValues.schoolLogo == null ? prefs.setString('schoolLogo',"assets/images/denning_logo_white.png") : prefs.setString('schoolLogo',loginModelValues.schoolLogo! );
+            loginModelValues.programmeName == null
+                ? prefs.setString('programmeName', '')
+                : prefs.setString(
+                    'programmeName', loginModelValues.programmeName!);
+            loginModelValues.schoolName == null
+                ? prefs.setString('schoolName', "Denning")
+                : prefs.setString('schoolName', loginModelValues.schoolName!);
+            loginModelValues.schoolLogo == null
+                ? prefs.setString(
+                    'schoolLogo', "assets/images/denning_logo_white.png")
+                : prefs.setString('schoolLogo', loginModelValues.schoolLogo!);
             prefs.setString('studentQrcode', loginModelValues.studentQrcode!);
+            // Navigator.pushAndRemoveUntil(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (BuildContext context) => ImageVerificationDesktop(
+            //               token: "${loginModelValues.token}",
+            //             )),
+            //     (Route<dynamic> route) => false);
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => ImageVerificationDesktop(
+                    builder: (BuildContext context) => ImageVerificationMacos(
                       token: "${loginModelValues.token}",
                     )),
                     (Route<dynamic> route) => false);
@@ -98,13 +112,15 @@ class _EmailLoginState extends State<EmailLogin> {
           } else if (result['status'] == 401) {
             CustomScaffoldWidget.buildErrorSnackbar(
                 context, "${result["message"]}");
-          }    else if(result['status'] == 404){
-            CustomScaffoldWidget.buildErrorSnackbar(context, "${result['message']}");
+          } else if (result['status'] == 404) {
+            CustomScaffoldWidget.buildErrorSnackbar(
+                context, "${result['message']}");
           } else {
             CustomScaffoldWidget.buildErrorSnackbar(
                 context, "${result["message"]}");
           }
-        } }else {
+        }
+      } else {
         AuthChecker.exceptionHandling(context, response.statusCode);
       }
     } on TimeoutException catch (e) {
@@ -113,8 +129,7 @@ class _EmailLoginState extends State<EmailLogin> {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
     } on Error catch (e) {
-      CustomScaffoldWidget.buildErrorSnackbar(
-          context, "Something went wrong");
+      CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
   }
 
@@ -145,7 +160,7 @@ class _EmailLoginState extends State<EmailLogin> {
       if (value == false) {
         isChecked = value!;
         SharedPreferences.getInstance().then(
-              (remeberMePrefs) {
+          (remeberMePrefs) {
             remeberMePrefs.setBool("remember_me", false);
             remeberMePrefs.setString('email2', "");
             remeberMePrefs.setString('password', "");
@@ -154,7 +169,7 @@ class _EmailLoginState extends State<EmailLogin> {
       } else {
         isChecked = value!;
         SharedPreferences.getInstance().then(
-              (remeberMePrefs) {
+          (remeberMePrefs) {
             remeberMePrefs.setBool("remember_me", true);
             remeberMePrefs.setString('email2', emailController.text);
             remeberMePrefs.setString('password', passwordController.text);
@@ -190,7 +205,7 @@ class _EmailLoginState extends State<EmailLogin> {
                 child: Container(
                   child: Padding(
                     padding:
-                    EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
+                        EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
                     child: Form(
                       key: _formKey,
                       child: Column(
@@ -242,13 +257,13 @@ class _EmailLoginState extends State<EmailLogin> {
                                 autofocus: false,
                                 controller: emailController,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 cursorColor: theme.isDark ? white : black,
                                 style: TextStyle(
                                     color: theme.isDark ? white : black),
                                 decoration: InputDecoration(
                                     contentPadding:
-                                    EdgeInsets.symmetric(vertical: 20),
+                                        EdgeInsets.symmetric(vertical: 20),
                                     labelText: "Enter your email",
                                     fillColor: white,
                                     focusedBorder: OutlineInputBorder(
@@ -259,7 +274,7 @@ class _EmailLoginState extends State<EmailLogin> {
                                     ),
                                     enabledBorder: new OutlineInputBorder(
                                       borderRadius:
-                                      new BorderRadius.circular(10.0),
+                                          new BorderRadius.circular(10.0),
                                       borderSide: new BorderSide(
                                           color: theme.isDark ? white : black),
                                     ),
@@ -324,14 +339,14 @@ class _EmailLoginState extends State<EmailLogin> {
                                 autofocus: false,
                                 controller: passwordController,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 cursorColor: theme.isDark ? white : black,
                                 obscureText: isPassword,
                                 style: TextStyle(
                                     color: theme.isDark ? white : black),
                                 decoration: InputDecoration(
                                     contentPadding:
-                                    EdgeInsets.symmetric(vertical: 20),
+                                        EdgeInsets.symmetric(vertical: 20),
                                     labelText: "Enter your password",
                                     fillColor: white,
                                     focusedBorder: OutlineInputBorder(
@@ -342,7 +357,7 @@ class _EmailLoginState extends State<EmailLogin> {
                                     ),
                                     enabledBorder: new OutlineInputBorder(
                                       borderRadius:
-                                      new BorderRadius.circular(10.0),
+                                          new BorderRadius.circular(10.0),
                                       borderSide: new BorderSide(
                                           color: theme.isDark ? white : black),
                                     ),
@@ -376,15 +391,15 @@ class _EmailLoginState extends State<EmailLogin> {
                                       },
                                       child: isPassword == false
                                           ? Icon(
-                                        Icons.visibility,
-                                        color:
-                                        theme.isDark ? white : black,
-                                      )
+                                              Icons.visibility,
+                                              color:
+                                                  theme.isDark ? white : black,
+                                            )
                                           : Icon(
-                                        Icons.visibility_off,
-                                        color:
-                                        theme.isDark ? white : black,
-                                      ),
+                                              Icons.visibility_off,
+                                              color:
+                                                  theme.isDark ? white : black,
+                                            ),
                                     ),
                                     hintText: "Enter your password",
                                     hintStyle: TextStyle(
@@ -425,7 +440,7 @@ class _EmailLoginState extends State<EmailLogin> {
                                 hoverColor: theme.isDark ? white : black,
                                 activeColor: theme.isDark ? white : black,
                                 materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
+                                    MaterialTapTargetSize.shrinkWrap,
                               ),
                               Text(
                                 "Remember me",
