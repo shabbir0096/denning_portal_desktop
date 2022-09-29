@@ -248,223 +248,228 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
               )),
           iconTheme: IconThemeData(color: theme.isDark ? white : black),
         ),
-        body: Column(
-          children: [
-            SizedBox(
-              height: 20.h,
-            ),
-            Center(
-              child: Text(
-                "Please upload a photo for verification",
-                style: TextStyle(
-                    fontSize: 19.sp,
-                    fontFamily: "Poppins-Bold",
-                    color: theme.isDark ? white : black),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20.h,
               ),
-            ),
-            Divider(
-              thickness: 1,
-              color: theme.isDark ? white : black,
-            ),
-
-            // Stack(
-            //   fit: StackFit.passthrough,
-            //   children: <Widget>[
-            //     // Max Size Widget
-            //     Visibility(
-            //       visible: _isVisible != true ? false : true,
-            //       child: Visibility(
-            //         visible: objFile?.path != null ? true : false,
-            //         child: Container(
-            //           height: 120,
-            //           width: double.infinity,
-            //           color: theme.isDark == true
-            //               ? cardColor
-            //               : whiteBottomBar,
-            //           child: Center(
-            //             child: Padding(
-            //               padding: const EdgeInsets.all(8.0),
-            //               child: ClipRRect(
-            //                 borderRadius:
-            //                 BorderRadius.circular(10.0),
-            //                 child: fileTypes_list.contains("${objFile?.extension}")
-            //                     ? Image.file(
-            //                   File("${objFile?.path}"),
-            //                   fit: BoxFit.contain,
-            //                 )
-            //                     : Column(
-            //                   children: [
-            //                     Image.asset(
-            //                       "assets/images/pdf_icon.png",
-            //                       fit: BoxFit.contain,
-            //                     ),
-            //                     SizedBox(
-            //                       height: 2.h,
-            //                     ),
-            //                     Text(
-            //                       "${objFile?.name}",
-            //                       style: CustomTextStyle
-            //                           .bodyRegular2(
-            //                           context,
-            //                           theme.isDark
-            //                               ? white
-            //                               : black),
-            //                       maxLines: 2,
-            //                       overflow:
-            //                       TextOverflow.ellipsis,
-            //                     )
-            //                   ],
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //
-            //     Positioned(
-            //       top: 10,
-            //       right: 20,
-            //       child: Container(
-            //         decoration: BoxDecoration(
-            //           color: white,
-            //           border: Border.all(
-            //             color: Colors.white,
-            //           ),
-            //           shape: BoxShape.circle,
-            //         ),
-            //         height: 30,
-            //         width: 30,
-            //         child: Center(
-            //           child: InkWell(
-            //             onTap: showToast,
-            //             child: Icon(
-            //               Icons.close,
-            //               color: Colors.red,
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-
-            SizedBox(
-              height: 10.h,
-            ),
-
-            Padding(
-              padding: EdgeInsets.only(
-                   left: 10.w, right: 10.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Hint",
-                        style: TextStyle(
-                            fontFamily: "Poppins-SemiBold",
-                            fontSize: 20.sp,
-                            color: theme.isDark ? white : black),
-                      ),
-                      Text(
-                        "\u2022  Please upload a photo from your device (Mac).\n\u2022  Photo should be clear, should not be from too far or should not be from to near.\n\u2022  You can refer to picture that is attached here.",
-                        style: TextStyle(
-                            fontFamily: "Poppins-Regular",
-                            fontSize: 13.sp,
-                            color: theme.isDark ? white : black),
-                      ),
-
-                    ],
-                  ),
-                  Spacer(),
-                  Image.asset("assets/images/hint_photo.jpeg",width: 100.w,height: 150.h,)
-                ],
-              ),
-            ),
-
-            SizedBox(
-              height: 50.h,
-            ),
-            Center(
-              child: Container(
-                width: 120.w,
-                height: 50.h,
-                child: MaterialButton(
-                  elevation: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.attach_file_rounded,
-                        color: theme.isDark ? black : white,
-                      ),
-                      SizedBox(
-                        width: 5.w,
-                      ),
-                      Text(
-                        "Please select a photo",
-                        style: CustomTextStyle.titleSemiBold(
-                          context,
-                          theme.isDark ? black : white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  textColor: black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  color: theme.isDark ? white : black,
-                  onPressed: () async {
-                    var result = await FilePicker.platform.pickFiles(
-                        type: FileType.custom,
-                        allowedExtensions: ['jpg', 'png', 'jpeg'],
-                        withReadStream:
-                            true // this will return PlatformFile object with read stream
-                        );
-
-                    if (result != null) {
-                      bool exists = appData
-                              .any((file) => file['device_id'] == "$deviceID")
-                          as dynamic;
-                      print("userExit or not: ${exists}");
-                      if (exists == false) {
-                        setState(() {
-                          objFile = result.files.single;
-                        });
-                        print(objFile!.path);
-                        _takePicture();
-                      } else {
-                        setState(() {
-                          objFile = result.files.single;
-                        });
-                        print(objFile!.path);
-                        // objFile = null;
-
-                      }
-                      if (studentId == "765") {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    new StudentBottomNavigation()),
-                            (Route<dynamic> route) => false);
-                      } else {
-                        print("_+_+_+_+_+_+_");
-                        checkStatus();
-                      }
-                    } else {}
-                  },
+              Center(
+                child: Text(
+                  "Please upload a photo for verification",
+                  style: TextStyle(
+                      fontSize: 19.sp,
+                      fontFamily: "Poppins-Bold",
+                      color: theme.isDark ? white : black),
                 ),
               ),
-            ),
-          ],
+              Divider(
+                thickness: 1,
+                color: theme.isDark ? white : black,
+              ),
+
+              // Stack(
+              //   fit: StackFit.passthrough,
+              //   children: <Widget>[
+              //     // Max Size Widget
+              //     Visibility(
+              //       visible: _isVisible != true ? false : true,
+              //       child: Visibility(
+              //         visible: objFile?.path != null ? true : false,
+              //         child: Container(
+              //           height: 120,
+              //           width: double.infinity,
+              //           color: theme.isDark == true
+              //               ? cardColor
+              //               : whiteBottomBar,
+              //           child: Center(
+              //             child: Padding(
+              //               padding: const EdgeInsets.all(8.0),
+              //               child: ClipRRect(
+              //                 borderRadius:
+              //                 BorderRadius.circular(10.0),
+              //                 child: fileTypes_list.contains("${objFile?.extension}")
+              //                     ? Image.file(
+              //                   File("${objFile?.path}"),
+              //                   fit: BoxFit.contain,
+              //                 )
+              //                     : Column(
+              //                   children: [
+              //                     Image.asset(
+              //                       "assets/images/pdf_icon.png",
+              //                       fit: BoxFit.contain,
+              //                     ),
+              //                     SizedBox(
+              //                       height: 2.h,
+              //                     ),
+              //                     Text(
+              //                       "${objFile?.name}",
+              //                       style: CustomTextStyle
+              //                           .bodyRegular2(
+              //                           context,
+              //                           theme.isDark
+              //                               ? white
+              //                               : black),
+              //                       maxLines: 2,
+              //                       overflow:
+              //                       TextOverflow.ellipsis,
+              //                     )
+              //                   ],
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //
+              //     Positioned(
+              //       top: 10,
+              //       right: 20,
+              //       child: Container(
+              //         decoration: BoxDecoration(
+              //           color: white,
+              //           border: Border.all(
+              //             color: Colors.white,
+              //           ),
+              //           shape: BoxShape.circle,
+              //         ),
+              //         height: 30,
+              //         width: 30,
+              //         child: Center(
+              //           child: InkWell(
+              //             onTap: showToast,
+              //             child: Icon(
+              //               Icons.close,
+              //               color: Colors.red,
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+
+              SizedBox(
+                height: 10.h,
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(
+                     left: 10.w, right: 10.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Guidelines to upload a photo",
+                            style: TextStyle(
+                                fontFamily: "Poppins-SemiBold",
+                                fontSize: 20.sp,
+                                color: theme.isDark ? white : black),
+                          ),
+                          SizedBox(height: 10.h,),
+                          Text(
+                            "\u2022  Please upload a photo from your device (Mac).\n\u2022  Photo should be clear, should not be from too far or should not be from to near.\n\u2022  Photograph must not be older than 6 months.\n\u2022  Photograph must be taken while looking straight in the camera with sharp focus.\n\u2022  Photograph must be of high quality with no ink marks or creases.\n\u2022  Black and white photographs are not accepted. Make sure that photograph is taken with appropriate brightness and contrast.\n\u2022  Eyes must be clear in the photograph with no hair across the eyes.\n\u2022  Photograph must be taken without glasses and cap.\n\u2022  Photograph must be original without filters or layers and has not been altered in any way.",
+                            style: TextStyle(
+                                fontFamily: "Poppins-Regular",
+                                fontSize: 13.sp,
+                                color: theme.isDark ? white : black,),textAlign: TextAlign.start,
+                          ),
+
+                        ],
+                      ),
+                    ),
+                    Spacer(),
+                    Image.asset("assets/images/hint_photo.jpeg",width: 100.w,height: 200.h,),
+                  ],
+                ),
+              ),
+
+              SizedBox(
+                height: 50.h,
+              ),
+              Center(
+                child: Container(
+                  width: 120.w,
+                  height: 50.h,
+                  child: MaterialButton(
+                    elevation: 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.attach_file_rounded,
+                          color: theme.isDark ? black : white,
+                        ),
+                        SizedBox(
+                          width: 5.w,
+                        ),
+                        Text(
+                          "Please select a photo",
+                          style: CustomTextStyle.titleSemiBold(
+                            context,
+                            theme.isDark ? black : white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    textColor: black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    color: theme.isDark ? white : black,
+                    onPressed: () async {
+                      var result = await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          allowedExtensions: ['jpg', 'png', 'jpeg'],
+                          withReadStream:
+                              true // this will return PlatformFile object with read stream
+                          );
+
+                      if (result != null) {
+                        bool exists = appData
+                                .any((file) => file['device_id'] == "$deviceID")
+                            as dynamic;
+                        print("userExit or not: ${exists}");
+                        if (exists == false) {
+                          setState(() {
+                            objFile = result.files.single;
+                          });
+                          print(objFile!.path);
+                          _takePicture();
+                        } else {
+                          setState(() {
+                            objFile = result.files.single;
+                          });
+                          print(objFile!.path);
+                          // objFile = null;
+
+                        }
+                        if (studentId == "765") {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      new StudentBottomNavigation()),
+                              (Route<dynamic> route) => false);
+                        } else {
+                          print("_+_+_+_+_+_+_");
+                          checkStatus();
+                        }
+                      } else {}
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
