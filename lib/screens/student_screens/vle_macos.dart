@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:denning_portal/component/student_bottom_navigation.dart';
 import 'package:denning_portal/screens/student_screens/setting_screen.dart';
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_macos_webview/flutter_macos_webview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

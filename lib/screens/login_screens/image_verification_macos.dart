@@ -54,7 +54,16 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
   String? deviceType;
   String? deviceID;
   bool _load = false;
-
+  bool _isVisible = false;
+  bool loader_visible = false;
+  List<String> fileTypes_list = [ "JPG",
+    "PNG",
+    "JPEG",
+    "GIF",
+    "jpg",
+    "jpeg",
+    "png",
+    "gif"];
 
 
   // get device information
@@ -189,7 +198,13 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
     }
   }
 
-
+  void showToast() {
+    setState(() {
+      _isVisible = !_isVisible;
+      loader_visible = false;
+      objFile = null;
+    });
+  }
   void _showInSnackBar(String message) {
     _scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
       content: Text(message),
@@ -244,7 +259,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
             ),
             Center(
               child: Text(
-                "Please upload a photo",
+                "Please upload a photo for verification",
                 style: TextStyle(
                     fontSize: 19.sp,
                     fontFamily: "Poppins-Bold",
@@ -254,6 +269,88 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
             Divider(
               thickness: 1,
               color: theme.isDark ? white : black,
+            ),
+
+            Stack(
+              fit: StackFit.passthrough,
+              children: <Widget>[
+                // Max Size Widget
+                Visibility(
+                  visible: _isVisible != true ? false : true,
+                  child: Visibility(
+                    visible: objFile?.path != null ? true : false,
+                    child: Container(
+                      height: 120,
+                      width: double.infinity,
+                      color: theme.isDark == true
+                          ? cardColor
+                          : whiteBottomBar,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ClipRRect(
+                            borderRadius:
+                            BorderRadius.circular(10.0),
+                            child: fileTypes_list.contains("${objFile?.extension}")
+                                ? Image.file(
+                              File("${objFile?.path}"),
+                              fit: BoxFit.contain,
+                            )
+                                : Column(
+                              children: [
+                                Image.asset(
+                                  "assets/images/pdf_icon.png",
+                                  fit: BoxFit.contain,
+                                ),
+                                SizedBox(
+                                  height: 2.h,
+                                ),
+                                Text(
+                                  "${objFile?.name}",
+                                  style: CustomTextStyle
+                                      .bodyRegular2(
+                                      context,
+                                      theme.isDark
+                                          ? white
+                                          : black),
+                                  maxLines: 2,
+                                  overflow:
+                                  TextOverflow.ellipsis,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  top: 10,
+                  right: 20,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: white,
+                      border: Border.all(
+                        color: Colors.white,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    height: 30,
+                    width: 30,
+                    child: Center(
+                      child: InkWell(
+                        onTap: showToast,
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 50.h,

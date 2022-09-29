@@ -6,7 +6,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
   camera_windows
   connectivity_plus_windows
-  desktop_webview_window
   flutter_platform_alert
   platform_device_id_windows
   smart_auth

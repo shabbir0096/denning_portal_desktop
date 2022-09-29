@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_linux
-  desktop_webview_window
   flutter_platform_alert
   platform_device_id_linux
   smart_auth

@@ -28,5 +28,11 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    	<string>The app uses photo library for uploading user pictures or documents in chat.</string>
+    	<key>LSApplicationQueriesSchemes</key>
+        	<array>
+        		<string>zoom.us</string>
+        	</array>
 </dict>
 </plist>
