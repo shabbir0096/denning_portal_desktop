@@ -136,7 +136,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
       request.fields["student_code"] = "$studentCode";
       request.fields["name"] = "$name";
       request.fields["fb_device_token"] = "null";
-      request.fields["device_type"] = "Mac";
+      request.fields["device_type"] = "macos";
       request.fields["ip_address"] = "${ipAddressValue}";
       request.fields["device_name"] = "$brand";
       request.fields["device_id"] = "$deviceID";
