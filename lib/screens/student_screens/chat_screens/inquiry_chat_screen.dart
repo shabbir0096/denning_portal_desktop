@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../component/webview_display_desktop.dart';
+import '../../../component/webview_display_macos.dart';
 import '../../../custom_widgets/custom_textStyle.dart';
 import '../../../custom_widgets/scaffold_messenge_snackbar.dart';
 import '../../../providers/internet_checker.dart';
@@ -364,8 +365,16 @@ class _InquiryChatScreenState extends State<InquiryChatScreen> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            WebviewDsiplayDesktop(
-                                                                Uri.decodeFull(snapshot.data['messages'][0]['history'][index]['attached_file_name']))));
+                                                            WebviewDisplayMacos(
+                                                                Uri.encodeFull(widget.data['history'][index]['attached_file_name']))));
+
+
+                                                // Navigator.push(
+                                                //     context,
+                                                //     MaterialPageRoute(
+                                                //         builder: (context) =>
+                                                //             WebviewDsiplayDesktop(
+                                                //                 Uri.decodeFull(snapshot.data['messages'][0]['history'][index]['attached_file_name']))));
                                               },
                                               child: Container(
                                                 height: 70.h,
