@@ -56,15 +56,16 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
   bool _load = false;
   bool _isVisible = false;
   bool loader_visible = false;
-  List<String> fileTypes_list = [ "JPG",
+  List<String> fileTypes_list = [
+    "JPG",
     "PNG",
     "JPEG",
     "GIF",
     "jpg",
     "jpeg",
     "png",
-    "gif"];
-
+    "gif"
+  ];
 
   // get device information
   getDeviceInfo() async {
@@ -123,10 +124,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
   }
 
   Future<void> registerStudent() async {
-
-    try{
-
-
+    try {
       final request = http.MultipartRequest(
         "POST",
         Uri.parse("https://denningportal.com/app/api/appapi/student_app_data"),
@@ -138,7 +136,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
       request.fields["student_code"] = "$studentCode";
       request.fields["name"] = "$name";
       request.fields["fb_device_token"] = "null";
-      request.fields["device_type"] = "${deviceType}";
+      request.fields["device_type"] = "Mac";
       request.fields["ip_address"] = "${ipAddressValue}";
       request.fields["device_name"] = "$brand";
       request.fields["device_id"] = "$deviceID";
@@ -154,14 +152,12 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
       }
       var resp = await request.send();
       if (resp.statusCode == 200) {
-        if(studentId == "765"){
-
-
-
+        if (studentId == "765") {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (BuildContext context) => new EmailLogin()),
-                  (Route<dynamic> route) => false);
+              MaterialPageRoute(
+                  builder: (BuildContext context) => new EmailLogin()),
+              (Route<dynamic> route) => false);
           CustomDialogueWindows(
               context,
               "Registration",
@@ -169,14 +165,12 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
               "Your device has been registered successfully. Please wait for the approval",
               "OK",
               AlertType.success);
-        }else
-
-
-
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (BuildContext context) => new EmailLogin()),
-                (Route<dynamic> route) => false);
+        } else
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => new EmailLogin()),
+              (Route<dynamic> route) => false);
         CustomDialogueWindows(
             context,
             "Registration",
@@ -205,14 +199,16 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
       objFile = null;
     });
   }
+
   void _showInSnackBar(String message) {
     _scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
       content: Text(message),
       duration: const Duration(seconds: 5),
     ));
   }
+
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
-  GlobalKey<ScaffoldMessengerState>();
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -271,87 +267,126 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
               color: theme.isDark ? white : black,
             ),
 
-            Stack(
-              fit: StackFit.passthrough,
-              children: <Widget>[
-                // Max Size Widget
-                Visibility(
-                  visible: _isVisible != true ? false : true,
-                  child: Visibility(
-                    visible: objFile?.path != null ? true : false,
-                    child: Container(
-                      height: 120,
-                      width: double.infinity,
-                      color: theme.isDark == true
-                          ? cardColor
-                          : whiteBottomBar,
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ClipRRect(
-                            borderRadius:
-                            BorderRadius.circular(10.0),
-                            child: fileTypes_list.contains("${objFile?.extension}")
-                                ? Image.file(
-                              File("${objFile?.path}"),
-                              fit: BoxFit.contain,
-                            )
-                                : Column(
-                              children: [
-                                Image.asset(
-                                  "assets/images/pdf_icon.png",
-                                  fit: BoxFit.contain,
-                                ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
-                                Text(
-                                  "${objFile?.name}",
-                                  style: CustomTextStyle
-                                      .bodyRegular2(
-                                      context,
-                                      theme.isDark
-                                          ? white
-                                          : black),
-                                  maxLines: 2,
-                                  overflow:
-                                  TextOverflow.ellipsis,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+            // Stack(
+            //   fit: StackFit.passthrough,
+            //   children: <Widget>[
+            //     // Max Size Widget
+            //     Visibility(
+            //       visible: _isVisible != true ? false : true,
+            //       child: Visibility(
+            //         visible: objFile?.path != null ? true : false,
+            //         child: Container(
+            //           height: 120,
+            //           width: double.infinity,
+            //           color: theme.isDark == true
+            //               ? cardColor
+            //               : whiteBottomBar,
+            //           child: Center(
+            //             child: Padding(
+            //               padding: const EdgeInsets.all(8.0),
+            //               child: ClipRRect(
+            //                 borderRadius:
+            //                 BorderRadius.circular(10.0),
+            //                 child: fileTypes_list.contains("${objFile?.extension}")
+            //                     ? Image.file(
+            //                   File("${objFile?.path}"),
+            //                   fit: BoxFit.contain,
+            //                 )
+            //                     : Column(
+            //                   children: [
+            //                     Image.asset(
+            //                       "assets/images/pdf_icon.png",
+            //                       fit: BoxFit.contain,
+            //                     ),
+            //                     SizedBox(
+            //                       height: 2.h,
+            //                     ),
+            //                     Text(
+            //                       "${objFile?.name}",
+            //                       style: CustomTextStyle
+            //                           .bodyRegular2(
+            //                           context,
+            //                           theme.isDark
+            //                               ? white
+            //                               : black),
+            //                       maxLines: 2,
+            //                       overflow:
+            //                       TextOverflow.ellipsis,
+            //                     )
+            //                   ],
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //
+            //     Positioned(
+            //       top: 10,
+            //       right: 20,
+            //       child: Container(
+            //         decoration: BoxDecoration(
+            //           color: white,
+            //           border: Border.all(
+            //             color: Colors.white,
+            //           ),
+            //           shape: BoxShape.circle,
+            //         ),
+            //         height: 30,
+            //         width: 30,
+            //         child: Center(
+            //           child: InkWell(
+            //             onTap: showToast,
+            //             child: Icon(
+            //               Icons.close,
+            //               color: Colors.red,
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
 
-                Positioned(
-                  top: 10,
-                  right: 20,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: white,
-                      border: Border.all(
-                        color: Colors.white,
-                      ),
-                      shape: BoxShape.circle,
-                    ),
-                    height: 30,
-                    width: 30,
-                    child: Center(
-                      child: InkWell(
-                        onTap: showToast,
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            SizedBox(
+              height: 10.h,
             ),
+
+            Padding(
+              padding: EdgeInsets.only(
+                   left: 10.w, right: 10.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Hint",
+                        style: TextStyle(
+                            fontFamily: "Poppins-SemiBold",
+                            fontSize: 20.sp,
+                            color: theme.isDark ? white : black),
+                      ),
+                      Text(
+                        "\u2022  Please upload a photo from your device (Mac).\n\u2022  Photo should be clear, should not be from too far or should not be from to near.\n\u2022  You can refer to picture that is attached here.",
+                        style: TextStyle(
+                            fontFamily: "Poppins-Regular",
+                            fontSize: 13.sp,
+                            color: theme.isDark ? white : black),
+                      ),
+
+                    ],
+                  ),
+                  Spacer(),
+                  Image.asset("assets/images/hint_photo.jpeg",width: 100.w,height: 150.h,)
+                ],
+              ),
+            ),
+
             SizedBox(
               height: 50.h,
             ),
@@ -391,13 +426,13 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
                         type: FileType.custom,
                         allowedExtensions: ['jpg', 'png', 'jpeg'],
                         withReadStream:
-                        true // this will return PlatformFile object with read stream
-                    );
+                            true // this will return PlatformFile object with read stream
+                        );
 
                     if (result != null) {
-                      bool exists =
-                      appData.any((file) => file['device_id'] == "$deviceID")
-                      as dynamic;
+                      bool exists = appData
+                              .any((file) => file['device_id'] == "$deviceID")
+                          as dynamic;
                       print("userExit or not: ${exists}");
                       if (exists == false) {
                         setState(() {
@@ -405,23 +440,22 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
                         });
                         print(objFile!.path);
                         _takePicture();
-                        } else {
+                      } else {
                         setState(() {
                           objFile = result.files.single;
                         });
                         print(objFile!.path);
-                         // objFile = null;
+                        // objFile = null;
 
-
-                      }    if(studentId =="765"){
+                      }
+                      if (studentId == "765") {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                new StudentBottomNavigation()),
-                                (Route<dynamic> route) => false);
+                                    new StudentBottomNavigation()),
+                            (Route<dynamic> route) => false);
                       } else {
-
                         print("_+_+_+_+_+_+_");
                         checkStatus();
                       }
@@ -436,29 +470,24 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
     );
   }
 
-
   Future<void> _takePictureMatch() async {
-      print("++++++++++++++++++");
+    print("++++++++++++++++++");
 
-      print("selected image path${objFile!.path}");
-      selectedImage = objFile!.path;
-      var bytes = File(objFile!.path!).readAsBytesSync();
-      String base64Image = base64Encode(bytes);
-      convertedImage = base64Image;
-
-
-
+    print("selected image path${objFile!.path}");
+    selectedImage = objFile!.path;
+    var bytes = File(objFile!.path!).readAsBytesSync();
+    String base64Image = base64Encode(bytes);
+    convertedImage = base64Image;
   }
+
   Future<void> _takePicture() async {
-      print("select image for register ${objFile!.path}");
-      selectedImage = objFile!.path;
-      var bytes = File(objFile!.path!).readAsBytesSync();
-      String base64Image = base64Encode(bytes);
-      convertedImage = base64Image;
-      // _showInSnackBar('Picture captured to: ${cameraImage!.path}');
-      registerStudent();
-
-
+    print("select image for register ${objFile!.path}");
+    selectedImage = objFile!.path;
+    var bytes = File(objFile!.path!).readAsBytesSync();
+    String base64Image = base64Encode(bytes);
+    convertedImage = base64Image;
+    // _showInSnackBar('Picture captured to: ${cameraImage!.path}');
+    registerStudent();
   }
 
   //checking image section
@@ -498,8 +527,8 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                new StudentBottomNavigation()),
-                (Route<dynamic> route) => false);
+                    new StudentBottomNavigation()),
+            (Route<dynamic> route) => false);
       } else {
         await EasyLoading.dismiss();
         setState(() {
@@ -507,11 +536,9 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
         });
         _showInSnackBar(
             "Try again by taking the photo ($cameraCount) out of 3");
-
       }
     } else {
-      _showInSnackBar(
-          "Try again by taking the photo ($cameraCount) out of 3");
+      _showInSnackBar("Try again by taking the photo ($cameraCount) out of 3");
       await EasyLoading.dismiss();
       setState(() {
         cameraCount++;
@@ -519,8 +546,6 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
       print("checking camera count$cameraCount");
     }
   }
-
-
 
   void checkStatus() async {
     for (var data in appData) {
@@ -530,7 +555,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) => new EmailLogin()),
-                (Route<dynamic> route) => false);
+            (Route<dynamic> route) => false);
 
         CustomDialogueWindows(
             context,
@@ -545,7 +570,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) => new EmailLogin()),
-                (Route<dynamic> route) => false);
+            (Route<dynamic> route) => false);
 
         CustomDialogueWindows(
             context,
@@ -565,13 +590,13 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => new OtpResgister(),),
-                  (Route<dynamic> route) => false);
+                builder: (BuildContext context) => new OtpResgister(),
+              ),
+              (Route<dynamic> route) => false);
         } else {
           checkImage(profileImageLink);
         }
       }
     }
   }
-
 }

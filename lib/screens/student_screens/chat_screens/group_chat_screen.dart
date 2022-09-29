@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../component/webview_display_desktop.dart';
+import '../../../component/webview_display_macos.dart';
 import '../../../custom_widgets/custom_textStyle.dart';
 import '../../../custom_widgets/scaffold_messenge_snackbar.dart';
 import '../../../providers/internet_checker.dart';
@@ -330,11 +331,20 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                                                 onTap: () {
                                                                   // final Uri _url = Uri.parse('${Uri.encodeFull(widget.data['history'][index]['attached_file_name'])}');
                                                                   // _launchInBrowser(_url);
+
                                                                   Navigator.push(
                                                                       context,
                                                                       MaterialPageRoute(
                                                                           builder: (context) =>
-                                                                              WebviewDsiplayDesktop('${Uri.encodeFull(widget.data['history'][index]['attached_file_name'])}')));
+                                                                              WebviewDisplayMacos(
+                                                                                  Uri.encodeFull(widget.data['history'][index]['attached_file_name']))));
+
+
+                                                                  // Navigator.push(
+                                                                  //     context,
+                                                                  //     MaterialPageRoute(
+                                                                  //         builder: (context) =>
+                                                                  //             WebviewDsiplayDesktop('${Uri.encodeFull(widget.data['history'][index]['attached_file_name'])}')));
                                                                 },
                                                                 child:
                                                                     Container(

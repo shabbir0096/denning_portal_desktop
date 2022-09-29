@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:denning_portal/component/webview_display_macos.dart';
 import 'package:denning_portal/custom_widgets/no_internet_screen.dart';
 import 'package:denning_portal/utils/colors.dart';
 import 'package:file_picker/file_picker.dart';
@@ -376,11 +377,17 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                                         )
                                                       : GestureDetector(
                                                           onTap: () {
+                                                            // Navigator.push(
+                                                            //     context,
+                                                            //     MaterialPageRoute(
+                                                            //         builder: (context) =>
+                                                            //             WebviewDsiplayDesktop(
+                                                            //                 Uri.encodeFull(widget.data['history'][index]['attached_file_name']))));
                                                             Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
                                                                     builder: (context) =>
-                                                                        WebviewDsiplayDesktop(
+                                                                       WebviewDisplayMacos(
                                                                             Uri.encodeFull(widget.data['history'][index]['attached_file_name']))));
                                                           },
                                                           child:  Container(
