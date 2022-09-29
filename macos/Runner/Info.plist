@@ -20,19 +20,23 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.business</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>zoom.us</string>
+	</array>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>$(PRODUCT_COPYRIGHT)</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The app uses photo library for uploading user pictures or documents in chat.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-    	<string>The app uses photo library for uploading user pictures or documents in chat.</string>
-    	<key>LSApplicationQueriesSchemes</key>
-        	<array>
-        		<string>zoom.us</string>
-        	</array>
+	<key>UILaunchStoryboardName</key>
+	<string></string>
 </dict>
 </plist>
