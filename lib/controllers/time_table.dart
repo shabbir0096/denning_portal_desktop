@@ -19,12 +19,12 @@ class TimeTableController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
     studentId = prefs.getString('studentId')!;
-    var data;
+    dynamic data;
 
     try {
       final response = await http.get(
         Uri.parse(
-            "${AppUrl.baseUrl}timetable_data?auth_token=${token}&student_id=${studentId}"),
+            "${AppUrl.baseUrl}timetable_data?auth_token=$token&student_id=$studentId"),
         headers: <String, String>{'authorization': BasicAuth.basicAuth},
       );
 
@@ -68,12 +68,12 @@ class TimeTableController {
       } else {
         AuthChecker.exceptionHandling(context, response.statusCode);
       }
-    } on TimeoutException catch (e) {
+    } on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
-    } on Error catch (e) {
+    } on Error {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
     return TimeTableModel.fromJson(data);

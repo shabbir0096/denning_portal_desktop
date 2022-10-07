@@ -35,7 +35,6 @@ class _StudentProfileState extends State<StudentProfile> {
       address = prefs.getString('address')!;
       image = prefs.getString('image')!;
 
-      print(name);
     });
   }
 
@@ -71,7 +70,7 @@ class _StudentProfileState extends State<StudentProfile> {
         actions: <Widget>[
           Theme(
             data: Theme.of(context).copyWith(
-                textTheme: TextTheme().apply(bodyColor: Colors.black),
+                textTheme: const TextTheme().apply(bodyColor: Colors.black),
                 iconTheme: IconThemeData(
                     color: theme.isDark ? white : black, size: 28.sp)),
             child: PopupMenuButton<int>(
@@ -87,7 +86,7 @@ class _StudentProfileState extends State<StudentProfile> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SettingScreen()));
+                              builder: (context) => const SettingScreen()));
                     },
                     child: Text(
                       "Setting",
@@ -104,7 +103,7 @@ class _StudentProfileState extends State<StudentProfile> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ChangePassword()));
+                              builder: (context) => const ChangePassword()));
                     },
                     child: Text(
                       "Change Password",
@@ -118,14 +117,14 @@ class _StudentProfileState extends State<StudentProfile> {
                   child: GestureDetector(
                     onTap: () async {
                       final prefs = await SharedPreferences.getInstance();
-                      String? token = await prefs.getString("token");
+                     // String? token = await prefs.getString("token");
                       prefs.remove("token");
                       prefs.remove("status");
                       Navigator.pop(context);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EmailLogin()));
+                              builder: (context) => const EmailLogin()));
                     },
                     child: Text(
                       "Logout",
@@ -160,7 +159,7 @@ class _StudentProfileState extends State<StudentProfile> {
                       child: CircleAvatar(
                         radius: 70,
                         backgroundImage: image!.isEmpty
-                            ? AssetImage(
+                            ? const AssetImage(
                             "assets/images/default_profile_image.jpeg")
                         as ImageProvider
                             : NetworkImage(image!),
@@ -180,7 +179,7 @@ class _StudentProfileState extends State<StudentProfile> {
                       child: Container(
                         width: 250.w,
                         child: Text(
-                          "${name}",
+                          "$name",
                           style: CustomTextStyle.headingSemiBold(
                               context, theme.isDark ? white : purple),
                           textAlign: TextAlign.center,
@@ -191,7 +190,7 @@ class _StudentProfileState extends State<StudentProfile> {
                       height: 10.h,
                     ),
                     Text(
-                      "${studentCode}",
+                      "$studentCode",
                       style: CustomTextStyle.bodySemiBold(
                           context, theme.isDark ? white : black),
                     ),
@@ -232,7 +231,7 @@ class _StudentProfileState extends State<StudentProfile> {
                                 Container(
                                   width: 210.w,
                                   child: Text(
-                                    "${email}",
+                                    "$email",
                                     style: CustomTextStyle.bodyRegular(
                                         context, theme.isDark ? white : black),
                                     maxLines: 3,
@@ -269,7 +268,7 @@ class _StudentProfileState extends State<StudentProfile> {
                                       context, theme.isDark ? white : purple),
                                 ),
                                 Text(
-                                  "${phone}",
+                                  "$phone",
                                   style: CustomTextStyle.bodyRegular(
                                       context, theme.isDark ? white : black),
                                   maxLines: 3,
@@ -294,30 +293,28 @@ class _StudentProfileState extends State<StudentProfile> {
                           SizedBox(
                             height: 20.h,
                           ),
-                          Container(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Address",
-                                    style: CustomTextStyle.titleSemiBold(
-                                        context, theme.isDark ? white : purple),
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Address",
+                                  style: CustomTextStyle.titleSemiBold(
+                                      context, theme.isDark ? white : purple),
+                                ),
+                                Container(
+                                  width: 200.w,
+                                  child: Text(
+                                    "$address",
+                                    style: CustomTextStyle.bodyRegular(
+                                        context,
+                                        theme.isDark ? white : black),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  Container(
-                                    width: 200.w,
-                                    child: Text(
-                                      "${address}",
-                                      style: CustomTextStyle.bodyRegular(
-                                          context,
-                                          theme.isDark ? white : black),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -338,23 +335,22 @@ class _StudentProfileState extends State<StudentProfile> {
     switch (item) {
       case 0:
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => SettingScreen()));
+            .push(MaterialPageRoute(builder: (context) => const SettingScreen()));
         break;
       case 1:
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => ChangePassword()));
+            .push(MaterialPageRoute(builder: (context) => const ChangePassword()));
         break;
       case 2:
-        print("User Logged out");
-        print("New Broadcast Clicked");
+
         final prefs = await SharedPreferences.getInstance();
-        String? token = await prefs.getString("token");
+       // String? token = await prefs.getString("token");
         prefs.remove("token");
         prefs.remove("status");
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => EmailLogin()));
+            context, MaterialPageRoute(builder: (context) => const EmailLogin()));
         break;
-        break;
+
     }
   }
 }

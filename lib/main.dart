@@ -26,9 +26,9 @@ Future<void> main() async {
   runApp(MyApp(token, status));
   configLoading();
   doWhenWindowReady(() {
-    final initialSize = Size(1024 , 720);
-    final minSize = Size(1024, 720);
-    final maxSize = Size(1920 , 1200);
+    const initialSize = Size(1024 , 720);
+    const minSize = Size(1024, 720);
+    const maxSize = Size(1920 , 1200);
     appWindow.maxSize = maxSize;
     appWindow.minSize = minSize;
     appWindow.size = initialSize; //default size
@@ -44,11 +44,11 @@ void configLoading() {
     ..loadingStyle = EasyLoadingStyle.dark
     ..indicatorSize = 45.0
     ..radius = 10.0
-    ..progressColor = Color(0xff233421)
-    ..backgroundColor = Color(0xff233421)
-    ..indicatorColor = Color(0xff233421)
-    ..textColor = Color(0xff233421)
-    ..maskColor = Color(0xff233421)
+    ..progressColor = const Color(0xff233421)
+    ..backgroundColor = const Color(0xff233421)
+    ..indicatorColor = const Color(0xff233421)
+    ..textColor = const Color(0xff233421)
+    ..maskColor = const Color(0xff233421)
     ..userInteractions = true
     ..dismissOnTap = false
     ..customAnimation = CustomAnimation();
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
   var status;
   String deviceTokenToSendPushNotification = "";
 
-  MyApp(this.token, this.status);
+  MyApp(this.token, this.status, {Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
       ],
 
       child: ScreenUtilInit(
-        designSize: Size(360, 690),
+        designSize: const Size(360, 690),
         minTextAdapt: true,
         splitScreenMode: true,
           builder: (context , child) {
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
             theme: themeChanger.isDark ? dark_mode : light_mode,
 
             home: token == null || status == null
-                ? SplashScreen()
+                ? const SplashScreen()
                 : StudentBottomNavigation(),
 
             debugShowCheckedModeBanner: false,

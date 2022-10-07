@@ -40,10 +40,10 @@ class _NoticeBoardQueryState extends State<NoticeBoardQuery> {
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
 
     return Scaffold(
@@ -52,7 +52,7 @@ class _NoticeBoardQueryState extends State<NoticeBoardQuery> {
         padding: EdgeInsets.only(left: 10.w, right: 10.w),
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
@@ -64,15 +64,15 @@ class _NoticeBoardQueryState extends State<NoticeBoardQuery> {
                   style: CustomTextStyle.headingSemiBold2(
                       context, theme.isDark ? white : black),
                 ),
-                Spacer(),
+                const Spacer(),
                 FloatingActionButton(
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AddInquiry()));
+                            builder: (context) => const AddInquiry()));
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.add,
                     color: white,
                   ),
@@ -110,11 +110,11 @@ class _NoticeBoardQueryState extends State<NoticeBoardQuery> {
                               itemCount: snapshot.data!['messages'].length,
                               itemBuilder: (context, int index) {
                                 DateTime date =
-                                new DateTime.fromMillisecondsSinceEpoch(
+                                DateTime.fromMillisecondsSinceEpoch(
                                     int.parse(snapshot.data['messages'][index]
                                     ['history'][0]['timestamp']) *
                                         1000);
-                                var format = new DateFormat("dd MMM, yyyy");
+                                var format = DateFormat("dd MMM, yyyy");
                                 var dateString = format.format(date);
                                 return Column(
                                   children: [
@@ -129,7 +129,7 @@ class _NoticeBoardQueryState extends State<NoticeBoardQuery> {
                                                         [index])));
                                       },
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
+                                        borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(8.0),
                                           bottomRight: Radius.circular(8.0),
                                           bottomLeft: Radius.circular(8.0),
@@ -187,11 +187,11 @@ class _NoticeBoardQueryState extends State<NoticeBoardQuery> {
                                                           fontFamily:
                                                           "Poppins-Regular"),
                                                     ),
-                                                    Spacer(),
+                                                    const Spacer(),
                                                     Theme(
                                                       data: Theme.of(context)
                                                           .copyWith(
-                                                          textTheme: TextTheme().apply(
+                                                          textTheme: const TextTheme().apply(
                                                               bodyColor: theme
                                                                   .isDark
                                                                   ? cardColor
@@ -204,7 +204,7 @@ class _NoticeBoardQueryState extends State<NoticeBoardQuery> {
                                                                 : black,
                                                           )),
                                                       child: PopupMenuButton<int>(
-                                                        child: Icon(
+                                                        child: const Icon(
                                                           Icons.more_vert_rounded,
                                                           size: 20,
                                                         ),
@@ -299,7 +299,7 @@ class _NoticeBoardQueryState extends State<NoticeBoardQuery> {
                                                     SizedBox(
                                                       width: 10.w,
                                                     ),
-                                                    Text("${dateString}",
+                                                    Text(dateString,
                                                         style: TextStyle(
                                                             color: theme.isDark
                                                                 ? white

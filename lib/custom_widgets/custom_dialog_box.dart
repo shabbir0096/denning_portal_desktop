@@ -18,20 +18,20 @@ CustomDialogueBox(context, var title, var desc, AlertType alertType) {
         color: white,
         fontFamily: "Poppins_Regular" ,fontSize: 12.sp,
       ),
-      animationDuration: Duration(milliseconds: 400),
+      animationDuration: const Duration(milliseconds: 400),
       alertBorder: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
-        side: BorderSide(
+        side: const BorderSide(
           color: black,
         ),
       ),
-      titleStyle: TextStyle(
+      titleStyle: const TextStyle(
         color: white,
         fontFamily: "Poppins_Regular",
       ),
       constraints: BoxConstraints.expand(width: 300.w),
       //First to chars "55" represents transparency of color
-      overlayColor: Color(0x55000000),
+      overlayColor: const Color(0x55000000),
       alertElevation: 0,
       alertAlignment: Alignment.center);
 

@@ -35,12 +35,17 @@ class _PrivateMessagesState extends State<PrivateMessages> {
     super.initState();
     getUser();
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    searchController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
     final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     return Scaffold(
@@ -48,7 +53,7 @@ class _PrivateMessagesState extends State<PrivateMessages> {
         padding: EdgeInsets.only(left: 10.w, right: 10.w),
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -75,10 +80,10 @@ class _PrivateMessagesState extends State<PrivateMessages> {
                           color: theme.isDark ? white : black, width: 1.0),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    enabledBorder: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                       borderSide:
-                      new BorderSide(color: theme.isDark ? white : black),
+                      BorderSide(color: theme.isDark ? white : black),
                     ),
                     border: InputBorder.none,
                     hintText: "search",
@@ -118,7 +123,7 @@ class _PrivateMessagesState extends State<PrivateMessages> {
                       child: ListView.builder(
                         itemCount: snapshot.data!['messages'].length,
                         itemBuilder: (context, int index) {
-                          var private_name = snapshot.data['messages'][index]['sender_data']['sender_name'][0];
+                          var privateName = snapshot.data['messages'][index]['sender_data']['sender_name'][0];
                           if (searchController.text.isEmpty) {
                             return Column(
                               children: [
@@ -138,7 +143,7 @@ class _PrivateMessagesState extends State<PrivateMessages> {
                                         backgroundColor: lightPurple,
                                         radius: 30,
                                         child: Text(
-                                          "${private_name}",
+                                          "$privateName",
                                           style: CustomTextStyle.bodySemiBold(
                                               context,
                                               theme.isDark ? white : black),
@@ -187,7 +192,7 @@ class _PrivateMessagesState extends State<PrivateMessages> {
                                         backgroundColor: lightPurple,
                                         radius: 30,
                                         child: Text(
-                                          "${private_name}",
+                                          "$privateName",
                                           style: CustomTextStyle.bodySemiBold(
                                               context,
                                               theme.isDark ? white : black),
@@ -211,7 +216,7 @@ class _PrivateMessagesState extends State<PrivateMessages> {
                               ],
                             );
                           }
-                          return SizedBox(
+                          return const SizedBox(
                             height: 0,
                           );
                         },
@@ -219,7 +224,7 @@ class _PrivateMessagesState extends State<PrivateMessages> {
                     );
                   }
                 }),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
           ],

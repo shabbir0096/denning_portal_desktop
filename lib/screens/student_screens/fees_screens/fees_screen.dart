@@ -43,9 +43,9 @@ class _FeesScreenState extends State<FeesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
     final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
@@ -111,7 +111,7 @@ class _FeesScreenState extends State<FeesScreen> {
                               //         builder: (context) => Checkout()));
                             },
                             child: ClipRRect(
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(8.0),
                                 bottomRight: Radius.circular(8.0),
                                 bottomLeft: Radius.circular(8.0),
@@ -169,7 +169,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                                               ? white
                                                               : black),
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Text(
                                                   "${snapshot.data!.fees!.unpaid![0].paymentReceiptNo}",
                                                   style: CustomTextStyle
@@ -195,7 +195,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                                               ? white
                                                               : black),
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Text(
                                                   "Rs. ${snapshot.data!.fees!.unpaid![0].amount} ",
                                                   style: CustomTextStyle
@@ -221,9 +221,9 @@ class _FeesScreenState extends State<FeesScreen> {
                                                               ? white
                                                               : black),
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Text(
-                                                  "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.unpaid![0].issuanceDate!))}",
+                                                  DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.unpaid![0].issuanceDate!)),
                                                   style: CustomTextStyle
                                                       .bodyRegular(
                                                           context,
@@ -247,9 +247,9 @@ class _FeesScreenState extends State<FeesScreen> {
                                                               ? white
                                                               : black),
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Text(
-                                                  "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.unpaid![0].paymentDeadline!))}",
+                                                  DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.unpaid![0].paymentDeadline!)),
                                                   style: CustomTextStyle
                                                       .bodyRegular(
                                                           context,
@@ -298,9 +298,9 @@ class _FeesScreenState extends State<FeesScreen> {
                                       )
                                     ],
                                   ),
-                                  child: new MaterialButton(
+                                  child: MaterialButton(
                                     elevation: 0,
-                                    child: new Text(
+                                    child: Text(
                                       'Paid',
                                       style: TextStyle(
                                         fontFamily: "Poppins-SemiBold",
@@ -310,9 +310,9 @@ class _FeesScreenState extends State<FeesScreen> {
                                       ),
                                     ),
                                     textColor: Colors.white,
-                                    shape: new RoundedRectangleBorder(
+                                    shape: RoundedRectangleBorder(
                                       borderRadius:
-                                          new BorderRadius.circular(10.0),
+                                          BorderRadius.circular(10.0),
                                       side: BorderSide(
                                           color: paid != true
                                               ? white
@@ -351,9 +351,9 @@ class _FeesScreenState extends State<FeesScreen> {
                                       )
                                     ],
                                   ),
-                                  child: new MaterialButton(
+                                  child: MaterialButton(
                                     elevation: 0,
-                                    child: new Text(
+                                    child: Text(
                                       'Unpaid',
                                       style: TextStyle(
                                         fontFamily: "Poppins-SemiBold",
@@ -363,9 +363,9 @@ class _FeesScreenState extends State<FeesScreen> {
                                       ),
                                     ),
                                     textColor: Colors.white,
-                                    shape: new RoundedRectangleBorder(
+                                    shape: RoundedRectangleBorder(
                                       borderRadius:
-                                          new BorderRadius.circular(10.0),
+                                          BorderRadius.circular(10.0),
                                       side: BorderSide(
                                           color: unpaid != true
                                               ? white
@@ -409,7 +409,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                           return Column(
                                             children: [
                                               ClipRRect(
-                                                borderRadius: BorderRadius.only(
+                                                borderRadius: const BorderRadius.only(
                                                   topLeft: Radius.circular(8.0),
                                                   bottomRight:
                                                       Radius.circular(8.0),
@@ -456,7 +456,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "${snapshot.data!.fees!.paid![index].paymentReceiptNo}",
                                                               style: CustomTextStyle
@@ -482,7 +482,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "Rs. ${snapshot.data!.fees!.paid![index].amount}",
                                                               style: CustomTextStyle
@@ -508,7 +508,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "Cash",
                                                               style: CustomTextStyle
@@ -534,9 +534,9 @@ class _FeesScreenState extends State<FeesScreen> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
-                                                              "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.paid![index].issuanceDate!))}",
+                                                              DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.paid![index].issuanceDate!)),
                                                               style: CustomTextStyle
                                                                   .bodyRegular(
                                                                       context,
@@ -560,9 +560,9 @@ class _FeesScreenState extends State<FeesScreen> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
-                                                              "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.paid![index].paymentDate!))}",
+                                                              DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.paid![index].paymentDate!)),
                                                               style: CustomTextStyle
                                                                   .bodyRegular(
                                                                       context,
@@ -603,7 +603,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                           return Column(
                                             children: [
                                               ClipRRect(
-                                                borderRadius: BorderRadius.only(
+                                                borderRadius: const BorderRadius.only(
                                                   topLeft: Radius.circular(8.0),
                                                   bottomRight:
                                                       Radius.circular(8.0),
@@ -650,7 +650,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "${snapshot.data!.fees!.unpaid![index].paymentReceiptNo}",
                                                               style: CustomTextStyle
@@ -676,7 +676,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "Rs. ${snapshot.data!.fees!.unpaid![index].amount}",
                                                               style: CustomTextStyle
@@ -702,7 +702,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "Cash",
                                                               style: CustomTextStyle
@@ -728,9 +728,9 @@ class _FeesScreenState extends State<FeesScreen> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
-                                                              "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.unpaid![index].issuanceDate!))}",
+                                                              DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.unpaid![index].issuanceDate!)),
                                                               style: CustomTextStyle
                                                                   .bodyRegular(
                                                                       context,
@@ -754,9 +754,9 @@ class _FeesScreenState extends State<FeesScreen> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
-                                                              "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.unpaid![index].paymentDeadline!))}",
+                                                              DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!.fees!.unpaid![index].paymentDeadline!)),
                                                               style: CustomTextStyle
                                                                   .bodyRegular(
                                                                       context,
@@ -785,6 +785,6 @@ class _FeesScreenState extends State<FeesScreen> {
                   ),
                 );
               }
-            }): NoInternetScreen());
+            }): const NoInternetScreen());
   }
 }

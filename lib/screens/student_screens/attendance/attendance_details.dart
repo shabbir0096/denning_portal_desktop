@@ -18,13 +18,6 @@ class AttendanceDetails extends StatefulWidget {
 
 class _AttendanceDetailsState extends State<AttendanceDetails> {
 
-  final _colors = [
-    Colors.blue.withOpacity(0.1),
-    Colors.red.withOpacity(0.1),
-    Colors.yellow.withOpacity(0.1),
-    Colors.green.withOpacity(0.1),
-  ];
-
  AttendanceController attendanceController=AttendanceController();
  var courseId=0;
 
@@ -38,7 +31,6 @@ class _AttendanceDetailsState extends State<AttendanceDetails> {
 
 
     });
-    print(studentId);
   }
 
   @override
@@ -51,10 +43,10 @@ class _AttendanceDetailsState extends State<AttendanceDetails> {
   Widget build(BuildContext context) {
 
 
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     return Scaffold(
       appBar: AppBar(
@@ -104,10 +96,10 @@ class _AttendanceDetailsState extends State<AttendanceDetails> {
                     ),
                     PieChart(
                       dataMap: {
-                        "Attended Classes":double.parse(snapshot.data!['attendance']['${courseId}']['total_present']['records'] ),
-                        "Missed Classes": double.parse(snapshot.data!['attendance']['${courseId}']['total_absent']['records'] ),
-                        "Online Classes":double.parse(snapshot.data!['attendance']['${courseId}']['total_online']['records'] ),
-                        "Leaves": double.parse(snapshot.data!['attendance']['${courseId}']['total_leaves']['records'] )
+                        "Attended Classes":double.parse(snapshot.data!['attendance']['$courseId']['total_present']['records'] ),
+                        "Missed Classes": double.parse(snapshot.data!['attendance']['$courseId']['total_absent']['records'] ),
+                        "Online Classes":double.parse(snapshot.data!['attendance']['$courseId']['total_online']['records'] ),
+                        "Leaves": double.parse(snapshot.data!['attendance']['$courseId']['total_leaves']['records'] )
 
                       },
                       chartValuesOptions: ChartValuesOptions(
@@ -140,12 +132,12 @@ class _AttendanceDetailsState extends State<AttendanceDetails> {
                     ),
                     Expanded(
                       child: ListView.builder(
-                          itemCount: snapshot.data!['attendance']['${courseId}']['history'].length,
+                          itemCount: snapshot.data!['attendance']['$courseId']['history'].length,
                           itemBuilder: (context, int index) {
                             return Column(
                               children: [
                                 ClipRRect(
-                                  borderRadius: BorderRadius.only(
+                                  borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(8.0),
                                     bottomRight: Radius.circular(8.0),
                                     bottomLeft: Radius.circular(8.0),
@@ -172,12 +164,38 @@ class _AttendanceDetailsState extends State<AttendanceDetails> {
                                         children: [
                                           Row(
                                             children: [
-                                              Text("${ snapshot.data!['attendance']['${courseId}']['history'][index]['timestamp_format']}",style: CustomTextStyle.bodyRegular(context , theme.isDark? white: black),),
-                                              Spacer(),
-                                              Text("${ snapshot.data!['attendance']['${courseId}']['history'][index]['section_name']}",style: CustomTextStyle.bodyRegular(context , theme.isDark? white: black),),
-                                              Spacer(),
+                                              Text("${ snapshot.data!['attendance']['$courseId']['history'][index]['timestamp_format']}",style: CustomTextStyle.bodyRegular(context , theme.isDark? white: black),),
+                                              const Spacer(),
+                                              Text("${ snapshot.data!['attendance']['$courseId']['history'][index]['section_name']}",style: CustomTextStyle.bodyRegular(context , theme.isDark? white: black),),
+                                              const Spacer(),
 
-                                              Text("${ snapshot.data!['attendance']['${courseId}']['history'][index]['status_name']}",style: TextStyle(color: snapshot.data!['attendance']['${courseId}']['history'][index]['status_name'] == "present" ? Colors.green : (snapshot.data!['attendance']['${ courseId }']['history'][index]['status_name'] == "absent") ? errorColor : theme.isDark? white: black ,fontFamily: "Poppins-Bold",fontSize: 12.sp,),)
+                                              Text(
+                                                "${snapshot.data!['attendance']['${courseId}']['history'][index]['status_name']}"
+                                                ,
+                                                style: TextStyle(
+                                                  color: snapshot.data!['attendance']['${courseId}']
+                                                  ['history']
+                                                  [index][
+                                                  'status_name'] ==
+                                                      "present"
+                                                      ? Colors.green
+                                                      : (snapshot.data!['attendance']
+                                                  ['${courseId}']['history'][index][
+                                                  'status_name'] ==
+                                                      "absent")
+                                                      ? errorColor
+                                                      : (snapshot.data!['attendance']['${courseId}']['history'][index]
+                                                  ['status_name'] ==
+                                                      "online")
+                                                      ? purple
+                                                      : theme.isDark
+                                                      ? white
+                                                      : black,
+                                                  fontFamily:
+                                                  "Poppins-Bold",
+                                                  fontSize: 10.sp,
+                                                ),
+                                              )
 
                                             ],
                                           ),

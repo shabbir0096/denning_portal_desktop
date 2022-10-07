@@ -10,7 +10,7 @@ class FeeController {
   Future<FeeModel?> feeHistory(String? token, String? studentId) async {
     final response = await http.get(
       Uri.parse(
-          "${AppUrl.baseUrl}fees_data?auth_token=${token}&student_id=${studentId}"),
+          "${AppUrl.baseUrl}fees_data?auth_token=$token&student_id=$studentId"),
       headers: <String, String>{'authorization': BasicAuth.basicAuth},
     );
 

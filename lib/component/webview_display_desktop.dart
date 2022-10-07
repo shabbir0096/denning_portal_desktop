@@ -10,14 +10,14 @@ import '../providers/theme.dart';
 
 class WebviewDsiplayDesktop extends StatefulWidget {
     String  url;
-  WebviewDsiplayDesktop(this.url);
+  WebviewDsiplayDesktop(this.url, {Key? key}) : super(key: key);
 
   @override
   State<WebviewDsiplayDesktop> createState() => _WebviewDsiplayDesktopState();
 }
 
 class _WebviewDsiplayDesktopState extends State<WebviewDsiplayDesktop> {
-  WebviewController _controller = WebviewController();
+  final WebviewController _controller = WebviewController();
   @override
   void initState() {
     // TODO: implement initState
@@ -26,7 +26,6 @@ class _WebviewDsiplayDesktopState extends State<WebviewDsiplayDesktop> {
   }
   Future<void> initPlatformState() async {
     await _controller.initialize();
-    print("url is ${widget.url}");
     setState(()  {
       _controller.url.listen((url) {});
       _controller.loadUrl(Uri.encodeFull(widget.url));
@@ -45,13 +44,19 @@ class _WebviewDsiplayDesktopState extends State<WebviewDsiplayDesktop> {
                 if (snapshot.hasData ) {
                   return   Expanded(child: Webview(_controller));
                 } else {
-                  return LinearProgressIndicator();
+                  return const LinearProgressIndicator();
                 }
               }),
 
         ],
       ),
     );
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _controller.dispose();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {

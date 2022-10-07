@@ -28,14 +28,9 @@ class VleMacos extends StatefulWidget {
 }
 
 class _VleMacosState extends State<VleMacos> {
-
-
-  final textController = TextEditingController();
   String email = '';
-  String url_link = '';
-  var subscription;
+  String urlLink = '';
   String connectionStatus = '';
-  bool? _webviewAvailable;
 
   Future<void> getUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,9 +40,9 @@ class _VleMacosState extends State<VleMacos> {
   }
 
   Future getUrl() async {
-    var convertedData;
+    dynamic convertedData;
     try {
-      Map data = {"user[email]": "${email}"};
+      Map data = {"user[email]": email};
       final response = await http.post(
         Uri.parse(
             "https://www.denningportal.com/vle/webservice/rest/server.php?wstoken=7ec7ce8f1b1afea19a63361b34a99dd8&wsfunction=auth_userkey_request_login_url&moodlewsrestformat=json"),
@@ -57,25 +52,25 @@ class _VleMacosState extends State<VleMacos> {
         convertedData = json.decode(response.body);
         if (convertedData != null) {
           setState(() {
-            url_link = convertedData['loginurl'].toString();
+            urlLink = convertedData['loginurl'].toString();
           });
 
           if (convertedData['loginurl'] == null) {
             CustomScaffoldWidget.buildErrorSnackbar(
-                context, "${convertedData['message']}" + "$data");
+                context, "${convertedData['message']}" "$data");
           } else {
-            // initPlatformState(url_link);
+            // initPlatformState(urlLink);
           }
         }
       } else {
         AuthChecker.exceptionHandling(context, response.statusCode);
       }
-    } on TimeoutException catch (e) {
+    } on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
-    } on Error catch (e) {
+    } on Error {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
   }
@@ -92,32 +87,26 @@ class _VleMacosState extends State<VleMacos> {
   Future<void> _onOpenPressed(PresentationStyle presentationStyle) async {
     final webview = FlutterMacOSWebView(
       onOpen: () => print('Opened'),
-      onClose: () =>  Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => StudentBottomNavigation()),
-      (route) => false),
+      onClose: ((){
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => StudentBottomNavigation()),
+                (route) => false);
+      }),
       onPageStarted: (url) => print('Page started: $url'),
       onPageFinished: (url) => print('Page finished: $url'),
       onWebResourceError: (err) {
-        print(
-          'Error: ${err.errorCode}, ${err.errorType}, ${err.domain}, ${err
-              .description}',
-        );
       },
     );
 
     await webview.open(
       javascriptEnabled: true,
-      url: url_link,
+      url: urlLink,
       presentationStyle: presentationStyle,
-      size: Size(1920.0.h, 1080.0.w),
+      size: Size(1024.0.h, 720.0.w),
       userAgent:
       'Mozilla/5.0 (iPhone; CPU iPhone OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
     );
-
-    // await Future.delayed(Duration(seconds: 5));
-    // await webview.close();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -199,13 +188,13 @@ class _VleMacosState extends State<VleMacos> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          url_link == ''
+          urlLink == ''
               ? Center(
               child:
               CircularProgressIndicator(
                 color: theme.isDark ? white : cardColor,
               ))
-              :  Center(
+              :  const Center(
                 child: SizedBox()
               ),
         ],
@@ -221,9 +210,7 @@ class _VleMacosState extends State<VleMacos> {
             .push(MaterialPageRoute(builder: (context) => SettingScreen()));
         break;
       case 1:
-        print("New Broadcast Clicked");
         final pref = await SharedPreferences.getInstance();
-        String? token = await pref.getString("token");
         pref.remove("token");
         pref.remove("status");
         Navigator.pop(context);
@@ -232,7 +219,6 @@ class _VleMacosState extends State<VleMacos> {
             MaterialPageRoute(builder: (context) => const EmailLogin()));
         break;
       case 2:
-        print("User Logged out");
         // Navigator.of(context).pushAndRemoveUntil(
         //     MaterialPageRoute(builder: (context) => LoginPage()),
         //         (route) => false);

@@ -14,7 +14,6 @@ import 'package:denning_portal/screens/student_screens/setting_screen.dart';
 import 'package:denning_portal/utils/colors.dart';
 import 'package:denning_portal/providers/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -34,7 +33,6 @@ class StudentDashboard extends StatefulWidget {
 }
 
 class _StudentDashboardState extends State<StudentDashboard> {
-  int _value = 0;
   bool events = true;
   bool notices = false;
   String? name = "";
@@ -45,12 +43,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
   String? status = "";
 
   DashboardController dashboardController = DashboardController();
-  var subscription;
   String connectionStatus = '';
 
   Future getAttendance(String? token, String? studentId) async {
     var convertedData;
-    Map data = {"auth_token": "${token}", "student_id": "${studentId}"};
+    Map data = {"auth_token": "$token", "student_id": "$studentId"};
     final response = await http.post(
       Uri.parse("https://denningportal.com/app/api/appapi/dashboard_data"),
       headers: <String, String>{'authorization': BasicAuth.basicAuth},
@@ -75,7 +72,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
       Navigator.pop(context);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => EmailLogin()));
+          context, MaterialPageRoute(builder: (context) => const EmailLogin()));
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Your Session has been expired, please try to login again',
@@ -88,7 +85,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
       ));
     } else if (response.statusCode == 200) {
       convertedData = json.decode(response.body);
-      print("helllo this is text$convertedData");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -112,30 +108,25 @@ class _StudentDashboardState extends State<StudentDashboard> {
       token = prefs.getString('token')!;
       studentId = prefs.getString('studentId');
       status = prefs.getString('status');
-      print("Status: ${status}");
-      print(name);
-      print("image: $image");
     });
   }
 
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
     getUser().then((value) => getAttendance(token, studentId));
   }
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
     final _width = MediaQuery.of(context).size.width;
     Color _dynamicTextColor = purple;
     final theme = Provider.of<ThemeChanger>(context);
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
-    print(studentId);
 
     return Scaffold(
       //backgroundColor: theme.isDark? black: white,
@@ -177,7 +168,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
           // ), ),
           Theme(
             data: Theme.of(context).copyWith(
-              textTheme: TextTheme().apply(bodyColor: Colors.black),
+              textTheme: const TextTheme().apply(bodyColor: Colors.black),
               // iconTheme: IconThemeData(color: white, size: 28.sp),
             ),
             child: PopupMenuButton<int>(
@@ -214,14 +205,14 @@ class _StudentDashboardState extends State<StudentDashboard> {
                   child: GestureDetector(
                     onTap: () async {
                       final prefs = await SharedPreferences.getInstance();
-                      String? token = await prefs.getString("token");
+                      //String? token = await prefs.getString("token");
                       prefs.remove("token");
                       prefs.remove("status");
                       Navigator.pop(context);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EmailLogin()));
+                              builder: (context) => const EmailLogin()));
                     },
                     child: Text(
                       "Logout",
@@ -264,22 +255,26 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            StudentProfile()));
+                                            const StudentProfile()));
                               },
                               child: Row(
                                 children: [
                                   CircleAvatar(
-                                    backgroundColor:
-                                        theme.isDark == true ? white : white,
-                                    radius: 65,
+                                    backgroundColor: theme.isDark == true
+                                        ? white
+                                        : black,
+                                    radius: 65.r,
                                     child: CircleAvatar(
-                                      radius: 61,
+                                      backgroundColor: theme.isDark == true
+                                          ? black
+                                          : white,
+                                      radius: 61.r,
                                       child: CircleAvatar(
-                                        radius: 57,
+                                        radius: 57.r,
                                         backgroundImage: image!.isEmpty
                                             ? AssetImage(
-                                                    "assets/images/default_profile_image.jpeg")
-                                                as ImageProvider
+                                            "assets/images/default_profile_image.jpeg")
+                                        as ImageProvider
                                             : NetworkImage(image!),
                                         child: const SizedBox.shrink(),
                                       ),
@@ -300,13 +295,13 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                             theme.isDark ? white : black),
                                       ),
                                       Text(
-                                        "${name}",
+                                        "$name",
                                         style: CustomTextStyle.titleSemiBold(
                                             context,
                                             theme.isDark ? white : black),
                                       ),
                                       Text(
-                                        "${studentCode}",
+                                        "$studentCode",
                                         style: CustomTextStyle.bodySemiBold(
                                             context,
                                             theme.isDark ? white : black),
@@ -379,7 +374,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                     ),
                                   ],
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 if (events == true && notices == false) ...[
                                   GestureDetector(
                                     onTap: () {
@@ -387,7 +382,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  EventsScreen()));
+                                                  const EventsScreen()));
                                     },
                                     child: Row(
                                       children: [
@@ -407,7 +402,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => Notices()));
+                                              builder: (context) => const Notices()));
                                     },
                                     child: Text(
                                       "See all (${snapshot.data!['notices'] == null ? '0' : snapshot.data!['notices'].length})",
@@ -425,7 +420,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                             if (events == true && notices == false) ...[
                               snapshot.data!['events'] == null
                                   ? ClipRRect(
-                                      borderRadius: BorderRadius.only(
+                                      borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(8.0),
                                         bottomRight: Radius.circular(8.0),
                                         bottomLeft: Radius.circular(8.0),
@@ -458,7 +453,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                         ),
                                       ),
                                     )
-                                  : Container(
+                                  : SizedBox(
                                       height: 150.h,
                                       width: _width * 0.96,
                                       child: ListView.builder(
@@ -485,7 +480,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                 },
                                                 child: ClipRRect(
                                                   borderRadius:
-                                                      BorderRadius.only(
+                                                      const BorderRadius.only(
                                                     topLeft:
                                                         Radius.circular(8.0),
                                                     bottomRight:
@@ -553,7 +548,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                               .fill,
                                                                         )),
                                                               SizedBox(
-                                                                width: 15.w,
+                                                                width: 5.w,
                                                               ),
                                                               Flexible(
                                                                 child: Column(
@@ -574,7 +569,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                                 ? white
                                                                                 : purple),
                                                                         maxLines:
-                                                                            3,
+                                                                            2,
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                       ),
@@ -585,7 +580,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                     Center(
                                                                       child:
                                                                           Text(
-                                                                        "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!['events'][index]['notice_date']))}",
+                                                                        DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!['events'][index]['notice_date'])),
                                                                         style: CustomTextStyle.bodyRegular2(
                                                                             context,
                                                                             theme.isDark
@@ -620,7 +615,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                             ] else if (notices == true && events == false) ...[
                               snapshot.data!['notices'] == null
                                   ? ClipRRect(
-                                      borderRadius: BorderRadius.only(
+                                      borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(8.0),
                                         bottomRight: Radius.circular(8.0),
                                         bottomLeft: Radius.circular(8.0),
@@ -682,7 +677,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                 },
                                                 child: ClipRRect(
                                                   borderRadius:
-                                                      BorderRadius.only(
+                                                      const BorderRadius.only(
                                                     topLeft:
                                                         Radius.circular(8.0),
                                                     bottomRight:
@@ -739,7 +734,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                       [
                                                                       'notice_date'] ==
                                                                   null
-                                                              ? SizedBox(
+                                                              ? const SizedBox(
                                                                   height: 0,
                                                                 )
                                                               : Row(
@@ -767,7 +762,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                     Center(
                                                                       child:
                                                                           Text(
-                                                                        "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!['notices'][index]['notice_date']))}",
+                                                                        DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!['notices'][index]['notice_date'])),
                                                                         style: CustomTextStyle.bodyRegular(
                                                                             context,
                                                                             theme.isDark
@@ -783,7 +778,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                       [
                                                                       'notice_time'] ==
                                                                   null
-                                                              ? SizedBox(
+                                                              ? const SizedBox(
                                                                   height: 0,
                                                                 )
                                                               : Row(
@@ -851,7 +846,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                     widget.select(1);
                                   },
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.only(
+                                    borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(8.0),
                                       bottomRight: Radius.circular(8.0),
                                       bottomLeft: Radius.circular(8.0),
@@ -894,7 +889,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                             color: lightPurple,
                                             child: Center(
                                               child: Text(
-                                                "${DateFormat('EEEE').format(DateTime.now())}",
+                                                DateFormat('EEEE').format(DateTime.now()),
                                                 style: CustomTextStyle
                                                     .bodyRegular2(
                                                         context,
@@ -969,7 +964,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                     ),
                                   ),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 Column(
                                   children: [
                                     snapshot.data!['attendance'] != null
@@ -982,7 +977,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                           AttendanceDetails()));
                                             },
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.only(
+                                              borderRadius: const BorderRadius.only(
                                                 topLeft: Radius.circular(8.0),
                                                 bottomRight:
                                                     Radius.circular(8.0),
@@ -1028,7 +1023,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                           ? white
                                                                           : purple),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Icon(
                                                               Icons
                                                                   .domain_verification_rounded,
@@ -1061,7 +1056,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                           ? green
                                                                           : green),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "${snapshot.data!['attendance']['total_present']['percentage']}",
                                                               style: CustomTextStyle
@@ -1087,7 +1082,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                           ? errorColor
                                                                           : errorColor),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "${snapshot.data!['attendance']['total_absent']['percentage']}",
                                                               style: CustomTextStyle
@@ -1113,7 +1108,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "${snapshot.data!['attendance']['total_leaves']['percentage']}",
                                                               style: CustomTextStyle
@@ -1125,30 +1120,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                             ),
                                                           ],
                                                         ),
-                                                        Spacer(),
-                                                        // GestureDetector(
-                                                        //   onTap: (){
-                                                        //     print("Whats up");
-                                                        //   },
-                                                        //   child: ClipRRect(
-                                                        //     borderRadius: BorderRadius.only(
-                                                        //       topLeft: Radius.circular(8.0),
-                                                        //       bottomRight: Radius.circular(8.0),
-                                                        //       bottomLeft: Radius.circular(8.0),
-                                                        //       topRight: Radius.circular(8.0),
-                                                        //     ),
-                                                        //     child: Container(
-                                                        //       width: double.infinity,
-                                                        //       color: purple,
-                                                        //       height: 35.h,
-                                                        //       child: Center(
-                                                        //         child: Text("Mark Attendance",style: TextStyle(color: theme.isDark == true
-                                                        //             ? white
-                                                        //             : black,fontFamily: "Poppins-Regular",fontSize: 13.sp),),
-                                                        //       ),
-                                                        //     ),
-                                                        //   ),
-                                                        // ),
+                                                        const Spacer(),
                                                         SizedBox(
                                                           height: 12.h,
                                                         ),
@@ -1168,7 +1140,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                           AttendanceDetails()));
                                             },
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.only(
+                                              borderRadius: const BorderRadius.only(
                                                 topLeft: Radius.circular(8.0),
                                                 bottomRight:
                                                     Radius.circular(8.0),
@@ -1214,7 +1186,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                           ? white
                                                                           : purple),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Icon(
                                                               Icons
                                                                   .domain_verification_rounded,
@@ -1247,7 +1219,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                           ? green
                                                                           : green),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "No data",
                                                               style: CustomTextStyle
@@ -1273,7 +1245,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                           ? errorColor
                                                                           : errorColor),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "No data",
                                                               style: CustomTextStyle
@@ -1299,7 +1271,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                           ? white
                                                                           : black),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(
                                                               "No data",
                                                               style: CustomTextStyle
@@ -1311,49 +1283,8 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                             ),
                                                           ],
                                                         ),
-                                                        Spacer(),
-                                                        // GestureDetector(
-                                                        //   onTap: () {
-                                                        //     print("Whats up");
-                                                        //   },
-                                                        //   child: ClipRRect(
-                                                        //     borderRadius:
-                                                        //         BorderRadius.only(
-                                                        //       topLeft:
-                                                        //           Radius.circular(
-                                                        //               8.0),
-                                                        //       bottomRight:
-                                                        //           Radius.circular(
-                                                        //               8.0),
-                                                        //       bottomLeft:
-                                                        //           Radius.circular(
-                                                        //               8.0),
-                                                        //       topRight:
-                                                        //           Radius.circular(
-                                                        //               8.0),
-                                                        //     ),
-                                                        //     child: Container(
-                                                        //       width:
-                                                        //           double.infinity,
-                                                        //       color: purple,
-                                                        //       height: 35.h,
-                                                        //       child: Center(
-                                                        //         child: Text(
-                                                        //           "Mark Attendance",
-                                                        //           style: TextStyle(
-                                                        //               color: theme.isDark ==
-                                                        //                       true
-                                                        //                   ? white
-                                                        //                   : black,
-                                                        //               fontFamily:
-                                                        //                   "Poppins-Regular",
-                                                        //               fontSize:
-                                                        //                   13.sp),
-                                                        //         ),
-                                                        //       ),
-                                                        //     ),
-                                                        //   ),
-                                                        // ),
+                                                        const Spacer(),
+
                                                         SizedBox(
                                                           height: 12.h,
                                                         ),
@@ -1373,10 +1304,10 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    FeesScreen()));
+                                                    const FeesScreen()));
                                       },
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
+                                        borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(8.0),
                                           bottomRight: Radius.circular(8.0),
                                           bottomLeft: Radius.circular(8.0),
@@ -1415,7 +1346,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                   ? white
                                                                   : purple),
                                                     ),
-                                                    Spacer(),
+                                                    const Spacer(),
                                                     Icon(
                                                       Icons.attach_money,
                                                       color:
@@ -1445,7 +1376,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                   ? white
                                                                   : black),
                                                     ),
-                                                    Spacer(),
+                                                    const Spacer(),
                                                     snapshot.data!['fees'] ==
                                                             null
                                                         ? Text(
@@ -1482,7 +1413,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                                   ? white
                                                                   : black),
                                                     ),
-                                                    Spacer(),
+                                                    const Spacer(),
                                                     snapshot.data![
                                                     'fees'] ==
                                                         null
@@ -1496,7 +1427,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                                               : purple),
                                                     )
                                                         : Text(
-                                                      "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!['fees'][0]['payment_deadline']))}",
+                                                      DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!['fees'][0]['payment_deadline'])),
                                                       style: CustomTextStyle
                                                           .bodyRegular2(
                                                           context,
@@ -1524,7 +1455,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                       );
                     }
                   }))
-          : NoInternetScreen(),
+          : const NoInternetScreen(),
     );
   }
 
@@ -1536,16 +1467,14 @@ class _StudentDashboardState extends State<StudentDashboard> {
             .push(MaterialPageRoute(builder: (context) => SettingScreen()));
         break;
       case 1:
-        print("New Broadcast Clicked");
         final prefs = await SharedPreferences.getInstance();
-        String? token = await prefs.getString("token");
+      //  String? token = await prefs.getString("token");
         prefs.remove("token");
         prefs.remove("status");
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => EmailLogin()));
+            context, MaterialPageRoute(builder: (context) => const EmailLogin()));
         break;
       case 2:
-        print("User Logged out");
 
         break;
     }

@@ -1,4 +1,4 @@
-import 'package:denning_portal/component/student_bottom_navigation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_macos_webview/flutter_macos_webview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,8 +11,8 @@ import '../providers/theme.dart';
 import '../utils/colors.dart';
 
 class WebviewDisplayMacos extends StatefulWidget {
-  var urlLink;
-  WebviewDisplayMacos(this.urlLink);
+  dynamic urlLink;
+  WebviewDisplayMacos(this.urlLink, {Key? key}) : super(key: key);
 
   @override
   State<WebviewDisplayMacos> createState() => _WebviewDisplayMacosState();
@@ -32,14 +32,19 @@ class _WebviewDisplayMacosState extends State<WebviewDisplayMacos> {
   Future<void> _onOpenPressed(PresentationStyle presentationStyle) async {
     final webview = FlutterMacOSWebView(
       onOpen: () => print('Opened'),
-      onClose: () => Navigator.pop(context),
+      onClose: ((){
+        Navigator.pop(context);
+
+      }),
       onPageStarted: (url) => print('Page started: $url'),
       onPageFinished: (url) => print('Page finished: $url'),
       onWebResourceError: (err) {
-        print(
+        if (kDebugMode) {
+          print(
           'Error: ${err.errorCode}, ${err.errorType}, ${err.domain}, ${err
               .description}',
         );
+        }
       },
     );
 
@@ -91,7 +96,7 @@ class _WebviewDisplayMacosState extends State<WebviewDisplayMacos> {
               CircularProgressIndicator(
                 color: theme.isDark ? white : cardColor,
               ))
-              :  Center(
+              :  const Center(
               child: SizedBox()
           ),
         ],

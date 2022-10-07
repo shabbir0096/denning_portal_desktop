@@ -6,7 +6,6 @@ import 'package:denning_portal/screens/login_screens/image_verification_macos.da
 import 'package:denning_portal/services/utilities/app_url.dart';
 import 'package:denning_portal/services/utilities/basic_auth.dart';
 import 'package:denning_portal/utils/colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +20,7 @@ import '../../models/LoginModel.dart';
 import '../../providers/internet_checker.dart';
 import '../../providers/theme.dart';
 import '../../services/utilities/authication_check.dart';
+import 'dart:io' as Io;
 
 class EmailLogin extends StatefulWidget {
   const EmailLogin({Key? key}) : super(key: key);
@@ -56,7 +56,7 @@ class _EmailLoginState extends State<EmailLogin> {
       Map data = {"email": email, "password": password};
       http.Response response = await http
           .post(
-            Uri.parse("${AppUrl.login}"),
+            Uri.parse(AppUrl.login),
             headers: <String, String>{'authorization': BasicAuth.basicAuth},
             body: data,
           )
@@ -93,13 +93,14 @@ class _EmailLoginState extends State<EmailLogin> {
                     'schoolLogo', "assets/images/denning_logo_white.png")
                 : prefs.setString('schoolLogo', loginModelValues.schoolLogo!);
             prefs.setString('studentQrcode', loginModelValues.studentQrcode!);
-            // Navigator.pushAndRemoveUntil(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (BuildContext context) => ImageVerificationDesktop(
-            //               token: "${loginModelValues.token}",
-            //             )),
-            //     (Route<dynamic> route) => false);
+            Io.Platform.isWindows ?
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => ImageVerificationDesktop(
+                          token: "${loginModelValues.token}",
+                        )),
+                (Route<dynamic> route) => false) :
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -123,12 +124,12 @@ class _EmailLoginState extends State<EmailLogin> {
       } else {
         AuthChecker.exceptionHandling(context, response.statusCode);
       }
-    } on TimeoutException catch (e) {
+    } on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
-    } on Error catch (e) {
+    } on Error {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
   }
@@ -184,12 +185,18 @@ class _EmailLoginState extends State<EmailLogin> {
     getUser();
     super.initState();
   }
-
+    @override
+  void dispose() {
+    // TODO: implement dispose
+      emailController.dispose();
+      passwordController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
     final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
@@ -202,288 +209,286 @@ class _EmailLoginState extends State<EmailLogin> {
             height: 690.h,
             child: Center(
               child: SingleChildScrollView(
-                child: Container(
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 40.h,
-                          ),
-                          Image.asset(
-                            theme.isDark
-                                ? "assets/images/denning_logo_white.png"
-                                : "assets/images/denning_logo_black.png",
-                            width: 160.w,
-                            height: 160.h,
-                            fit: BoxFit.contain,
-                          ),
-                          SizedBox(
-                            height: 40.h,
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                height: 50.h,
-                                child: VerticalDivider(
-                                  color: theme.isDark ? white : black,
-                                  thickness: 4,
-                                ),
+                child: Padding(
+                  padding:
+                      EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 40.h,
+                        ),
+                        Image.asset(
+                          theme.isDark
+                              ? "assets/images/denning_logo_white.png"
+                              : "assets/images/denning_logo_black.png",
+                          width: 160.w,
+                          height: 160.h,
+                          fit: BoxFit.contain,
+                        ),
+                        SizedBox(
+                          height: 40.h,
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              height: 50.h,
+                              child: VerticalDivider(
+                                color: theme.isDark ? white : black,
+                                thickness: 4,
                               ),
-                              SizedBox(
-                                width: 10.w,
-                              ),
-                              Text(
-                                "Login",
-                                style: CustomTextStyle.heading1(
-                                    context, theme.isDark ? white : black),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 30.h,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(_width * 0.01),
-                            child: Theme(
-                              child: TextFormField(
-                                textAlignVertical: TextAlignVertical.center,
-                                textAlign: TextAlign.left,
-                                autofocus: false,
-                                controller: emailController,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                cursorColor: theme.isDark ? white : black,
-                                style: TextStyle(
-                                    color: theme.isDark ? white : black),
-                                decoration: InputDecoration(
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 20),
-                                    labelText: "Enter your email",
-                                    fillColor: white,
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: theme.isDark ? white : black,
-                                          width: 2.0),
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    enabledBorder: new OutlineInputBorder(
-                                      borderRadius:
-                                          new BorderRadius.circular(10.0),
-                                      borderSide: new BorderSide(
-                                          color: theme.isDark ? white : black),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0)),
-                                        borderSide: BorderSide(
-                                          width: 1,
-                                          color: errorColor,
-                                        )),
-                                    focusedErrorBorder: OutlineInputBorder(
+                            ),
+                            SizedBox(
+                              width: 10.w,
+                            ),
+                            Text(
+                              "Login",
+                              style: CustomTextStyle.heading1(
+                                  context, theme.isDark ? white : black),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(_width * 0.01),
+                          child: Theme(
+                            child: TextFormField(
+                              textAlignVertical: TextAlignVertical.center,
+                              textAlign: TextAlign.left,
+                              autofocus: false,
+                              controller: emailController,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              cursorColor: theme.isDark ? white : black,
+                              style: TextStyle(
+                                  color: theme.isDark ? white : black),
+                              decoration: InputDecoration(
+                                  contentPadding:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  labelText: "Enter your email",
+                                  fillColor: white,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: theme.isDark ? white : black,
+                                        width: 2.0),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                        color: theme.isDark ? white : black),
+                                  ),
+                                  errorBorder: const OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10.0)),
                                       borderSide: BorderSide(
                                         width: 1,
                                         color: errorColor,
-                                      ),
+                                      )),
+                                  focusedErrorBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0)),
+                                    borderSide: BorderSide(
+                                      width: 1,
+                                      color: errorColor,
                                     ),
-                                    alignLabelWithHint: true,
-                                    errorStyle: TextStyle(color: errorColor),
-                                    border: InputBorder.none,
-                                    prefixIcon: Icon(
-                                      Icons.mail,
+                                  ),
+                                  alignLabelWithHint: true,
+                                  errorStyle: const TextStyle(color: errorColor),
+                                  border: InputBorder.none,
+                                  prefixIcon: Icon(
+                                    Icons.mail,
+                                    color: theme.isDark ? white : black,
+                                  ),
+                                  hintText: "Enter your email",
+                                  hintStyle: TextStyle(
+                                    fontFamily: "Poppins-Regular",
+                                    fontSize: 12.sp,
+                                    color: Colors.grey,
+                                  ),
+                                  labelStyle: TextStyle(
                                       color: theme.isDark ? white : black,
-                                    ),
-                                    hintText: "Enter your email",
-                                    hintStyle: TextStyle(
                                       fontFamily: "Poppins-Regular",
-                                      fontSize: 12.sp,
-                                      color: Colors.grey,
-                                    ),
-                                    labelStyle: TextStyle(
-                                        color: theme.isDark ? white : black,
-                                        fontFamily: "Poppins-Regular",
-                                        fontSize: 12.sp)),
-                                validator: (value) {
-                                  if (value!.isEmpty ||
-                                      !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                          .hasMatch(value)) {
-                                    return 'Enter a valid email!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (String? value) {
-                                  email = value!;
-                                },
-                              ),
-                              data: Theme.of(context).copyWith(
-                                primaryColor: theme.isDark ? white : black,
-                              ),
+                                      fontSize: 12.sp)),
+                              validator: (value) {
+                                if (value!.isEmpty ||
+                                    !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                        .hasMatch(value)) {
+                                  return 'Enter a valid email!';
+                                }
+                                return null;
+                              },
+                              onSaved: (String? value) {
+                                email = value!;
+                              },
+                            ),
+                            data: Theme.of(context).copyWith(
+                              primaryColor: theme.isDark ? white : black,
                             ),
                           ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(_width * 0.01),
-                            child: Theme(
-                              child: TextFormField(
-                                textAlignVertical: TextAlignVertical.center,
-                                textAlign: TextAlign.left,
-                                autofocus: false,
-                                controller: passwordController,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                cursorColor: theme.isDark ? white : black,
-                                obscureText: isPassword,
-                                style: TextStyle(
-                                    color: theme.isDark ? white : black),
-                                decoration: InputDecoration(
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 20),
-                                    labelText: "Enter your password",
-                                    fillColor: white,
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: theme.isDark ? white : black,
-                                          width: 2.0),
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    enabledBorder: new OutlineInputBorder(
-                                      borderRadius:
-                                          new BorderRadius.circular(10.0),
-                                      borderSide: new BorderSide(
-                                          color: theme.isDark ? white : black),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0)),
-                                        borderSide: BorderSide(
-                                          width: 1,
-                                          color: errorColor,
-                                        )),
-                                    focusedErrorBorder: OutlineInputBorder(
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(_width * 0.01),
+                          child: Theme(
+                            child: TextFormField(
+                              textAlignVertical: TextAlignVertical.center,
+                              textAlign: TextAlign.left,
+                              autofocus: false,
+                              controller: passwordController,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              cursorColor: theme.isDark ? white : black,
+                              obscureText: isPassword,
+                              style: TextStyle(
+                                  color: theme.isDark ? white : black),
+                              decoration: InputDecoration(
+                                  contentPadding:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  labelText: "Enter your password",
+                                  fillColor: white,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: theme.isDark ? white : black,
+                                        width: 2.0),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                        color: theme.isDark ? white : black),
+                                  ),
+                                  errorBorder: const OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10.0)),
                                       borderSide: BorderSide(
                                         width: 1,
                                         color: errorColor,
-                                      ),
+                                      )),
+                                  focusedErrorBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0)),
+                                    borderSide: BorderSide(
+                                      width: 1,
+                                      color: errorColor,
                                     ),
-                                    alignLabelWithHint: true,
-                                    errorStyle: TextStyle(color: errorColor),
-                                    border: InputBorder.none,
-                                    prefixIcon: Icon(
-                                      Icons.lock,
+                                  ),
+                                  alignLabelWithHint: true,
+                                  errorStyle: const TextStyle(color: errorColor),
+                                  border: InputBorder.none,
+                                  prefixIcon: Icon(
+                                    Icons.lock,
+                                    color: theme.isDark ? white : black,
+                                  ),
+                                  suffixIcon: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isPassword = !isPassword;
+                                      });
+                                    },
+                                    child: isPassword == false
+                                        ? Icon(
+                                            Icons.visibility,
+                                            color:
+                                                theme.isDark ? white : black,
+                                          )
+                                        : Icon(
+                                            Icons.visibility_off,
+                                            color:
+                                                theme.isDark ? white : black,
+                                          ),
+                                  ),
+                                  hintText: "Enter your password",
+                                  hintStyle: TextStyle(
+                                    fontFamily: "Poppins-Regular",
+                                    fontSize: 12.sp,
+                                    color: Colors.grey,
+                                  ),
+                                  labelStyle: TextStyle(
                                       color: theme.isDark ? white : black,
-                                    ),
-                                    suffixIcon: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isPassword = !isPassword;
-                                        });
-                                      },
-                                      child: isPassword == false
-                                          ? Icon(
-                                              Icons.visibility,
-                                              color:
-                                                  theme.isDark ? white : black,
-                                            )
-                                          : Icon(
-                                              Icons.visibility_off,
-                                              color:
-                                                  theme.isDark ? white : black,
-                                            ),
-                                    ),
-                                    hintText: "Enter your password",
-                                    hintStyle: TextStyle(
                                       fontFamily: "Poppins-Regular",
-                                      fontSize: 12.sp,
-                                      color: Colors.grey,
-                                    ),
-                                    labelStyle: TextStyle(
-                                        color: theme.isDark ? white : black,
-                                        fontFamily: "Poppins-Regular",
-                                        fontSize: 12.sp)),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Enter your password';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (String? value) {
-                                  password = value!;
-                                },
-                              ),
-                              data: Theme.of(context).copyWith(
-                                primaryColor: theme.isDark ? white : black,
-                              ),
+                                      fontSize: 12.sp)),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Enter your password';
+                                }
+                                return null;
+                              },
+                              onSaved: (String? value) {
+                                password = value!;
+                              },
+                            ),
+                            data: Theme.of(context).copyWith(
+                              primaryColor: theme.isDark ? white : black,
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Checkbox(
-                                value: isChecked,
-                                onChanged: _handleRemeberme,
-                                side: BorderSide(
-                                  color: theme.isDark ? white : black,
-                                ),
-                                checkColor: theme.isDark ? black : white,
-                                hoverColor: theme.isDark ? white : black,
-                                activeColor: theme.isDark ? white : black,
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Checkbox(
+                              value: isChecked,
+                              onChanged: _handleRemeberme,
+                              side: BorderSide(
+                                color: theme.isDark ? white : black,
                               ),
-                              Text(
-                                "Remember me",
+                              checkColor: theme.isDark ? black : white,
+                              hoverColor: theme.isDark ? white : black,
+                              activeColor: theme.isDark ? white : black,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            Text(
+                              "Remember me",
+                              style: CustomTextStyle.bodyRegular(
+                                  context, theme.isDark ? white : black),
+                            ),
+                            const Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ForgetScreen()));
+                              },
+                              child: Text(
+                                "Forget Password ?",
                                 style: CustomTextStyle.bodyRegular(
                                     context, theme.isDark ? white : black),
                               ),
-                              Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ForgetScreen()));
-                                },
-                                child: Text(
-                                  "Forget Password ?",
-                                  style: CustomTextStyle.bodyRegular(
-                                      context, theme.isDark ? white : black),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                          CustomButtonW(
-                            buttonText: "Login",
-                            isChecked: isChecked,
-                            buttonClicked: buttonClicked,
-                            onPress: () async {
-                              if (isOnline! == false) {
-                                CustomScaffoldWidget.buildErrorSnackbar(context,
-                                    "Please enable your internet connection");
-                              } else if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        CustomButtonW(
+                          buttonText: "Login",
+                          isChecked: isChecked,
+                          buttonClicked: buttonClicked,
+                          onPress: () async {
+                            if (isOnline! == false) {
+                              CustomScaffoldWidget.buildErrorSnackbar(context,
+                                  "Please enable your internet connection");
+                            } else if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
 
-                                postData();
-                              }
-                            },
-                          )
-                        ],
-                      ),
+                              postData();
+                            }
+                          },
+                        )
+                      ],
                     ),
                   ),
                 ),

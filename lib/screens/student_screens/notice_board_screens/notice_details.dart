@@ -7,7 +7,7 @@ import '../../../providers/theme.dart';
 
 class NoticeDescription extends StatefulWidget {
   dynamic data;
-  NoticeDescription(this.data);
+  NoticeDescription(this.data, {Key? key}) : super(key: key);
 
   @override
   State<NoticeDescription> createState() => _NoticeDescriptionState();
@@ -16,10 +16,10 @@ class NoticeDescription extends StatefulWidget {
 class _NoticeDescriptionState extends State<NoticeDescription> {
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     return Scaffold(
       appBar: AppBar(

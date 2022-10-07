@@ -6,7 +6,7 @@ import '../../utils/colors.dart';
 import '../../providers/theme.dart';
 
 class LeaveStatus extends StatefulWidget {
-  LeaveStatus({Key? key}) : super(key: key);
+  const LeaveStatus({Key? key}) : super(key: key);
 
   @override
   _LeaveStatusState createState() => _LeaveStatusState();
@@ -52,7 +52,7 @@ class _LeaveStatusState extends State<LeaveStatus> {
       body: Stepper(
         controlsBuilder: (BuildContext context, ControlsDetails details) {
           return Row(
-            children: <Widget>[],
+            children: const <Widget>[],
           );
         },
         steps: getSteps(theme),
@@ -75,7 +75,7 @@ class _LeaveStatusState extends State<LeaveStatus> {
   List<Step> getSteps(theme) {
     return [
       Step(
-        title: new Text(
+        title: Text(
           'Public Law',
           style: CustomTextStyle.bodyRegular(context , theme.isDark? white: black),
         ),
@@ -86,7 +86,7 @@ class _LeaveStatusState extends State<LeaveStatus> {
                   border: Border.all(
                     color: Colors.white,
                   ),
-                  borderRadius: BorderRadius.all(Radius.circular(5))),
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: Container(
                 height: 200.h,
                 color:  theme.isDark? cardColor: cardColorlight,
@@ -110,7 +110,7 @@ class _LeaveStatusState extends State<LeaveStatus> {
                         ],
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 1,
                       color: Colors.white,
                     ),
@@ -149,7 +149,7 @@ class _LeaveStatusState extends State<LeaveStatus> {
         ),
       ),
       Step(
-        title: new Text(
+        title: Text(
           'Public Law',
           style: CustomTextStyle.bodyRegular(context , theme.isDark? white: black),
         ),
@@ -160,7 +160,7 @@ class _LeaveStatusState extends State<LeaveStatus> {
                   border: Border.all(
                     color: Colors.white,
                   ),
-                  borderRadius: BorderRadius.all(Radius.circular(5))),
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: Container(
                 height: 200.h,
                 color:  theme.isDark? cardColor: cardColorlight,
@@ -184,7 +184,7 @@ class _LeaveStatusState extends State<LeaveStatus> {
                         ],
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 1,
                       color: Colors.white,
                     ),

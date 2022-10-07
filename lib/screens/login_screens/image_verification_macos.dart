@@ -29,18 +29,18 @@ class ImageVerificationMacos extends StatefulWidget {
   final String? token;
 
   /// Default Constructor
-  ImageVerificationMacos({Key? key, required this.token}) : super(key: key);
+  const ImageVerificationMacos({Key? key, required this.token}) : super(key: key);
 
   @override
   State<ImageVerificationMacos> createState() => _ImageVerificationMacosState();
 }
 
 class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
+  dynamic appData;
   PlatformFile? objFile;
   String name = "";
   String studentCode = "";
   String studentId = "";
-  var appData;
   String? convertedImage;
   String? selectedImage;
   String status = "approved";
@@ -53,10 +53,9 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
   String? mac;
   String? deviceType;
   String? deviceID;
-  bool _load = false;
   bool _isVisible = false;
-  bool loader_visible = false;
-  List<String> fileTypes_list = [
+  bool loaderVisible = false;
+  List<String> fileTypesList = [
     "JPG",
     "PNG",
     "JPEG",
@@ -113,7 +112,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
       // return json.decode(response.body);
 
     } else {
-      print("server Errorr");
+
     }
   }
 
@@ -132,12 +131,12 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
       request.headers
           .addAll(<String, String>{'authorization': BasicAuth.basicAuth});
       request.fields["auth_token"] = "${widget.token}";
-      request.fields["student_id"] = "$studentId";
-      request.fields["student_code"] = "$studentCode";
-      request.fields["name"] = "$name";
+      request.fields["student_id"] = studentId;
+      request.fields["student_code"] = studentCode;
+      request.fields["name"] = name;
       request.fields["fb_device_token"] = "null";
       request.fields["device_type"] = "macos";
-      request.fields["ip_address"] = "${ipAddressValue}";
+      request.fields["ip_address"] = "$ipAddressValue";
       request.fields["device_name"] = "$brand";
       request.fields["device_id"] = "$deviceID";
       request.fields["data_points"] = "null";
@@ -146,7 +145,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
       if (objFile == null) {
         request.fields["profile_image"] = '';
       } else {
-        request.files.add(new http.MultipartFile(
+        request.files.add(http.MultipartFile(
             "profile_image", objFile!.readStream!, objFile!.size,
             filename: objFile!.name));
       }
@@ -156,7 +155,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => new EmailLogin()),
+                  builder: (BuildContext context) => const EmailLogin()),
               (Route<dynamic> route) => false);
           CustomDialogueWindows(
               context,
@@ -165,12 +164,13 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
               "Your device has been registered successfully. Please wait for the approval",
               "OK",
               AlertType.success);
-        } else
+        } else {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => new EmailLogin()),
+                  builder: (BuildContext context) => const EmailLogin()),
               (Route<dynamic> route) => false);
+        }
         CustomDialogueWindows(
             context,
             "Registration",
@@ -195,7 +195,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
   void showToast() {
     setState(() {
       _isVisible = !_isVisible;
-      loader_visible = false;
+      loaderVisible = false;
       objFile = null;
     });
   }
@@ -240,7 +240,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EmailLogin()));
+                    MaterialPageRoute(builder: (context) => const EmailLogin()));
               },
               icon: Icon(
                 Icons.arrow_back_ios,
@@ -288,7 +288,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
               //               child: ClipRRect(
               //                 borderRadius:
               //                 BorderRadius.circular(10.0),
-              //                 child: fileTypes_list.contains("${objFile?.extension}")
+              //                 child: fileTypesList.contains("${objFile?.extension}")
               //                     ? Image.file(
               //                   File("${objFile?.path}"),
               //                   fit: BoxFit.contain,
@@ -385,7 +385,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
                         ],
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Image.asset("assets/images/hint_photo.jpeg",width: 100.w,height: 200.h,),
                   ],
                 ),
@@ -437,18 +437,17 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
                         bool exists = appData
                                 .any((file) => file['device_id'] == "$deviceID")
                             as dynamic;
-                        print("userExit or not: ${exists}");
                         if (exists == false) {
                           setState(() {
                             objFile = result.files.single;
                           });
-                          print(objFile!.path);
+
                           _takePicture();
                         } else {
                           setState(() {
                             objFile = result.files.single;
                           });
-                          print(objFile!.path);
+
                           // objFile = null;
 
                         }
@@ -457,10 +456,9 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      new StudentBottomNavigation()),
+                                      StudentBottomNavigation()),
                               (Route<dynamic> route) => false);
                         } else {
-                          print("_+_+_+_+_+_+_");
                           checkStatus();
                         }
                       } else {}
@@ -476,9 +474,6 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
   }
 
   Future<void> _takePictureMatch() async {
-    print("++++++++++++++++++");
-
-    print("selected image path${objFile!.path}");
     selectedImage = objFile!.path;
     var bytes = File(objFile!.path!).readAsBytesSync();
     String base64Image = base64Encode(bytes);
@@ -486,7 +481,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
   }
 
   Future<void> _takePicture() async {
-    print("select image for register ${objFile!.path}");
+
     selectedImage = objFile!.path;
     var bytes = File(objFile!.path!).readAsBytesSync();
     String base64Image = base64Encode(bytes);
@@ -507,12 +502,11 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
       status: 'loading...',
       maskType: EasyLoadingMaskType.black,
     );
-    print('EasyLoading show');
-    CircularProgressIndicator();
+    const CircularProgressIndicator();
     final imgBase64Str = await networkImageToBase64(loginProfileImage);
 
     Map data = {
-      "base1": "data:image/png;base64,${imgBase64Str}",
+      "base1": "data:image/png;base64,$imgBase64Str",
       "base2": "data:image/png;base64,$convertedImage"
     };
 
@@ -532,7 +526,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    new StudentBottomNavigation()),
+                    StudentBottomNavigation()),
             (Route<dynamic> route) => false);
       } else {
         await EasyLoading.dismiss();
@@ -548,7 +542,6 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
       setState(() {
         cameraCount++;
       });
-      print("checking camera count$cameraCount");
     }
   }
 
@@ -559,7 +552,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => new EmailLogin()),
+                builder: (BuildContext context) => const EmailLogin()),
             (Route<dynamic> route) => false);
 
         CustomDialogueWindows(
@@ -574,7 +567,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => new EmailLogin()),
+                builder: (BuildContext context) => const EmailLogin()),
             (Route<dynamic> route) => false);
 
         CustomDialogueWindows(
@@ -595,7 +588,7 @@ class _ImageVerificationMacosState extends State<ImageVerificationMacos> {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => new OtpResgister(),
+                builder: (BuildContext context) => const OtpResgister(),
               ),
               (Route<dynamic> route) => false);
         } else {

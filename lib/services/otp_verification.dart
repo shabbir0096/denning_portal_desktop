@@ -3,15 +3,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:math';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/colors.dart';
 
 
 class OtpServices{
   Future postOtpRequest( phoneFormatted,context) async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     var rng = Random();
-    print(phoneFormatted);
+    if (kDebugMode) {
+      print(phoneFormatted);
+    }
     int msg=rng.nextInt(9000)+1000;
 
 
@@ -29,14 +29,18 @@ body: data
     }
 
     if(response.statusCode == 300){
-      print("Successfully send number");
+      if (kDebugMode) {
+        print("Successfully send number");
+      }
       // prefs.setInt('msg', msg);
 
 
 
     }
     else{
-      print("error");
+      if (kDebugMode) {
+        print("error");
+      }
     }
 
 
@@ -44,7 +48,7 @@ body: data
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         "OTP has been sent to your $phoneFormatted",
-        style: TextStyle(
+        style: const TextStyle(
             fontSize: 14,
             color: white,
             fontFamily: "Poppins-Regular"),

@@ -26,18 +26,19 @@ import '../../../services/utilities/authication_check.dart';
 import '../../../services/utilities/basic_auth.dart';
 import '../../../utils/config.dart';
 import '../../login_screens/email_login.dart';
+import 'dart:io' as Io;
 
 class PrivateChatScreen extends StatefulWidget {
-  var data;
+  dynamic data;
 
-  PrivateChatScreen(this.data);
+  PrivateChatScreen(this.data, {Key? key}) : super(key: key);
 
   @override
   State<PrivateChatScreen> createState() => _PrivateChatScreenState();
 }
 
 class _PrivateChatScreenState extends State<PrivateChatScreen> {
-  ScrollController _scrollController =
+  final ScrollController _scrollController =
       ScrollController(initialScrollOffset: 99999999.0);
   TextEditingController message = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -51,8 +52,8 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
   String? inquiry;
   FilePickerResult? result;
   bool _isVisible = false;
-  bool loader_visible = false;
-  List<String> fileTypes_list = [ "JPG",
+  bool loaderVisible = false;
+  List<String> fileTypesList = [ "JPG",
     "PNG",
     "JPEG",
     "GIF",
@@ -84,19 +85,19 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
       //-----add other fields if needed
       request.fields["type"] = "private";
       request.fields["message_thread_code"] =
-          '${widget.data[1] == null ? widget.data['message_thread_code'] : widget.data[1]}';
-      request.fields["message"] = "${inquiry}";
-      request.fields["status"] = "${status}";
-      request.fields["sender"] = "student-${studentId}";
-      request.fields["reciever"] = "${reciver}";
-      request.fields["timestamp"] = "${dateTimeSend}";
+          '${widget.data[1] ?? widget.data['message_thread_code']}';
+      request.fields["message"] = "$inquiry";
+      request.fields["status"] = "$status";
+      request.fields["sender"] = "student-$studentId";
+      request.fields["reciever"] = reciver;
+      request.fields["timestamp"] = dateTimeSend;
       request.fields["read_status"] = "0";
-      request.fields["student_id"] = "${studentId}";
-      request.fields["auth_token"] = "${token}";
+      request.fields["student_id"] = "$studentId";
+      request.fields["auth_token"] = "$token";
       if (objFile == null) {
         request.fields["attached_file_name"] = '';
       } else {
-        request.files.add(new http.MultipartFile(
+        request.files.add(http.MultipartFile(
             "attached_file_name", objFile!.readStream!, objFile!.size,
             filename: objFile!.name));
       }
@@ -122,12 +123,12 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
       } else {
         AuthChecker.exceptionHandling(context, resp.statusCode);
       }
-    } on TimeoutException catch (e) {
+    } on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
-    } on Error catch (e) {
+    } on Error {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
   }
@@ -138,11 +139,11 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
     token = prefs.getString('token')!;
     studentId = prefs.getString('studentId')!;
 
-    var convertedData;
+    dynamic convertedData;
     try {
       final response = await http.get(
         Uri.parse(
-            "${AppUrl.baseUrl}messages_data?auth_token=${token}&student_id=${studentId}&type=private&message_thread_code=${widget.data[1] == null ? widget.data['message_thread_code'] : widget.data[1]}"),
+            "${AppUrl.baseUrl}messages_data?auth_token=$token&student_id=$studentId&type=private&message_thread_code=${widget.data[1] ?? widget.data['message_thread_code']}"),
         headers: <String, String>{'authorization': BasicAuth.basicAuth},
       );
       convertedData = json.decode(response.body);
@@ -169,7 +170,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
 
           Navigator.pop(context);
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => EmailLogin()));
+              context, MaterialPageRoute(builder: (context) => const EmailLogin()));
           CustomScaffoldWidget.buildErrorSnackbar(context,
               "Your Session has been expired, please try to login again");
         } else if (convertedData['status'] == 401) {
@@ -182,12 +183,12 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
       } else {
         AuthChecker.exceptionHandling(context, response.statusCode);
       }
-    } on TimeoutException catch (e) {
+    } on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
-    } on Error catch (e) {
+    } on Error {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
   }
@@ -200,7 +201,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
           context, "Your Session has been expired, please try to login again");
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (BuildContext context) => EmailLogin()),
+          MaterialPageRoute(builder: (BuildContext context) => const EmailLogin()),
           (Route<dynamic> route) => false);
     } else {
       SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -216,24 +217,25 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
   void showToast() {
     setState(() {
       _isVisible = !_isVisible;
-      loader_visible = false;
+      loaderVisible = false;
       objFile = null;
     });
   }
-
+    @override
+  void dispose() {
+    // TODO: implement dispose
+      _scrollController.dispose();
+      super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    var size, height, width;
-    size = MediaQuery.of(context).size;
-    height = size.height;
-    width = size.width;
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
     final theme = Provider.of<ThemeChanger>(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
-          "${widget.data[0] == null ? widget.data['sender_data']['sender_name'] : widget.data[0]}",
+          "${widget.data[0] ?? widget.data['sender_data']['sender_name']}",
           style: CustomTextStyle.AppBarHeading(
               context, theme.isDark ? white : black),
         ),
@@ -246,7 +248,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          new StudentBottomNavigation()),
+                          StudentBottomNavigation()),
                   (Route<dynamic> route) => false);
             },
             icon: Icon(
@@ -276,7 +278,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                   .data['messages'][0]['history'].length,
                               itemBuilder: (context, int index) {
                                 DateTime date =
-                                    new DateTime.fromMillisecondsSinceEpoch(
+                                    DateTime.fromMillisecondsSinceEpoch(
                                         int.parse(snapshot.data['messages'][0]
                                                     ['history'][index]
                                                 ['timestamp']) *
@@ -312,9 +314,9 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                                     ? cardColorlight
                                                     : lightPurple),
                                                 borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(
+                                                  topLeft: const Radius.circular(
                                                       kBorderRadius),
-                                                  topRight: Radius.circular(
+                                                  topRight: const Radius.circular(
                                                       kBorderRadius),
                                                   bottomRight: Radius.circular(
                                                       snapshot.data['messages'][0]
@@ -372,18 +374,18 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                                                   [index][
                                                               'attached_file_name'] ==
                                                           null
-                                                      ? SizedBox(
+                                                      ? const SizedBox(
                                                           height: 0,
                                                         )
                                                       : GestureDetector(
                                                           onTap: () {
-                                                            // Navigator.push(
-                                                            //     context,
-                                                            //     MaterialPageRoute(
-                                                            //         builder: (context) =>
-                                                            //             WebviewDsiplayDesktop(
-                                                            //                 Uri.encodeFull(widget.data['history'][index]['attached_file_name']))));
-                                                            Navigator.push(
+                                                        Io.Platform.isWindows ?   Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        WebviewDsiplayDesktop(
+                                                                            Uri.encodeFull(widget.data['history'][index]['attached_file_name']))))
+                                                           : Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
                                                                     builder: (context) =>
@@ -392,32 +394,31 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                                           },
                                                           child:  Container(
                                                             height: 100.h,
-                                                            width: 100.w,
+                                                            width: 50.w,
                                                             child: ClipRRect(
                                                               borderRadius:
                                                               BorderRadius
                                                                   .circular(
                                                                   10.0),
-                                                              child: fileTypes_list
+                                                              child: fileTypesList
                                                                   .contains(
                                                                   "${snapshot.data['messages'][0]['history'][index]['attached_file_type']}")
                                                                   ? Image.network(
                                                                 "${snapshot.data['messages'][0]['history'][index]['attached_file_name']}",
-                                                                fit: BoxFit
-                                                                    .cover,
+                                                                fit: BoxFit.fill,
                                                               )
                                                                   : Column(
                                                                 children: [
                                                                   Container(
                                                                     height:
-                                                                    50.h,
+                                                                    100.h,
                                                                     width:
                                                                     100.w,
                                                                     child: Image
                                                                         .asset(
                                                                       "assets/images/pdf_icon.png",
                                                                       fit: BoxFit
-                                                                          .contain,
+                                                                          .fill,
                                                                     ),
                                                                   ),
                                                                 ],
@@ -433,7 +434,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                                         MainAxisSize.min,
                                                     children: <Widget>[
                                                       Text(
-                                                        "${dateString}",
+                                                        dateString,
                                                         style: TextStyle(
                                                             fontSize:
                                                                 kBubbleMetaFontSize,
@@ -471,7 +472,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                               child: Visibility(
                                 visible: objFile?.path != null ? true : false,
                                 child: Container(
-                                  height: 120,
+                                  height: 120.h,
                                   width: double.infinity,
                                   color: theme.isDark == true
                                       ? cardColor
@@ -482,16 +483,25 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                       child: ClipRRect(
                                         borderRadius:
                                         BorderRadius.circular(10.0),
-                                        child: fileTypes_list.contains("${objFile?.extension}")
+                                        child: fileTypesList.contains(
+                                            "${objFile?.extension}")
                                             ? Image.file(
                                           File("${objFile?.path}"),
                                           fit: BoxFit.contain,
                                         )
                                             : Column(
                                           children: [
-                                            Image.asset(
-                                              "assets/images/pdf_icon.png",
-                                              fit: BoxFit.contain,
+                                            Container(
+                                              height:
+                                              80.h,
+                                              width:
+                                              30.w,
+                                              child: Image
+                                                  .asset(
+                                                "assets/images/pdf_icon.png",
+                                                fit: BoxFit
+                                                    .fill,
+                                              ),
                                             ),
                                             SizedBox(
                                               height: 2.h,
@@ -504,7 +514,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                                   theme.isDark
                                                       ? white
                                                       : black),
-                                              maxLines: 2,
+                                              maxLines: 1,
                                               overflow:
                                               TextOverflow.ellipsis,
                                             )
@@ -533,7 +543,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                 child: Center(
                                   child: InkWell(
                                     onTap: showToast,
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.close,
                                       color: Colors.red,
                                     ),
@@ -548,7 +558,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                           child: Column(
                             children: [
                               Container(
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                     left: 10, top: 5, bottom: 5, right: 10),
                                 width: double.infinity,
                                 decoration: BoxDecoration(
@@ -570,28 +580,29 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                         setState(() {
                                           _isVisible = true;
                                         });
-                                        var result = await FilePicker.platform
-                                            .pickFiles(
-                                                type: FileType.custom,
-                                                allowedExtensions: [
-                                                  'jpg',
-                                                  'pdf',
-                                                  'png',
-                                                  'gif'
-                                                ],
-                                                allowCompression: true,
-                                                withReadStream: true,
-                                                lockParentWindow:
-                                                    false // this will return PlatformFile object with read stream
-                                                );
+                                        var result =
+                                        await FilePicker.platform.pickFiles(
+                                          type: FileType.custom,
+                                          allowedExtensions: [
+                                            'jpeg',
+                                            'jpg',
+                                            'pdf',
+                                            'png',
+                                            'gif'
+                                          ],
+                                          withReadStream: true,
+                                          // this will return PlatformFile object with read stream
+                                        );
 
                                         if (result != null) {
-                                          objFile = result.files.single;
+                                          setState(() {
+                                            objFile = result.files.single;
+                                          });
                                         } else {
                                           objFile = null;
                                         }
                                       },
-                                      child: Icon(
+                                      child: const Icon(
                                         Icons.add,
                                         color: Colors.white,
                                         size: 18,
@@ -623,10 +634,10 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(20.0),
                                           ),
-                                          enabledBorder: new OutlineInputBorder(
+                                          enabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                                new BorderRadius.circular(20.0),
-                                            borderSide: new BorderSide(
+                                                BorderRadius.circular(20.0),
+                                            borderSide: BorderSide(
                                                 color: theme.isDark
                                                     ? white
                                                     : black),
@@ -647,19 +658,19 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                     ),
                                     FloatingActionButton(
                                       onPressed: () {
-                                        var file_size = objFile?.size;
+                                        var fileSize = objFile?.size;
                                         if (message.text.isEmpty) {
                                           CustomScaffoldWidget
                                               .buildErrorSnackbar(
                                                   context, "Type your message");
-                                        } else if (file_size != null &&
-                                            file_size > 1000000) {
+                                        } else if (fileSize != null &&
+                                            fileSize > 1000000) {
                                           CustomScaffoldWidget.buildErrorSnackbar(
                                               context,
                                               "image size is too large select less than 1 MB");
                                         } else {
                                           setState(() {
-                                            loader_visible = true;
+                                            loaderVisible = true;
                                           });
                                           _formKey.currentState!.save();
                                           uploadSelectedFile(snapshot
@@ -668,11 +679,11 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                                           message.clear();
                                         }
                                       },
-                                      child: loader_visible
-                                          ? CircularProgressIndicator(
+                                      child: loaderVisible
+                                          ? const CircularProgressIndicator(
                                               color: white,
                                             )
-                                          : Icon(
+                                          : const Icon(
                                               Icons.send,
                                               color: Colors.white,
                                               size: 18,
@@ -692,7 +703,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                 },
               ),
             )
-          : NoInternetScreen(),
+          : const NoInternetScreen(),
     );
   }
 }

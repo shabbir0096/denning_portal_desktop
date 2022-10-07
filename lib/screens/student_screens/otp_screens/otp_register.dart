@@ -1,7 +1,6 @@
 import 'package:denning_portal/services/otp_verification.dart';
 import 'package:denning_portal/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,14 +29,8 @@ class _OtpResgisterState extends State<OtpResgister> {
   Future<void> getUser() async{
     SharedPreferences  prefs = await SharedPreferences.getInstance();
     setState(() {
-
       phoneController.text = prefs.getString('phone')!;
       phoneFormatted = prefs.getString('phoneFormatted')!;
-
-
-
-
-      print(phoneFormatted);
     });
   }
 
@@ -48,15 +41,20 @@ class _OtpResgisterState extends State<OtpResgister> {
     getUser();
 
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    phoneController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
 
 
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     OtpServices otpServices=OtpServices();
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
@@ -78,7 +76,7 @@ class _OtpResgisterState extends State<OtpResgister> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => EmailLogin()));
+                      builder: (context) => const EmailLogin()));
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -134,7 +132,7 @@ class _OtpResgisterState extends State<OtpResgister> {
                     autofocus: true,
                     cursorColor: theme.isDark? white : black,
                     readOnlyField: true,
-                   labelText: "${phoneController.text}",
+                   labelText: phoneController.text,
                     hintText: "Provide your number",
                     icon: Icon(
                       Icons.mail,
@@ -151,6 +149,7 @@ class _OtpResgisterState extends State<OtpResgister> {
                     },
                     onSaved: (String? value) {
                       phoneFormatted = value!;
+                      return null;
                     },
                   ),
                   SizedBox(
@@ -176,8 +175,9 @@ class _OtpResgisterState extends State<OtpResgister> {
                             backgroundColor: Colors.red,
                           ));
                         }
-                        else
+                        else {
                           otpServices.postOtpRequest(phoneFormatted!,context);
+                        }
                         // Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpResponse()));
                       }
                   )

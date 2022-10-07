@@ -40,14 +40,19 @@ class _EventsScreenState extends State<EventsScreen> {
     super.initState();
     getUser();
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    searchController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
     var size = MediaQuery.of(context).size;
-    final _width = MediaQuery.of(context).size.width;
+    // final _width = MediaQuery.of(context).size.width;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
     final theme = Provider.of<ThemeChanger>(context);
@@ -102,10 +107,10 @@ class _EventsScreenState extends State<EventsScreen> {
                         color: theme.isDark ? white : black, width: 2.0),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  enabledBorder: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(10.0),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
                     borderSide:
-                        new BorderSide(color: theme.isDark ? white : black),
+                        BorderSide(color: theme.isDark ? white : black),
                   ),
                   border: InputBorder.none,
                   hintText: "Search",
@@ -132,7 +137,7 @@ class _EventsScreenState extends State<EventsScreen> {
                   ));
                 } else {
                   return snapshot.data['events'] == null
-                      ? Text("No data available")
+                      ? const Text("No data available")
                       : Expanded(
                           child: GridView.builder(
                               gridDelegate:
@@ -157,7 +162,7 @@ class _EventsScreenState extends State<EventsScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(height: 12,),
+                                      const SizedBox(height: 12,),
                                       //Text("23 Days Left",style: TextStyle(fontFamily: "Montserrat-Regular",fontSize: _width * 0.035,color: black),),
                                       GestureDetector(
                                         onTap: () {
@@ -188,7 +193,7 @@ class _EventsScreenState extends State<EventsScreen> {
                                                           null
                                                       ? NetworkImage(
                                                           "${snapshot.data!['events'][index]['image']}")
-                                                      : AssetImage(
+                                                      : const AssetImage(
                                                               "assets/images/default_event_image.jpg")
                                                           as ImageProvider,
                                                   colorFilter: ColorFilter.mode(
@@ -282,7 +287,7 @@ class _EventsScreenState extends State<EventsScreen> {
                                                         // //   )
                                                       ],
                                                     ),
-                                                    Spacer(),
+                                                    const Spacer(),
                                                     Text(
                                                       "${snapshot.data!['events'][index]['notice_title']}"
                                                           .toUpperCase(),
@@ -324,7 +329,7 @@ class _EventsScreenState extends State<EventsScreen> {
                                                                     .ellipsis,
                                                           ),
                                                         ),
-                                                        Spacer(),
+                                                        const Spacer(),
                                                         Text(
                                                           "${snapshot.data!['events'][index]['notice_time']}",
                                                           style: TextStyle(
@@ -394,7 +399,7 @@ class _EventsScreenState extends State<EventsScreen> {
                                                       null
                                                       ? NetworkImage(
                                                       "${snapshot.data!['events'][index]['image']}")
-                                                      : AssetImage(
+                                                      : const AssetImage(
                                                       "assets/images/default_event_image.jpg")
                                                   as ImageProvider,
                                                   colorFilter: ColorFilter.mode(
@@ -488,7 +493,7 @@ class _EventsScreenState extends State<EventsScreen> {
                                                         // //   )
                                                       ],
                                                     ),
-                                                    Spacer(),
+                                                    const Spacer(),
                                                     Text(
                                                       "${snapshot.data!['events'][index]['notice_title']}"
                                                           .toUpperCase(),
@@ -530,7 +535,7 @@ class _EventsScreenState extends State<EventsScreen> {
                                                                 .ellipsis,
                                                           ),
                                                         ),
-                                                        Spacer(),
+                                                        const Spacer(),
                                                         Text(
                                                           "${snapshot.data!['events'][index]['notice_time']}",
                                                           style: TextStyle(
@@ -555,7 +560,7 @@ class _EventsScreenState extends State<EventsScreen> {
                                     ],
                                   );
                                 }
-                                return SizedBox(
+                                return const SizedBox(
                                   height: 0,
                                 );
                               }),
@@ -568,7 +573,7 @@ class _EventsScreenState extends State<EventsScreen> {
             ),
           ],
         ),
-      ): NoInternetScreen() ,
+      ): const NoInternetScreen() ,
     );
   }
 }

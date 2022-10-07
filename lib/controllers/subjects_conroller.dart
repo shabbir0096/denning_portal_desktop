@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:denning_portal/models/SubjectsModel.dart';
 import 'package:denning_portal/services/utilities/app_url.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +18,7 @@ import '../services/utilities/basic_auth.dart';
 class SubjectsController {
 
   Future<SubjectsModel> subjectData(String? token, String? studentId ,BuildContext context) async {
-    var data;
+    dynamic data;
     String token ="";
     String studentId = "";
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -29,7 +28,7 @@ class SubjectsController {
       final response = await http.get(
         Uri.parse(
             "${AppUrl
-                .baseUrl}subjects_data?auth_token=${token}&student_id=${studentId}"),
+                .baseUrl}subjects_data?auth_token=$token&student_id=$studentId"),
         headers: <String, String>{'authorization': BasicAuth.basicAuth},
       );
 
@@ -56,7 +55,7 @@ class SubjectsController {
 
           Navigator.pop(context);
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => EmailLogin()));
+              context, MaterialPageRoute(builder: (context) => const EmailLogin()));
           CustomScaffoldWidget.buildErrorSnackbar(context,
               "Your Session has been expired, please try to login again");
         }
@@ -75,12 +74,12 @@ class SubjectsController {
       }else {
         AuthChecker.exceptionHandling(context, response.statusCode);
       }
-    }on TimeoutException catch (e) {
+    }on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
-    } on Error catch (e) {
+    } on Error {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
     return SubjectsModel.fromJson(data);

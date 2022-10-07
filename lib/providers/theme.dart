@@ -23,8 +23,7 @@ class ThemeChanger with ChangeNotifier {
     _loadFromPreferences();
   }
   _initialPreferences() async {
-    if(_preferences == null)
-      _preferences = await SharedPreferences.getInstance();
+    _preferences ??= await SharedPreferences.getInstance();
   }
   _savePreferences()async {
     await _initialPreferences();

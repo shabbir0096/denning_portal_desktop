@@ -1,6 +1,8 @@
 
 import 'dart:async';
+import 'package:denning_portal/component/student_bottom_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_macos_webview/flutter_macos_webview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_windows/webview_windows.dart';
@@ -10,20 +12,22 @@ import '../../../custom_widgets/scaffold_messenge_snackbar.dart';
 import '../../../providers/internet_checker.dart';
 import '../../../providers/theme.dart';
 import '../../../utils/colors.dart';
+import 'event_details.dart';
+import 'event_screen.dart';
 
-class RegistratioFormEvents extends StatefulWidget {
+class RegistratioFormEventsMacOS extends StatefulWidget {
   List<String> userDetailsList;
-   RegistratioFormEvents( {Key? key , required this.userDetailsList}) : super(key: key);
+   RegistratioFormEventsMacOS( {Key? key , required this.userDetailsList}) : super(key: key);
 
 
   @override
-  State<RegistratioFormEvents> createState() => _RegistratioFormEventsState();
+  State<RegistratioFormEventsMacOS> createState() => _RegistratioFormEventsMacOSState();
 }
 
-class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
-  final WebviewController _controller = WebviewController();
+class _RegistratioFormEventsMacOSState extends State<RegistratioFormEventsMacOS> {
+
     String? googleFormLink_new;
-  String refineUrl(String googleFormLink) {
+  Future refineUrl(String googleFormLink) async {
 
     if(googleFormLink.contains("STUDENT_NAME")) {
       googleFormLink = googleFormLink.replaceAll("STUDENT_NAME", widget.userDetailsList[0]);
@@ -40,7 +44,7 @@ class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
 
     // repeat the above check for all the dynamic values
     googleFormLink_new = googleFormLink;
-    initPlatformState(googleFormLink_new!);
+
     return googleFormLink;
   }
 
@@ -48,47 +52,34 @@ class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    refineUrl(widget.userDetailsList[4]);
+    refineUrl(widget.userDetailsList[4]).then((value) => _onOpenPressed(PresentationStyle.modal));
+    
   }
+  Future<void> _onOpenPressed(PresentationStyle presentationStyle) async {
+    final webview = FlutterMacOSWebView(
+      onOpen: () => print('Opened'),
+      onClose: ((){
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const StudentBottomNavigation()),
+                (route) => false);
 
+      }) ,
+      onPageStarted: (url) => print('Page started: $url'),
+      onPageFinished: (url) => print('Page finished: $url'),
+      onWebResourceError: (err) {
+      },
+    );
 
-  Future<void> initPlatformState(String url) async {
-    await _controller.initialize();
-    setState(()  {
-      CustomScaffoldWidget.buildErrorSnackbar(context, "Url link is $googleFormLink_new");
-      _controller.url.listen((url) {});
-      _controller.loadUrl(Uri.encodeFull(googleFormLink_new!));
-      if (!mounted) return;
-
-    });
-  }
-  Widget compositeView() {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          StreamBuilder<LoadingState>(
-              stream: _controller.loadingState,
-              builder: (context, snapshot) {
-                if (snapshot.hasData ) {
-                  return   Expanded(child: Webview(_controller));
-                } else {
-                  return const LinearProgressIndicator();
-                }
-              }),
-
-        ],
-      ),
+    await webview.open(
+      javascriptEnabled: true,
+      url: Uri.encodeFull(googleFormLink_new!),
+      presentationStyle: presentationStyle,
+      size: Size(1024.0.h, 720.0.w),
+      userAgent:
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
     );
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-
-    _controller.dispose();
-    super.dispose();
-  }
   @override
   Widget build(BuildContext context) {
 
@@ -124,7 +115,9 @@ class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
              CircularProgressIndicator(
                color: theme.isDark ? white : cardColor,
              ))
-             : Expanded(child: compositeView()),
+             :  const Center(
+             child: SizedBox()
+         ),
        ],
      ): const NoInternetScreen(),
     );

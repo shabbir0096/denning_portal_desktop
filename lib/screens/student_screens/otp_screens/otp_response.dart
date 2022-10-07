@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:denning_portal/component/student_bottom_navigation.dart';
 import 'package:denning_portal/utils/colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
@@ -19,7 +18,7 @@ class OtpResponse extends StatefulWidget {
   String? phoneFormatted;
 
 
-  OtpResponse(this.msg, this.phoneFormatted);
+  OtpResponse(this.msg, this.phoneFormatted, {Key? key}) : super(key: key);
 
   @override
   State<OtpResponse> createState() => _OtpResponseState();
@@ -40,7 +39,6 @@ class _OtpResponseState extends State<OtpResponse> {
     var duration = interval;
     Timer.periodic(duration, (timer) {
       setState(() {
-        print(timer.tick);
         currentSeconds = timer.tick;
         if (timer.tick >= timerMaxSeconds) timer.cancel();
       });
@@ -53,15 +51,20 @@ class _OtpResponseState extends State<OtpResponse> {
     startTimeout();
     super.initState();
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    pinController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
     OtpServices otpServices=OtpServices();
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
 
 
@@ -164,7 +167,7 @@ class _OtpResponseState extends State<OtpResponse> {
                                   fontSize: 15.sp),
                             ),
                           ),
-                        Spacer(),
+                        const Spacer(),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
@@ -172,7 +175,7 @@ class _OtpResponseState extends State<OtpResponse> {
                               Icons.timer,
                               size: 30.h,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             Text(
@@ -236,9 +239,4 @@ class _OtpResponseState extends State<OtpResponse> {
     );
   }
 
-  Widget buildPinPut() {
-    return Pinput(
-      onCompleted: (pin) => print(pin),
-    );
-  }
 }

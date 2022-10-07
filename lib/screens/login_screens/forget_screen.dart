@@ -25,17 +25,17 @@ class _ForgetScreenState extends State<ForgetScreen> {
   String? email = "";
   bool isChecked = false;
   bool buttonClicked = false;
-  TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool spin = false;
 
   Future forgetPassword() async {
-    var convertedData;
+    dynamic convertedData;
 
     setState(() {
       spin = true;
     });
-    Map data = {"email": "${email}"};
+    Map data = {"email": "$email"};
     final response = await http.post(
       Uri.parse("https://denningportal.com/app/api/appapi/forgot_password"),
       headers: <String, String>{'authorization': BasicAuth.basicAuth},
@@ -44,12 +44,11 @@ class _ForgetScreenState extends State<ForgetScreen> {
 
     if (response.statusCode == 200) {
       convertedData = json.decode(response.body);
-      print(convertedData);
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        duration: Duration(seconds: 10),
+        duration: const Duration(seconds: 10),
         content: Text(
-          "${"${convertedData['message']}"}",
+          "${convertedData['message']}",
           style: TextStyle(
               fontSize: 14.sp,
               color: Colors.white,
@@ -74,13 +73,19 @@ class _ForgetScreenState extends State<ForgetScreen> {
       ));
     }
   }
+@override
+  void dispose() {
+    // TODO: implement dispose
+  _emailController.dispose();
+  super.dispose();
 
+  }
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
 
@@ -98,7 +103,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
             onPressed: () {
               Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => EmailLogin()));
+                  MaterialPageRoute(builder: (context) => const EmailLogin()));
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -173,13 +178,14 @@ class _ForgetScreenState extends State<ForgetScreen> {
                     },
                     onSaved: (String? value) {
                       email = value!;
+                      return email;
                     },
                   ),
                   SizedBox(
                     height: 20.h,
                   ),
                   spin == true
-                      ? Center(
+                      ? const Center(
                           child: CircularProgressIndicator(
                           color: white,
                         ))
@@ -208,7 +214,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
                               forgetPassword();
                               _formKey.currentState!.reset();
                             } else {
-                              print("cannot post data");
+
                             }
                           }),
                 ],

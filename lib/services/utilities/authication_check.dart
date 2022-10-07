@@ -26,7 +26,7 @@ class AuthChecker{
 
       Navigator.pop(context);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => EmailLogin()));
+          context, MaterialPageRoute(builder: (context) => const EmailLogin()));
       CustomScaffoldWidget.buildErrorSnackbar(context, "Your Session has been expired, please try to login again");
     }
     else if (statusCode == 404){

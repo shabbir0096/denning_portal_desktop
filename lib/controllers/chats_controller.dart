@@ -17,7 +17,7 @@ import '../services/utilities/basic_auth.dart';
 
 class ChatsController {
   static Future chatMessage(String type , BuildContext context) async {
-    var convertedData;
+    dynamic convertedData;
     String token ="";
     String studentId = "";
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -28,7 +28,7 @@ class ChatsController {
       final response = await http.get(
         Uri.parse(
             "${AppUrl
-                .baseUrl}messages_data?auth_token=${token}&student_id=${studentId}&type=${type}"),
+                .baseUrl}messages_data?auth_token=$token&student_id=$studentId&type=$type"),
         headers: <String, String>{'authorization': BasicAuth.basicAuth},
       );
 
@@ -56,7 +56,7 @@ class ChatsController {
 
           Navigator.pop(context);
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => EmailLogin()));
+              context, MaterialPageRoute(builder: (context) => const EmailLogin()));
           CustomScaffoldWidget.buildErrorSnackbar(context,
               "Your Session has been expired, please try to login again");
         }
@@ -72,12 +72,12 @@ class ChatsController {
       } else {
         AuthChecker.exceptionHandling(context, response.statusCode);
       }
-    }on TimeoutException catch (e) {
+    }on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
-    } on Error catch (e) {
+    } on Error {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
   }

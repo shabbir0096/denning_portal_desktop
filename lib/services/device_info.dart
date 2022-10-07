@@ -33,22 +33,10 @@ class DeviceInfo {
    getIpAddress=data['ip'];
     deviceType=devicetype;
 
-
-
-    print('model no ${androidInfo.model}');
-    print("Device name ${androidInfo.brand}");
-    print("isPhysical ${androidInfo.isPhysicalDevice}");
-    print('Device ID ${androidInfo.androidId}');
-    print('IP Address ${data['ip']}');
-    print("Device Type ${devicetype}");
-
-
-
   }
   Future getMAc() async {
     MacadressGen macadressGen = MacadressGen();
     mac = await macadressGen.getMac();
-    print("macAddress ${mac}");
   }
 
   Future<String?> getdevicetype() async {

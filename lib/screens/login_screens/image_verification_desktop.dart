@@ -25,7 +25,6 @@ import '../../component/student_bottom_navigation.dart';
 import '../../custom_widgets/custom_dialogue_windows.dart';
 import '../../custom_widgets/custom_textStyle.dart';
 import '../../custom_widgets/scaffold_messenge_snackbar.dart';
-import '../../providers/internet_checker.dart';
 import '../../services/utilities/authication_check.dart';
 import '../../services/utilities/basic_auth.dart';
 import '../../utils/colors.dart';
@@ -39,7 +38,7 @@ class ImageVerificationDesktop extends StatefulWidget {
   final String? token;
 
   /// Default Constructor
-  ImageVerificationDesktop({Key? key, required this.token, this.title})
+  const ImageVerificationDesktop({Key? key, required this.token, this.title})
       : super(key: key);
 
   @override
@@ -49,15 +48,12 @@ class ImageVerificationDesktop extends StatefulWidget {
 
 class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
   Timer? _timer;
-  late double _progress;
-  String _cameraInfo = 'Unknown';
+  String? _cameraInfo;
   List<CameraDescription> _cameras = <CameraDescription>[];
   int _cameraIndex = 0;
   int _cameraId = -1;
 
   bool _initialized = false;
-  bool _recordAudio = true;
-  bool _previewPaused = false;
   Size? _previewSize;
   ResolutionPreset _resolutionPreset = ResolutionPreset.veryHigh;
   StreamSubscription<CameraErrorEvent>? _errorStreamSubscription;
@@ -73,13 +69,11 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
   String? studentId = "";
   String? firebaseImageURL;
   var deviceName = "";
-  var appData;
-  var loginProfileImage;
-  var deviceTokenToSendPushNotification;
-  var a;
+  dynamic appData;
+  dynamic loginProfileImage;
+  dynamic deviceTokenToSendPushNotification;
   int cameraCount = 0;
   String status = "approved";
-  bool _isLoading = false;
 
   //device_info
   String? modelNo;
@@ -88,7 +82,6 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
   String? mac;
   String? deviceType;
   String? deviceID;
-  bool _load = false;
 
   @override
   void initState() {
@@ -126,7 +119,6 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
 
   getDeviceID() async {
     deviceID = await PlatformDeviceId.getDeviceId;
-    print("macAddress $deviceID");
     if (Io.Platform.isAndroid || Io.Platform.isIOS) {
       return deviceType = 'mobile';
     } else {
@@ -164,7 +156,6 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
       // return json.decode(response.body);
 
     } else {
-      print("server Errorr");
     }
   }
 
@@ -187,8 +178,8 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
     request.fields["student_code"] = "$studentCode";
     request.fields["name"] = "$name";
     request.fields["fb_device_token"] = "null";
-    request.fields["device_type"] = "${deviceType}";
-    request.fields["ip_address"] = "${ipAddressValue}";
+    request.fields["device_type"] = "$deviceType";
+    request.fields["ip_address"] = "$ipAddressValue";
     request.fields["device_name"] = "$brand";
     request.fields["device_id"] = "$deviceID";
     request.fields["data_points"] = "null";
@@ -204,7 +195,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
 
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (BuildContext context) => new EmailLogin()),
+            MaterialPageRoute(builder: (BuildContext context) => const EmailLogin()),
                 (Route<dynamic> route) => false);
         CustomDialogueWindows(
             context,
@@ -213,13 +204,14 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
             "Your device has been registered successfully. Please wait for the approval",
             "OK",
             AlertType.success);
-      }else
+      }else {
         await EasyLoading.dismiss();
+      }
       _disposeCurrentCamera();
 
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (BuildContext context) => new EmailLogin()),
+          MaterialPageRoute(builder: (BuildContext context) => const EmailLogin()),
               (Route<dynamic> route) => false);
       CustomDialogueWindows(
           context,
@@ -231,9 +223,9 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
     } else {
       AuthChecker.exceptionHandling(context, resp.statusCode);
     }
-  } on TimeoutException catch (e) {
+  } on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
     } on Error catch (e) {
@@ -356,7 +348,6 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
             _initialized = false;
             _cameraId = -1;
             _previewSize = null;
-            _previewPaused = false;
             _cameraInfo = 'Camera disposed';
           });
         }
@@ -401,18 +392,16 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
   }
 
   Future<void> checkImage(var loginProfileImage) async {
-    print("checking.....................");
     _timer?.cancel();
     await EasyLoading.show(
       status: 'loading...',
       maskType: EasyLoadingMaskType.black,
     );
-    print('EasyLoading show');
-    CircularProgressIndicator();
+    const CircularProgressIndicator();
     final imgBase64Str = await networkImageToBase64(loginProfileImage);
 
     Map data = {
-      "base1": "data:image/png;base64,${imgBase64Str}",
+      "base1": "data:image/png;base64,$imgBase64Str",
       "base2": "data:image/png;base64,$convertedImage"
     };
 
@@ -431,25 +420,22 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    new StudentBottomNavigation()),
+                    StudentBottomNavigation()),
             (Route<dynamic> route) => false);
       } else {
-        print("-------=-==");
+
         await EasyLoading.dismiss();
         setState(() {
           cameraCount++;
         });
-        print(cameraCount);
         _showInSnackBar(
             "Try again by taking the photo ($cameraCount) out of 3");
       }
     } else {
-      print("-----------------------------");
       await EasyLoading.dismiss();
       setState(() {
         cameraCount++;
       });
-      print(cameraCount);
       _showInSnackBar(
           "Try again by taking the photo ($cameraCount) out of 3");
     }
@@ -520,7 +506,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
         child: Text(value.toString()),
       );
     }).toList();
-    final isOnline = Provider.of<ConnectivityService>(context).isOnline;
+
 
     return MaterialApp(
       builder: EasyLoading.init(),
@@ -541,7 +527,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
                 _disposeCurrentCamera();
                 Navigator.pop(context);
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EmailLogin()));
+                    MaterialPageRoute(builder: (context) => const EmailLogin()));
               },
               icon: Icon(
                 Icons.arrow_back_ios,
@@ -573,7 +559,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
                     height: 40.h,
                     width: 200.w,
                     child: Padding(
-                      padding: EdgeInsets.only(left: 25.0, right: 25),
+                      padding: const EdgeInsets.only(left: 25.0, right: 25),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child: Container(
@@ -581,9 +567,9 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Tooltip(
-                              padding: EdgeInsets.all(20),
-                              margin: EdgeInsets.all(10),
-                              showDuration: Duration(seconds: 10),
+                              padding: const EdgeInsets.all(20),
+                              margin: const EdgeInsets.all(10),
+                              showDuration: const Duration(seconds: 10),
                               decoration: BoxDecoration(
                                 color: Colors.black.withOpacity(0.7),
                                 borderRadius:
@@ -611,7 +597,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
                                   SizedBox(
                                     width: 3.w,
                                   ),
-                                  Icon(
+                                  const Icon(
                                     Icons.error,
                                     color: white,
                                   ),
@@ -648,9 +634,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
                   const SizedBox(width: 5),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: theme.isDark ? cardColor : whiteBottomBar,
-                      // background
-                      onPrimary: Colors.white, // foreground
+                      foregroundColor: Colors.white, backgroundColor: theme.isDark ? cardColor : whiteBottomBar, // foreground
                     ),
                     onPressed: _switchCamera,
                     child: const Text(
@@ -664,28 +648,24 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
             if (_cameras.isEmpty)
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  fixedSize: Size(50, 50),
-                  primary: theme.isDark ? cardColor : whiteBottomBar,
-                  // background
-                  onPrimary: Colors.white, // foreground
+                  foregroundColor: Colors.white, fixedSize: const Size(50, 50),
+                  backgroundColor: theme.isDark ? cardColor : whiteBottomBar, // foreground
                 ),
                 onPressed: _fetchCameras,
-                child: Text('Re-check available cameras cameraID:${_cameraId}'),
+                child: Text('Re-check available cameras cameraID:$_cameraId'),
               ),
             const SizedBox(height: 20),
             if (EasyLoading.isShow == false)
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  fixedSize: Size(50, 50),
-                  primary: black, // background
-                  onPrimary: Colors.white, // foreground
+                  foregroundColor: Colors.white,
+                  backgroundColor: black, fixedSize: const Size(50, 50), // foreground
                 ),
                 onPressed: () {
                   if (EasyLoading.isShow == false) {
                     bool exists =
                         appData.any((file) => file['device_id'] == "$deviceID")
                             as dynamic;
-                    print("userExit or not: ${exists}");
                     if (exists == false) {
                       _takePicture();
                     }    if(studentId =="765"){
@@ -693,7 +673,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                              new StudentBottomNavigation()),
+                              StudentBottomNavigation()),
                               (Route<dynamic> route) => false);
                     } else {
                       checkStatus();
@@ -721,7 +701,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => new EmailLogin()),
+                builder: (BuildContext context) => const EmailLogin()),
             (Route<dynamic> route) => false);
         _disposeCurrentCamera();
         CustomDialogueWindows(
@@ -735,7 +715,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => new EmailLogin()),
+                builder: (BuildContext context) => const EmailLogin()),
             (Route<dynamic> route) => false);
         _disposeCurrentCamera();
         CustomDialogueWindows(
@@ -756,7 +736,7 @@ class _ImageVerificationDesktopState extends State<ImageVerificationDesktop> {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => new OtpResgister(),),
+                  builder: (BuildContext context) => const OtpResgister(),),
               (Route<dynamic> route) => false);
         } else {
           checkImage(profileImageLink);
