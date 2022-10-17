@@ -87,6 +87,7 @@ class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
     return Scaffold(
       appBar: AppBar(
+
         title: Text(
           "Event Registration",
           style: CustomTextStyle.AppBarHeading(

@@ -1,4 +1,6 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
+
+import 'dart:io';
+
 import 'package:denning_portal/component/student_bottom_navigation.dart';
 import 'package:denning_portal/providers/internet_checker.dart';
 import 'package:denning_portal/screens/student_screens/spalsh_screen.dart';
@@ -23,17 +25,18 @@ Future<void> main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('token');
   String? status = prefs.getString('status');
+  HttpOverrides.global=MyHttpOverrides();
   runApp(MyApp(token, status));
   configLoading();
-  doWhenWindowReady(() {
-    final initialSize = Size(1024 , 720);
-    final minSize = Size(1024, 720);
-    final maxSize = Size(1920 , 1200);
-    appWindow.maxSize = maxSize;
-    appWindow.minSize = minSize;
-    appWindow.size = initialSize; //default size
-    appWindow.show();
-  });
+  // doWhenWindowReady(() {
+  //   final initialSize = Size(800 , 620);
+  //   final minSize = Size(800, 620);
+  //   final maxSize = Size(1280 , 800);
+  //   appWindow.maxSize = maxSize;
+  //   appWindow.minSize = minSize;
+  //   appWindow.size = initialSize; //default size
+  //   appWindow.show();
+  // });
 }
 void configLoading() {
 
@@ -54,11 +57,18 @@ void configLoading() {
     ..customAnimation = CustomAnimation();
 }
 
-
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
 class MyApp extends StatelessWidget {
   var token;
   var status;
   String deviceTokenToSendPushNotification = "";
+
 
   MyApp(this.token, this.status);
 

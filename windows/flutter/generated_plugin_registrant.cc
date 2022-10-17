@@ -6,7 +6,6 @@
 
 #include "generated_plugin_registrant.h"
 
-#include <bitsdojo_window_windows/bitsdojo_window_plugin.h>
 #include <camera_windows/camera_windows.h>
 #include <connectivity_plus_windows/connectivity_plus_windows_plugin.h>
 #include <flutter_platform_alert/flutter_platform_alert_plugin.h>
@@ -15,8 +14,6 @@
 #include <webview_windows/webview_windows_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
-  BitsdojoWindowPluginRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("BitsdojoWindowPlugin"));
   CameraWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("CameraWindows"));
   ConnectivityPlusWindowsPluginRegisterWithRegistrar(

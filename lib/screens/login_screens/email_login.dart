@@ -111,7 +111,7 @@ class _EmailLoginState extends State<EmailLogin> {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
     } on SocketException catch (e) {
       CustomScaffoldWidget.buildErrorSnackbar(
-          context, "Please enable your internet connection");
+          context, "Please enable your internet connection $e");
     } on Error catch (e) {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Something went wrong");

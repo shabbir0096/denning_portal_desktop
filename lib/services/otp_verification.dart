@@ -8,50 +8,57 @@ import '../utils/colors.dart';
 
 
 class OtpServices{
-  Future postOtpRequest( phoneFormatted,context) async{
+  Future postOtpRequest( phoneFormatted,context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var rng = Random();
     print(phoneFormatted);
-    int msg=rng.nextInt(9000)+1000;
+    int msg = rng.nextInt(9000) + 1000;
 
 
-    Map data = {"id": "rchdenning", "pass": "ricahoni","to":"$phoneFormatted","msg":"Your OTP is $msg\nPlease Donot share it with anyone.","lang":"english","mask":"denning"};
+    Map data = {
+      "id": "rchdenning",
+      "pass": "ricahoni",
+      "to": "$phoneFormatted",
+      "msg": "Your OTP is $msg\nPlease Donot share it with anyone.",
+      "lang": "english",
+      "mask": "denning"
+    };
 
-     // String body = json.encode(data);
+    // String body = json.encode(data);
 
     http.Response response = await http.post(
         Uri.parse("http://outreach.pk/api/sendsms.php/sendsms/url?"),
-body: data
-        // headers: {HttpHeaders.contentTypeHeader: "application/json", HttpHeaders.authorizationHeader: "Authoriz $token"},
-        );
+        body: data
+      // headers: {HttpHeaders.contentTypeHeader: "application/json", HttpHeaders.authorizationHeader: "Authoriz $token"},
+    );
     if (kDebugMode) {
       print(response.body);
     }
 
-    if(response.statusCode == 300){
+    if (response.statusCode == 300) {
       print("Successfully send number");
       // prefs.setInt('msg', msg);
 
 
-
     }
-    else{
+    else {
       print("error");
     }
 
 
-   Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpResponse(msg ,  phoneFormatted)));//
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(
-        "OTP has been sent to your $phoneFormatted",
-        style: TextStyle(
-            fontSize: 14,
-            color: white,
-            fontFamily: "Poppins-Regular"),
-      ),
-      backgroundColor:purple,
-    ));
+    //  Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpResponse(msg ,  phoneFormatted)));//
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //     content: Text(
+    //       "OTP has been sent to your $phoneFormatted",
+    //       style: TextStyle(
+    //           fontSize: 14,
+    //           color: white,
+    //           fontFamily: "Poppins-Regular"),
+    //     ),
+    //     backgroundColor:purple,
+    //   ));
+    // }
+
+
   }
-
-
 }

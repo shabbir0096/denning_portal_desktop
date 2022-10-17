@@ -1,7 +1,6 @@
 import 'package:denning_portal/services/otp_verification.dart';
 import 'package:denning_portal/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
