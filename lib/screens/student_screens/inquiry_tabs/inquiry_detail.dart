@@ -8,8 +8,8 @@ import '../../../utils/colors.dart';
 import '../../../providers/theme.dart';
 
 class InquiryDetail extends StatefulWidget {
-  var data;
-  InquiryDetail(this.data);
+  dynamic data;
+  InquiryDetail(this.data, {Key? key}) : super(key: key);
 
   @override
   State<InquiryDetail> createState() => _InquiryDetailState();
@@ -18,10 +18,10 @@ class InquiryDetail extends StatefulWidget {
 class _InquiryDetailState extends State<InquiryDetail> {
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     return Scaffold(
       appBar: AppBar(
@@ -155,7 +155,7 @@ class _InquiryDetailState extends State<InquiryDetail> {
 
                 ],
               ),
-              SizedBox(height: 5,),
+              const SizedBox(height: 5,),
               Text(
                 "${widget.data['history'][0]['message']}",
                 style:CustomTextStyle.bodyRegular(context , theme.isDark? white: black),

@@ -1,7 +1,7 @@
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:denning_portal/screens/student_screens/events/registration_form.dart';
-import 'package:flutter/cupertino.dart';
+//import 'package:denning_portal/screens/student_screens/events/registration_form_macos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,10 +13,11 @@ import '../../../custom_widgets/custom_textStyle.dart';
 import '../../../utils/colors.dart';
 import '../../../providers/theme.dart';
 import 'event_screen.dart';
+import 'dart:io' as Io;
 
 class EventDetails extends StatefulWidget {
   dynamic data;
-  EventDetails(this.data);
+  EventDetails(this.data, {Key? key}) : super(key: key);
 
   @override
   _EventDetailsState createState() => _EventDetailsState();
@@ -25,7 +26,7 @@ class EventDetails extends StatefulWidget {
 class _EventDetailsState extends State<EventDetails> {
   bool pressAttention = false;
   bool buttonClicked = false;
-  final f = new DateFormat.yMMMMEEEEd();
+  final f = DateFormat.yMMMMEEEEd();
   String studentName = "";
   String studentEmail = "";
   String studentDRN = "";
@@ -87,7 +88,7 @@ class _EventDetailsState extends State<EventDetails> {
                   height: _height * 0.7,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       bottomRight: Radius.circular(0.0),
                       bottomLeft: Radius.circular(0.0),
                     ),
@@ -119,7 +120,7 @@ class _EventDetailsState extends State<EventDetails> {
                         //   ),
                         // ),
                     SizedBox.fromSize(
-                    size: Size(45, 45), // button width and height
+                    size: const Size(45, 45), // button width and height
                       child: GestureDetector(
                         onTap: (){
                           Navigator.of(context).pop();
@@ -127,8 +128,8 @@ class _EventDetailsState extends State<EventDetails> {
                         child: Container(
                           height: 250.0,
                           width: 250.0,
-                          child: Center(child: Icon(Icons.arrow_back ,color: black,),),
-                          decoration: BoxDecoration(
+                          child: const Center(child: Icon(Icons.arrow_back ,color: black,),),
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white,
                           ),
@@ -298,9 +299,9 @@ class _EventDetailsState extends State<EventDetails> {
                             child: Container(
                               width: double.infinity,
                               height: 50.h,
-                              child: new MaterialButton(
+                              child: MaterialButton(
                                 elevation: 0,
-                                child: new Text(
+                                child: Text(
                                   'Register now',
                                   style: TextStyle(
                                       color: theme.isDark ? white : white,
@@ -308,12 +309,16 @@ class _EventDetailsState extends State<EventDetails> {
                                       fontFamily: "Poppins-Regular"),
                                 ),
                                 color: theme.isDark ? blue : blue,
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(10.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 onPressed: () {
-
+                                Io.Platform.isWindows ?
                                   Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RegistratioFormEvents(userDetailsList: userDetailsList)))
+                                :  Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => RegistratioFormEvents(userDetailsList: userDetailsList)));
@@ -337,9 +342,9 @@ class _EventDetailsState extends State<EventDetails> {
                           child: Container(
                             width: double.infinity,
                             height: 50.h,
-                            child: new MaterialButton(
+                            child: MaterialButton(
                               elevation: 0,
-                              child: new Text(
+                              child: Text(
                                 'All Events',
                                 style: TextStyle(
                                     color: theme.isDark ? black : white,
@@ -347,15 +352,15 @@ class _EventDetailsState extends State<EventDetails> {
                                     fontFamily: "Poppins-Regular"),
                               ),
                               color: theme.isDark ? white : black,
-                              shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
                               onPressed: () {
                                 Navigator.pop(context);
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => EventsScreen()));
+                                        builder: (context) => const EventsScreen()));
                               },
                             ),
                           ),

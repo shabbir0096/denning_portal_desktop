@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:denning_portal/services/utilities/app_url.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +14,7 @@ import '../services/utilities/authication_check.dart';
 import '../services/utilities/basic_auth.dart';
 
 class AttendanceController {
-  var convertedData;
+  dynamic convertedData;
   Future getAttendanceData(String? token, String? studentId , BuildContext context) async {
     String token ="";
     String studentId = "";
@@ -27,7 +26,7 @@ class AttendanceController {
 
       final response = await http.get(
         Uri.parse(
-            "${AppUrl.baseUrl}attendance_data?auth_token=${token}&student_id=${studentId}"),
+            "${AppUrl.baseUrl}attendance_data?auth_token=$token&student_id=$studentId"),
         headers: <String, String>{'authorization': BasicAuth.basicAuth},
       );
 
@@ -55,7 +54,7 @@ class AttendanceController {
 
           Navigator.pop(context);
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => EmailLogin()));
+              context, MaterialPageRoute(builder: (context) => const EmailLogin()));
           CustomScaffoldWidget.buildErrorSnackbar(context,
               "Your Session has been expired, please try to login again");
         }
@@ -72,12 +71,12 @@ class AttendanceController {
       } else {
         AuthChecker.exceptionHandling(context, response.statusCode);
       }
-    }on TimeoutException catch (e) {
+    }on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
-    } on Error catch (e) {
+    } on Error {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
   }
@@ -91,7 +90,7 @@ class AttendanceController {
       final response = await http.get(
         Uri.parse(
             "${AppUrl
-                .baseUrl}attendance_data?auth_token=${token}&student_id=${studentId}&subject_id=${subjectId}"),
+                .baseUrl}attendance_data?auth_token=$token&student_id=$studentId&subject_id=$subjectId"),
         headers: <String, String>{'authorization': BasicAuth.basicAuth},
       );
 
@@ -120,7 +119,7 @@ class AttendanceController {
 
           Navigator.pop(context);
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => EmailLogin()));
+              context, MaterialPageRoute(builder: (context) => const EmailLogin()));
           CustomScaffoldWidget.buildErrorSnackbar(context,
               "Your Session has been expired, please try to login again");
         }
@@ -135,12 +134,12 @@ class AttendanceController {
       } else {
         AuthChecker.exceptionHandling(context, response.statusCode);
       }
-    } on TimeoutException catch (e) {
+    } on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
-    } on Error catch (e) {
+    } on Error {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
   }

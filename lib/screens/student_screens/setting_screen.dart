@@ -6,7 +6,7 @@ import '../../custom_widgets/custom_textStyle.dart';
 import '../../providers/theme.dart';
 
 class SettingScreen extends StatefulWidget {
-  SettingScreen({Key? key}) : super(key: key);
+  const SettingScreen({Key? key}) : super(key: key);
 
   @override
   State<SettingScreen> createState() => _SettingScreenState();
@@ -15,7 +15,6 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
-    final themeChanger = Provider.of<ThemeChanger>(context);
     final theme = Provider.of<ThemeChanger>(context);
     return Scaffold(
       appBar: AppBar(
@@ -53,14 +52,14 @@ class _SettingScreenState extends State<SettingScreen> {
                 "assets/images/moon.png",
                 width: 200,
               ),
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
             ),
           ),
           Container (
-            padding: EdgeInsets.only(left:15, right: 15, bottom: 30),
+            padding: const EdgeInsets.only(left:15, right: 15, bottom: 30),
             child: Consumer<ThemeChanger>(
               builder: (context,notifier,child) => SwitchListTile(
-                title: Text("Dark Mode"),
+                title: const Text("Dark Mode"),
                 onChanged: (val){
                   notifier.toggleChangeTheme();
                 },

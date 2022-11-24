@@ -21,21 +21,21 @@ class RegistratioFormEvents extends StatefulWidget {
 }
 
 class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
-  WebviewController _controller = WebviewController();
+  final WebviewController _controller = WebviewController();
     String? googleFormLink_new;
   String refineUrl(String googleFormLink) {
 
     if(googleFormLink.contains("STUDENT_NAME")) {
-      googleFormLink = googleFormLink.replaceAll("STUDENT_NAME", "${widget.userDetailsList[0]}");
+      googleFormLink = googleFormLink.replaceAll("STUDENT_NAME", widget.userDetailsList[0]);
     }
     if(googleFormLink.contains("STUDENT_EMAIL@DENNINGSTUDENTS.COM")) {
-      googleFormLink = googleFormLink.replaceAll("STUDENT_EMAIL@DENNINGSTUDENTS.COM", "${widget.userDetailsList[1]}");
+      googleFormLink = googleFormLink.replaceAll("STUDENT_EMAIL@DENNINGSTUDENTS.COM", widget.userDetailsList[1]);
  }
     if(googleFormLink.contains("STUDENT_DRN")) {
-      googleFormLink = googleFormLink.replaceAll("STUDENT_DRN", "${widget.userDetailsList[2]}");
+      googleFormLink = googleFormLink.replaceAll("STUDENT_DRN", widget.userDetailsList[2]);
     }
     if(googleFormLink.contains("STUDENT_PHONE")) {
-      googleFormLink = googleFormLink.replaceAll("STUDENT_PHONE", "${widget.userDetailsList[3]}");
+      googleFormLink = googleFormLink.replaceAll("STUDENT_PHONE", widget.userDetailsList[3]);
     }
 
     // repeat the above check for all the dynamic values
@@ -48,8 +48,9 @@ class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    refineUrl("${widget.userDetailsList[4]}");
+    refineUrl(widget.userDetailsList[4]);
   }
+
 
   Future<void> initPlatformState(String url) async {
     await _controller.initialize();
@@ -72,13 +73,21 @@ class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
                 if (snapshot.hasData ) {
                   return   Expanded(child: Webview(_controller));
                 } else {
-                  return LinearProgressIndicator();
+                  return const LinearProgressIndicator();
                 }
               }),
 
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+
+    _controller.dispose();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -118,7 +127,7 @@ class _RegistratioFormEventsState extends State<RegistratioFormEvents> {
              ))
              : Expanded(child: compositeView()),
        ],
-     ): NoInternetScreen(),
+     ): const NoInternetScreen(),
     );
   }
 }

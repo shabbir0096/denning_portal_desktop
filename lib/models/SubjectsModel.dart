@@ -53,12 +53,6 @@ SubjectsModel copyWith({  int? status,
 
 }
 
-/// class_id : "3"
-/// subject_id : "29"
-/// section_id : "160"
-/// subject_name : "Developing English Language Skills"
-/// section_name : "Developing English Language Skills 1"
-/// section_short_name : "DELS 1"
 
 class Subjects {
   Subjects({

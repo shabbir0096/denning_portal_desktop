@@ -1,5 +1,4 @@
-import 'package:badges/badges.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+
 import 'package:denning_portal/screens/student_screens/inquiry_tabs/group_messages.dart';
 import 'package:denning_portal/screens/student_screens/inquiry_tabs/inquiries.dart';
 import 'package:denning_portal/screens/student_screens/inquiry_tabs/private_messages.dart';
@@ -8,16 +7,12 @@ import 'package:denning_portal/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../custom_widgets/custom_dialogue_windows.dart';
 import '../../custom_widgets/custom_textStyle.dart';
 import '../../custom_widgets/no_internet_screen.dart';
 import '../../providers/internet_checker.dart';
 import '../../providers/theme.dart';
 import '../profile_screens/change_password.dart';
-import 'all_notifications.dart';
 import '../login_screens/email_login.dart';
 
 class NoticeBoard extends StatefulWidget {
@@ -30,23 +25,27 @@ class NoticeBoard extends StatefulWidget {
 class _NoticeBoardState extends State<NoticeBoard>
     with TickerProviderStateMixin {
   TabController? _controller;
-  var subscription;
   String connectionStatus='';
 
   @override
   void initState() {
-    _controller = new TabController(length: 3, vsync: this);
+    _controller = TabController(length: 3, vsync: this);
     super.initState();
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _controller?.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
-
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    //
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     return Scaffold(
       appBar: AppBar(
@@ -87,7 +86,7 @@ class _NoticeBoardState extends State<NoticeBoard>
           // ),
           Theme(
             data: Theme.of(context).copyWith(
-              textTheme: TextTheme().apply(bodyColor: Colors.black),
+              textTheme: const TextTheme().apply(bodyColor: Colors.black),
               // iconTheme: IconThemeData(color: white, size: 28.sp),
             ),
             child: PopupMenuButton<int>(
@@ -141,7 +140,7 @@ class _NoticeBoardState extends State<NoticeBoard>
               context, theme.isDark ? white : black),
           labelColor: purple,
           unselectedLabelColor: theme.isDark ? white : black,
-          tabs: <Widget>[
+          tabs: const <Widget>[
             Tab(
               text: "INQUIRIES",
             ),
@@ -156,12 +155,12 @@ class _NoticeBoardState extends State<NoticeBoard>
       ),
       body:isOnline! ? TabBarView(
         controller: _controller,
-        children: <Widget>[
+        children: const <Widget>[
           NoticeBoardQuery(),
           GroupMessages(),
           PrivateMessages()
         ],
-      ): NoInternetScreen(),
+      ): const NoInternetScreen(),
     );
   }
 
@@ -170,21 +169,20 @@ class _NoticeBoardState extends State<NoticeBoard>
     switch (item) {
       case 0:
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => SettingScreen()));
+            .push(MaterialPageRoute(builder: (context) => const SettingScreen()));
         break;
       case 1:
 
       case 2:
-      print("New Broadcast Clicked");
       final pref = await SharedPreferences.getInstance();
-      String? token = await pref.getString("token");
+      //String? token = await pref.getString("token");
       pref.remove("token");
       pref.remove("status");
       Navigator.pop(context);
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => EmailLogin()));
+              builder: (context) => const EmailLogin()));
       break;
 
     }

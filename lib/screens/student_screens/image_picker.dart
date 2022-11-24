@@ -1,4 +1,3 @@
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import '../../../services/utilities/basic_auth.dart';
 import '../../../utils/colors.dart';
 import '../../providers/theme.dart';
 import 'package:http/http.dart' as http;
-
 
 class AddInquiry extends StatefulWidget {
   const AddInquiry({Key? key}) : super(key: key);
@@ -36,7 +34,6 @@ class _AddInquiryState extends State<AddInquiry> {
   ];
   String? selectedValue;
 
-  final _formKey = GlobalKey<FormState>();
   String dropdownValue = 'One';
   PlatformFile? objFile;
 
@@ -65,28 +62,18 @@ class _AddInquiryState extends State<AddInquiry> {
     request.fields["auth_token"] =
         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdGF0dXMiOjIwMCwibWVzc2FnZSI6IkxvZ2dlZGluIFN1Y2Nlc3NmdWxseSIsInN0dWRlbnRfaWQiOiIyNiIsInN0dWRlbnRfY29kZSI6IkRMUy0yMDE5LTAwNDAiLCJuYW1lIjoiTXVoYW1tYWQgU2FtYWltIiwiZW1haWwiOiJtdWhhbW1hZC5zYW1haW0uMDA0MEBkZW5uaW5nc3R1ZGVudHMuY29tIiwiYWRkcmVzcyI6IjUwMS01Zmxvb3Igc3VuIHJlc2lkZW5jeSBvcHAgZGFuaXNoIG1vdG9ycyBraGFsaWQgYmluIHdhbGVlZCByb2FkIiwicGhvbmUiOiIwMzAyLTI4NzU2NTEiLCJwaG9uZV9mb3JtYXR0ZWQiOiI5MjMwMjI4NzU2NTEiLCJiaXJ0aGRheSI6IjA5LUp1bi0yMDAwIiwiZ2VuZGVyIjoibWFsZSIsImltYWdlIjoiaHR0cHM6XC9cL2Rlbm5pbmdwb3J0YWwuY29tXC9kcG9ydGFsXC91cGxvYWRzXC9zdHVkZW50X2ltYWdlXC8yNi5qcGciLCJ2YWxpZGl0eSI6dHJ1ZX0.fryeP2djaRvEc9-zvmPEUJeGoARgvJYMWGvDzFeENRI";
 
-    request.files.add(new http.MultipartFile(
+    request.files.add(http.MultipartFile(
         "attached_file_name", objFile!.readStream!, objFile!.size,
         filename: objFile!.name));
-
-    //-------Send request
-    var resp = await request.send();
-
-    //------Read response
-    String result = await resp.stream.bytesToString();
-
-    //-------Your response
-    print(result);
   }
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
-    print("File Path : ${objFile}");
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -126,10 +113,10 @@ class _AddInquiryState extends State<AddInquiry> {
                           color: theme.isDark ? white : black, width: 2.0),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    enabledBorder: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                       borderSide:
-                          new BorderSide(color: theme.isDark ? white : black),
+                          BorderSide(color: theme.isDark ? white : black),
                     ),
                     border: InputBorder.none,
                     hintStyle: CustomTextStyle.bodyRegular(
@@ -158,7 +145,9 @@ class _AddInquiryState extends State<AddInquiry> {
                   items: departments
                       .map((item) => DropdownMenuItem<String>(
                             value: item,
-                            onTap: () => null,
+                            onTap: () {
+                              null;
+                            },
                             enabled: true,
                             child: Text(
                               item,
@@ -188,10 +177,10 @@ class _AddInquiryState extends State<AddInquiry> {
                           color: theme.isDark ? white : black, width: 2.0),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    enabledBorder: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                       borderSide:
-                          new BorderSide(color: theme.isDark ? white : black),
+                          BorderSide(color: theme.isDark ? white : black),
                     ),
                     border: InputBorder.none,
                     hintStyle: CustomTextStyle.bodyRegular(
@@ -220,7 +209,9 @@ class _AddInquiryState extends State<AddInquiry> {
                   items: priority
                       .map((item) => DropdownMenuItem<String>(
                             value: item,
-                            onTap: () => null,
+                            onTap: () {
+                              null;
+                            },
                             enabled: true,
                             child: Text(
                               item,
@@ -251,10 +242,10 @@ class _AddInquiryState extends State<AddInquiry> {
                           color: theme.isDark ? white : black, width: 2.0),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    enabledBorder: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                       borderSide:
-                          new BorderSide(color: theme.isDark ? white : black),
+                          BorderSide(color: theme.isDark ? white : black),
                     ),
                     border: InputBorder.none,
                     hintText: "Subject",
@@ -287,10 +278,10 @@ class _AddInquiryState extends State<AddInquiry> {
                             color: theme.isDark ? white : black, width: 2.0),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      enabledBorder: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(10.0),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                         borderSide:
-                            new BorderSide(color: theme.isDark ? white : black),
+                            BorderSide(color: theme.isDark ? white : black),
                       ),
                       border: InputBorder.none,
                       hintText: "Your Inquiry",
@@ -313,7 +304,7 @@ class _AddInquiryState extends State<AddInquiry> {
                 children: [
                   Tooltip(
                     message: "Attach File",
-                    textStyle: TextStyle(color: Colors.red),
+                    textStyle: const TextStyle(color: Colors.red),
                     height: 20,
                     child: FloatingActionButton(
                       onPressed: () async {
@@ -342,16 +333,16 @@ class _AddInquiryState extends State<AddInquiry> {
                   Expanded(
                     child: Container(
                       height: 50.h,
-                      child: new MaterialButton(
+                      child: MaterialButton(
                         elevation: 0,
-                        child: new Text(
+                        child: Text(
                           'Send',
                           style: CustomTextStyle.bodyRegular(
                               context, theme.isDark ? black : white),
                         ),
                         textColor: theme.isDark ? black : white,
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                         color: theme.isDark ? white : black,
                         onPressed: () {

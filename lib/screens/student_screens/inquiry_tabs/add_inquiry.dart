@@ -36,13 +36,13 @@ class _AddInquiryState extends State<AddInquiry> {
   String? status;
   String? subject;
   String? inquiry;
-  bool loader_visible = false;
+  bool loaderVisible = false;
   final List<String> departments = [
     "admin-3",
     'teacher-5',
     'student_affair-1',
   ];
-  final List<String> departments_show = [
+  final List<String> departmentsShow = [
     "Admin",
     'Teacher',
     'Student Affair',
@@ -52,8 +52,8 @@ class _AddInquiryState extends State<AddInquiry> {
     'Medium',
     'Low',
   ];
-  String? department_name = 'Select Department';
-  String? priority_name = "Select Priority";
+  String? departmentName = 'Select Department';
+  String? priorityName = "Select Priority";
 
   final _formKey = GlobalKey<FormState>();
   String dropdownValue = 'One';
@@ -63,9 +63,9 @@ class _AddInquiryState extends State<AddInquiry> {
   Future<void> getUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      // token = prefs.getString('token')!;
-      // studentId = prefs.getString('studentId')!;
-      // status = prefs.getString('status')!;
+      token = prefs.getString('token')!;
+      studentId = prefs.getString('studentId')!;
+      status = prefs.getString('status')!;
     });
   }
 
@@ -84,16 +84,16 @@ class _AddInquiryState extends State<AddInquiry> {
       //-----add other fields if needed
       request.fields["type"] = "inquiry";
       request.fields["inquiry_thread_code"] = '';
-      request.fields["subject"] = "${subject}";
-      request.fields["priority"] = "${prior}";
-      request.fields["inquiry"] = "${inquiry}";
-      request.fields["status"] = "${status}";
-      request.fields["sender"] = "student-${studentId}";
-      request.fields["reciever"] = "${depart}";
-      request.fields["timestamp"] = "${dateTimeSend}";
+      request.fields["subject"] = "$subject";
+      request.fields["priority"] = prior;
+      request.fields["inquiry"] = "$inquiry";
+      request.fields["status"] = "$status";
+      request.fields["sender"] = "student-$studentId";
+      request.fields["reciever"] = depart;
+      request.fields["timestamp"] = dateTimeSend;
       request.fields["read_status"] = "0";
-      request.fields["student_id"] = "${studentId}";
-      request.fields["auth_token"] = "${token}";
+      request.fields["student_id"] = "$studentId";
+      request.fields["auth_token"] = "$token";
 
       if (objFile == null) {
         request.fields["attached_file_name"] = '';
@@ -134,7 +134,7 @@ class _AddInquiryState extends State<AddInquiry> {
 
           Navigator.pop(context);
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => EmailLogin()));
+              context, MaterialPageRoute(builder: (context) => const EmailLogin()));
           CustomScaffoldWidget.buildErrorSnackbar(context,
               "Your Session has been expired, please try to login again");
         }else if(result['status'] == 401) {
@@ -156,7 +156,7 @@ class _AddInquiryState extends State<AddInquiry> {
   void showToast() {
 
     setState(() {
-      loader_visible = false;
+      loaderVisible = false;
 
     });
   }
@@ -213,10 +213,10 @@ class _AddInquiryState extends State<AddInquiry> {
                             color: theme.isDark ? white : black, width: 1.0),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      enabledBorder: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(10.0),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                         borderSide:
-                        new BorderSide(color: theme.isDark ? white : black),
+                        BorderSide(color: theme.isDark ? white : black),
                       ),
                       border: InputBorder.none,
                       hintStyle: CustomTextStyle.bodyRegular(
@@ -226,7 +226,7 @@ class _AddInquiryState extends State<AddInquiry> {
                     ),
                     isExpanded: true,
                     hint: Text(
-                      '${department_name}',
+                      '$departmentName',
                       style: TextStyle(
                           color: theme.isDark ? white : black,
                           fontFamily: "Poppins-Regular",
@@ -242,10 +242,12 @@ class _AddInquiryState extends State<AddInquiry> {
                         color: theme.isDark ? cardColor : whiteBottomBar,
                         border: Border.all(color: theme.isDark ? white : black),
                         borderRadius: BorderRadius.circular(10.0)),
-                    items: departments_show
+                    items: departmentsShow
                         .map((item) => DropdownMenuItem<String>(
                       value: item,
-                      onTap: () => null,
+                      onTap: () {
+                        null;
+                      } ,
                       enabled: true,
                       child: Text(
                         item,
@@ -281,10 +283,10 @@ class _AddInquiryState extends State<AddInquiry> {
                             color: theme.isDark ? white : black, width: 1.0),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      enabledBorder: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(10.0),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                         borderSide:
-                        new BorderSide(color: theme.isDark ? white : black),
+                        BorderSide(color: theme.isDark ? white : black),
                       ),
                       border: InputBorder.none,
                       hintStyle: CustomTextStyle.bodyRegular(
@@ -294,7 +296,7 @@ class _AddInquiryState extends State<AddInquiry> {
                     ),
                     isExpanded: true,
                     hint: Text(
-                      '$priority_name',
+                      '$priorityName',
                       style: TextStyle(
                           color: theme.isDark ? white : black,
                           fontFamily: "Poppins-Regular",
@@ -313,7 +315,9 @@ class _AddInquiryState extends State<AddInquiry> {
                     items: priority
                         .map((item) => DropdownMenuItem<String>(
                       value: item,
-                      onTap: () => null,
+                      onTap: () {
+                        null;
+                      },
                       enabled: true,
                       child: Text(
                         item,
@@ -340,24 +344,24 @@ class _AddInquiryState extends State<AddInquiry> {
                     decoration: InputDecoration(
                       labelText: "Subject",
                       fillColor: theme.isDark ? white : black,
-                      contentPadding: EdgeInsets.only(right: 25.0 , left: 25.0 ),
+                      contentPadding: const EdgeInsets.only(right: 25.0 , left: 25.0 ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                             color: theme.isDark ? white : black, width: 1.0),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      enabledBorder: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(10.0),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                         borderSide:
-                        new BorderSide(color: theme.isDark ? white : black),
+                        BorderSide(color: theme.isDark ? white : black),
                       ),
-                      errorBorder: OutlineInputBorder(
+                      errorBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(
                             width: 1,
                             color: errorColor,
                           )),
-                      focusedErrorBorder: OutlineInputBorder(
+                      focusedErrorBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         borderSide: BorderSide(
                           width: 1,
@@ -399,26 +403,26 @@ class _AddInquiryState extends State<AddInquiry> {
                       style: TextStyle(color: theme.isDark ? white : black),
                       decoration: InputDecoration(
                         labelText: "Write your inquiry",
-                        contentPadding: EdgeInsets.only(right: 25.0 , left: 25.0 , top: 30.0 , bottom: 20.0),
+                        contentPadding: const EdgeInsets.only(right: 25.0 , left: 25.0 , top: 30.0 , bottom: 20.0),
                         fillColor: theme.isDark ? white : black,
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                               color: theme.isDark ? white : black, width: 2.0),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        enabledBorder: new OutlineInputBorder(
-                          borderRadius: new BorderRadius.circular(10.0),
-                          borderSide: new BorderSide(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
                               color: theme.isDark ? white : black),
                         ),
-                        errorBorder: OutlineInputBorder(
+                        errorBorder: const OutlineInputBorder(
                             borderRadius:
                             BorderRadius.all(Radius.circular(10.0)),
                             borderSide: BorderSide(
                               width: 1,
                               color: errorColor,
                             )),
-                        focusedErrorBorder: OutlineInputBorder(
+                        focusedErrorBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(
                             width: 1,
@@ -466,7 +470,7 @@ class _AddInquiryState extends State<AddInquiry> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     )
-                        : Text(
+                        : const Text(
                       "No file selected",
                       style: TextStyle(
                           color: Colors.red,
@@ -482,7 +486,7 @@ class _AddInquiryState extends State<AddInquiry> {
                   children: [
                     Tooltip(
                       message: "Attach File",
-                      textStyle: TextStyle(color: Colors.red),
+                      textStyle: const TextStyle(color: Colors.red),
                       height: 20,
                       child: FloatingActionButton(
                         onPressed: () async {
@@ -490,6 +494,7 @@ class _AddInquiryState extends State<AddInquiry> {
                               allowedExtensions: [
                                 'jpg',
                                 'pdf',
+                                'jpeg',
                                 'png',
                                 'gif'
                               ],
@@ -521,23 +526,23 @@ class _AddInquiryState extends State<AddInquiry> {
                         height: 50.h,
                         child: MaterialButton(
                           elevation: 0,
-                          child: loader_visible ? CircularProgressIndicator(color: theme.isDark ? black : white) : Text(
+                          child: loaderVisible ? CircularProgressIndicator(color: theme.isDark ? black : white) : Text(
                             'Send',
                             style: CustomTextStyle.bodyRegular(
                                 context, theme.isDark ? black : white),
                           ),
                           textColor: theme.isDark ? black : white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
                           color: theme.isDark ? white : black,
                           onPressed: () {
 
-                            var file_size = objFile?.size;
+                            var fileSize = objFile?.size;
                             if (isOnline! == false) {
                               CustomScaffoldWidget.buildErrorSnackbar(context,
                                   "Please enable your internet connection");
-                            } else if(file_size != null && file_size> 1000000){
+                            } else if(fileSize != null && fileSize> 1000000){
                               CustomScaffoldWidget.buildErrorSnackbar(
                                   context, "image size is too large select less than 1 MB");
                             }else if (depart == 'Select Department'){
@@ -546,7 +551,7 @@ class _AddInquiryState extends State<AddInquiry> {
                               CustomScaffoldWidget.buildErrorSnackbar(context, "Select Priority");
                             } else {
                               setState(() {
-                                loader_visible = true;
+                                loaderVisible = true;
                               });
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
@@ -554,7 +559,7 @@ class _AddInquiryState extends State<AddInquiry> {
                                 _formKey.currentState!.reset();
                               }
                               else {
-                                loader_visible = false;
+                                loaderVisible = false;
                               }
                             }
                           },

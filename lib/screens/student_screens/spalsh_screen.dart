@@ -16,11 +16,12 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
+  @override
   void initState() {
-    Timer(Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => EmailLogin()),
+        MaterialPageRoute(builder: (context) => const EmailLogin()),
       );
     });
     super.initState();
@@ -46,10 +47,10 @@ class _SplashScreenState extends State<SplashScreen> {
               fit: BoxFit.contain,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 100,
           ),
-          Spacer(),
+          const Spacer(),
           CircularProgressIndicator(
             color:  theme.isDark? white: black,
           ),

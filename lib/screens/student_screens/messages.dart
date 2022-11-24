@@ -12,21 +12,21 @@ class Messages extends StatefulWidget {
 class _MessagesState extends State<Messages> {
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor:black,
       appBar: AppBar(
-        title: Text("Messages",
+        title: const Text("Messages",
             style: TextStyle(fontFamily: "Poppins-SemiBold", color: white)),
         elevation: 0,
         backgroundColor: Colors.transparent,
         centerTitle: true,
         leading: IconButton(onPressed: (){}, icon: Icon(Icons.arrow_back_ios,size: 18.h,)),
-        iconTheme: IconThemeData(color: white),
+        iconTheme: const IconThemeData(color: white),
 
       ),
 

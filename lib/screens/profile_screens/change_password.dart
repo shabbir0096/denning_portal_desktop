@@ -22,7 +22,7 @@ import 'dart:convert';
 import '../login_screens/email_login.dart';
 
 class ChangePassword extends StatefulWidget {
-  ChangePassword({Key? key}) : super(key: key);
+  const ChangePassword({Key? key}) : super(key: key);
 
   @override
   State<ChangePassword> createState() => _ChangePasswordState();
@@ -40,9 +40,9 @@ class _ChangePasswordState extends State<ChangePassword> {
   String? currentPassword = "";
   String? newPassword = "";
   String? confirmPassword = "";
-  TextEditingController _currentPasswordController = TextEditingController();
-  TextEditingController _newPasswordController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   bool spin = false;
 
   Future<void> getUser() async {
@@ -55,7 +55,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   Future changePassword() async {
     if (newPassword == confirmPassword) {
-      var convertedData;
+      dynamic convertedData;
 
       setState(() {
         spin = true;
@@ -63,11 +63,11 @@ class _ChangePasswordState extends State<ChangePassword> {
 
       try {
         Map data = {
-          "student_id": "${studentId}",
-          "auth_token": "${token}",
-          "current_password": "${currentPassword}",
-          "new_password": "${newPassword}",
-          "confirm_password": "${confirmPassword}"
+          "student_id": "$studentId",
+          "auth_token": "$token",
+          "current_password": "$currentPassword",
+          "new_password": "$newPassword",
+          "confirm_password": "$confirmPassword"
         };
         final response = await http
             .post(
@@ -81,7 +81,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           convertedData = json.decode(response.body);
           if(convertedData['status'] == 200){
             CustomScaffoldWidget.buildSuccessSnackbar(
-                context, "${"${convertedData['message']}"}");
+                context, "${convertedData['message']}");
             setState(() {
               spin = false;
             });
@@ -107,7 +107,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
             Navigator.pop(context);
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => EmailLogin()));
+                context, MaterialPageRoute(builder: (context) => const EmailLogin()));
             CustomScaffoldWidget.buildErrorSnackbar(context,
                 "Your Session has been expired, please try to login again");
           }
@@ -125,12 +125,12 @@ class _ChangePasswordState extends State<ChangePassword> {
         } else {
           AuthChecker.exceptionHandling(context, response.statusCode);
         }
-      } on TimeoutException catch (e) {
+      } on TimeoutException {
         CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-      } on SocketException catch (e) {
+      } on SocketException {
         CustomScaffoldWidget.buildErrorSnackbar(
             context, "Please enable your internet connection");
-      } on Error catch (e) {
+      } on Error {
         CustomScaffoldWidget.buildErrorSnackbar(
             context, "Something went wrong");
       }
@@ -146,13 +146,21 @@ class _ChangePasswordState extends State<ChangePassword> {
     super.initState();
     getUser();
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
 
+    _confirmPasswordController.dispose();
+    _currentPasswordController.dispose();
+    _newPasswordController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
 
@@ -245,6 +253,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                       },
                       onSaved: (String? value) {
                         currentPassword = value!;
+                        return currentPassword;
                         // ,
                       }),
                   SizedBox(
@@ -286,6 +295,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                       },
                       onSaved: (String? value) {
                         newPassword = value!;
+                        return newPassword;
                       }),
                   SizedBox(
                     height: 20.h,
@@ -326,6 +336,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                       },
                       onSaved: (String? value) {
                         confirmPassword = value!;
+                        return confirmPassword;
                         // ,
                       }),
                   SizedBox(

@@ -9,6 +9,7 @@ import 'package:denning_portal/screens/student_screens/notice_board_screens/noti
 import 'package:denning_portal/screens/student_screens/student_dashboard.dart';
 import 'package:denning_portal/screens/student_screens/time_table.dart';
 import 'package:denning_portal/screens/student_screens/vle.dart';
+import 'package:denning_portal/screens/student_screens/vle_macos.dart';
 import 'package:denning_portal/utils/icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,8 +18,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/profile_screens/student_profile.dart';
 import '../utils/colors.dart';
 import '../providers/theme.dart';
-
+import 'dart:io' as Io;
 class StudentBottomNavigation extends StatefulWidget {
+  const StudentBottomNavigation({Key? key}) : super(key: key);
+
 
 
 
@@ -32,13 +35,13 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
   MyAppIcons myAppIcons = MyAppIcons();
 
   int _selectedIndex = 0;
-  late List<Widget> _widgetOptions = <Widget>[
+  late final List<Widget> _widgetOptions = <Widget>[
     StudentDashboard(
       select: onTapped,
     ),
-    TimeTableScreen(),
-    Vle(),
-    NoticeBoard()
+    const TimeTableScreen(),
+    Io.Platform.isMacOS ? const VleMacos() : const Vle(),
+    const NoticeBoard()
   ];
 
   void onTapped(int index) {
@@ -75,7 +78,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
     final _height = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    //final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     return Scaffold(
       drawer: SafeArea(
@@ -90,66 +93,63 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
             width: 120.w,
             height: double.infinity,
             child: ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(10),
                   bottomRight: Radius.circular(10)),
               child: Drawer(
                 child: ListView(
-                  padding: EdgeInsets.all(0.0),
+                  padding: const EdgeInsets.all(0.0),
                   children: <Widget>[
                     ListTile(
                       onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => StudentProfile()));
+                                builder: (context) => const StudentProfile()));
                       },
-                      title: Container(
-                        // color: Colors.red,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => StudentProfile()));
-                              },
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const StudentProfile()));
+                            },
+                            child: CircleAvatar(
+                              backgroundColor:
+                              theme.isDark == true ? white : white,
+                              radius: 45,
                               child: CircleAvatar(
-                                backgroundColor:
-                                theme.isDark == true ? white : white,
-                                radius: 45,
+                                radius: 41,
                                 child: CircleAvatar(
-                                  radius: 41,
-                                  child: CircleAvatar(
-                                    radius: 37,
-                                    backgroundImage: image!.isEmpty
-                                        ? AssetImage(
-                                        "assets/images/default_profile_image.jpeg")
-                                    as ImageProvider
-                                        : NetworkImage(image!),
-                                    child: const SizedBox.shrink(),
-                                  ),
+                                  radius: 37,
+                                  backgroundImage: image!.isEmpty
+                                      ? const AssetImage(
+                                      "assets/images/default_profile_image.jpeg")
+                                  as ImageProvider
+                                      : NetworkImage(image!),
+                                  child: const SizedBox.shrink(),
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: _height * 0.02,
-                            ),
-                            Text(
-                              "${name}",
-                              style: TextStyle(
-                                  fontFamily: "Poppins-SemiBold",
-                                  fontWeight: FontWeight.w700,
-                                  color: white,
-                                  fontSize: 20.sp),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(height: 25.h),
-                          ],
-                        ),
+                          ),
+                          SizedBox(
+                            height: _height * 0.02,
+                          ),
+                          Text(
+                            "$name",
+                            style: TextStyle(
+                                fontFamily: "Poppins-SemiBold",
+                                fontWeight: FontWeight.w700,
+                                color: white,
+                                fontSize: 20.sp),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 25.h),
+                        ],
                       ),
                     ),
                     ListTile(
@@ -183,7 +183,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                         ),
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: white,
                       thickness: 0.5,
                     ),
@@ -219,7 +219,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                         ),
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: white,
                       thickness: 0.5,
                     ),
@@ -255,7 +255,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                         ),
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: white,
                       thickness: 0.5,
                     ),
@@ -292,7 +292,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                         ),
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: white,
                       thickness: 0.5,
                     ),
@@ -304,7 +304,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => EventsScreen()));
+                                    builder: (context) => const EventsScreen()));
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -329,7 +329,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                         ),
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: white,
                       thickness: 0.5,
                     ),
@@ -341,7 +341,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Notices()));
+                                    builder: (context) => const Notices()));
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -368,7 +368,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                     ),
 
 
-                    Divider(
+                    const Divider(
                       color: white,
                       thickness: 0.5,
                     ),
@@ -380,7 +380,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CourseDetails()));
+                                    builder: (context) => const CourseDetails()));
                           },
                           child:  Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -405,7 +405,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                         ),
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: white,
                       thickness: 0.5,
                     ),
@@ -417,7 +417,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => FeesScreen()));
+                                    builder: (context) => const FeesScreen()));
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -442,7 +442,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                         ),
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: white,
                       thickness: 0.5,
                     ),
@@ -452,7 +452,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                         child: GestureDetector(
                           onTap: () async {
                             final pref = await SharedPreferences.getInstance();
-                            String? token = await pref.getString("token");
+                          //  String? token = await pref.getString("token");
                             pref.remove("token");
                             pref.remove("status");
 
@@ -460,7 +460,7 @@ class _StudentBottomNavigationState extends State<StudentBottomNavigation> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => EmailLogin()));
+                                    builder: (context) => const EmailLogin()));
                             // Navigator.push(context, MaterialPageRoute(builder: (context)=> EmailLogin()));
                           },
                           child: Row(

@@ -13,7 +13,7 @@ import '../../../providers/internet_checker.dart';
 import '../../../providers/theme.dart';
 
 class CourseDetails extends StatefulWidget {
-  CourseDetails({Key? key}) : super(key: key);
+  const CourseDetails({Key? key}) : super(key: key);
 
   @override
   State<CourseDetails> createState() => _CourseDetailsState();
@@ -99,7 +99,7 @@ SubjectsController subjectsController=SubjectsController();
 
                         ),
 
-                        Spacer(),
+                        const Spacer(),
 
                         Text(
                           "Attendance",
@@ -136,10 +136,10 @@ SubjectsController subjectsController=SubjectsController();
 
 
                                   ),
-                                 Spacer(),
+                                 const Spacer(),
                                   GestureDetector(
                                     onTap:(){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=> SpecificAttedance(snapshot.data!.subjects![index])));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=> SpecificAttendance(snapshot.data!.subjects![index])));
                                     },
                                     child: Text(
                                       "Show",
@@ -164,7 +164,7 @@ SubjectsController subjectsController=SubjectsController();
                 ),
               );
             }
-          }): NoInternetScreen() ,
+          }): const NoInternetScreen() ,
     );
   }
 }

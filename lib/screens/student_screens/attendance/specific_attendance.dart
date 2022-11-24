@@ -10,22 +10,15 @@ import '../../../custom_widgets/custom_textStyle.dart';
 import '../../../utils/colors.dart';
 import '../../../providers/theme.dart';
 
-class SpecificAttedance extends StatefulWidget {
-  var data;
-  SpecificAttedance(this.data);
+class SpecificAttendance extends StatefulWidget {
+  dynamic data;
+  SpecificAttendance(this.data, {Key? key}) : super(key: key);
 
   @override
-  State<SpecificAttedance> createState() => _SpecificAttedanceState();
+  State<SpecificAttendance> createState() => _SpecificAttendanceState();
 }
 
-class _SpecificAttedanceState extends State<SpecificAttedance> {
-
-  final _colors = [
-    Colors.blue.withOpacity(0.1),
-    Colors.red.withOpacity(0.1),
-    Colors.yellow.withOpacity(0.1),
-    Colors.green.withOpacity(0.1),
-  ];
+class _SpecificAttendanceState extends State<SpecificAttendance> {
 
   AttendanceController attendanceController=AttendanceController();
   var courseId=0;
@@ -42,7 +35,6 @@ class _SpecificAttedanceState extends State<SpecificAttedance> {
 
 
     });
-    print("idddddddddddddd${token}");
   }
 
   @override
@@ -56,11 +48,10 @@ class _SpecificAttedanceState extends State<SpecificAttedance> {
 
   @override
   Widget build(BuildContext context) {
-    print("type : ${widget.data.subjectId.runtimeType}");
     final _height = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     return Scaffold(
       appBar: AppBar(
@@ -135,10 +126,10 @@ SizedBox(height: _height * 0.4,),
                     ),
                     PieChart(
                       dataMap: {
-                        "Attended Classes":double.parse(snapshot.data!['attendance']['${courseId}']['total_present']['records'] ),
-                        "Missed Classes": double.parse(snapshot.data!['attendance']['${courseId}']['total_absent']['records'] ),
-                        "Online Classes":double.parse(snapshot.data!['attendance']['${courseId}']['total_online']['records'] ),
-                        "Leaves": double.parse(snapshot.data!['attendance']['${courseId}']['total_leaves']['records'] )
+                        "Attended Classes":double.parse(snapshot.data!['attendance']['$courseId']['total_present']['records'] ),
+                        "Missed Classes": double.parse(snapshot.data!['attendance']['$courseId']['total_absent']['records'] ),
+                        "Online Classes":double.parse(snapshot.data!['attendance']['$courseId']['total_online']['records'] ),
+                        "Leaves": double.parse(snapshot.data!['attendance']['$courseId']['total_leaves']['records'] )
 
                       },
                       chartValuesOptions: ChartValuesOptions(
@@ -176,7 +167,7 @@ SizedBox(height: _height * 0.4,),
                             return Column(
                               children: [
                                 ClipRRect(
-                                  borderRadius: BorderRadius.only(
+                                  borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(8.0),
                                     bottomRight: Radius.circular(8.0),
                                     bottomLeft: Radius.circular(8.0),
@@ -203,11 +194,11 @@ SizedBox(height: _height * 0.4,),
                                         children: [
                                           Row(
                                             children: [
-                                              Text("${ snapshot.data!['attendance']['${courseId}']['history'][index]['timestamp_format']}",style: CustomTextStyle.bodyRegular(context , theme.isDark? white: black),),
+                                              Text("${ snapshot.data!['attendance']['$courseId']['history'][index]['timestamp_format']}",style: CustomTextStyle.bodyRegular(context , theme.isDark? white: black),),
 
-                                              Spacer(),
+                                              const Spacer(),
                                               Text("${ snapshot.data!['attendance']['${widget.data.subjectId}']['history'][index]['section_name']}",style: CustomTextStyle.bodyRegular(context , theme.isDark? white: black),),
-                                              Spacer(),
+                                              const Spacer(),
 
                                               Text("${ snapshot.data!['attendance']['${widget.data.subjectId}']['history'][index]['status_name']}",style: TextStyle(color: snapshot.data!['attendance']['${widget.data.subjectId}']['history'][index]['status_name'] == "present" ? Colors.green : (snapshot.data!['attendance']['${widget.data.subjectId}']['history'][index]['status_name'] == "absent") ? errorColor : theme.isDark? white: black ,fontFamily: "Poppins-Bold",fontSize: 12.sp,),)
 

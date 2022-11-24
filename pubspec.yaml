@@ -64,11 +64,17 @@ dependencies:
   webview_windows: ^0.0.8
   flutter_html: ^3.0.0-alpha.3
   flutter_platform_alert: ^0.2.7
-  connectivity_plus: ^2.3.4
+  connectivity_plus: ^2.3.7
   easy_encryption: ^0.0.1
-
   filepicker_windows: ^2.0.2
   path_provider: ^2.0.11
+  flutter_macos_webview: ^0.0.6
+  auto_size_text_field: ^2.1.0
+  webview_dart: ^1.0.0
+
+
+
+
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +86,16 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+  flutter_launcher_icons: "^0.10.0"
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/denning_logo_black.png"
+  windows:
+    generate: true
+    image_path: "assets/images/denning_logo_black.png"
+    icon_size: 48
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

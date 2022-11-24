@@ -30,12 +30,17 @@ class _AllNotificationsState extends State<AllNotifications> {
       "time": "${DateTime.now()}"
     }
   ];
-
+    @override
+  void dispose() {
+    // TODO: implement dispose
+      searchController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
     final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     return Scaffold(
@@ -62,7 +67,7 @@ class _AllNotificationsState extends State<AllNotifications> {
         padding: EdgeInsets.only(left: 10.w, right: 10.w),
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -74,7 +79,6 @@ class _AllNotificationsState extends State<AllNotifications> {
                     setState(() {
                       search = value;
                     });
-                    print(search);
                   },
                   cursorColor: theme.isDark ? white : black,
                   style: TextStyle(color: theme.isDark ? white : black),
@@ -90,10 +94,10 @@ class _AllNotificationsState extends State<AllNotifications> {
                             color: theme.isDark ? white : black, width: 2.0),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      enabledBorder: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(10.0),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                         borderSide:
-                            new BorderSide(color: theme.isDark ? white : black),
+                            BorderSide(color: theme.isDark ? white : black),
                       ),
                       border: InputBorder.none,
                       hintText: "Search",
@@ -128,7 +132,7 @@ class _AllNotificationsState extends State<AllNotifications> {
                           //         builder: (context) => Checkout()));
                         },
                         child: ClipRRect(
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(8.0),
                             bottomRight: Radius.circular(8.0),
                             bottomLeft: Radius.circular(8.0),
@@ -176,10 +180,10 @@ class _AllNotificationsState extends State<AllNotifications> {
                                             context,
                                             theme.isDark ? white : black),
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                       Theme(
                                         data: Theme.of(context).copyWith(
-                                            textTheme: TextTheme().apply(
+                                            textTheme: const TextTheme().apply(
                                                 bodyColor: theme.isDark
                                                     ? white
                                                     : black),
@@ -188,7 +192,7 @@ class _AllNotificationsState extends State<AllNotifications> {
                                                   theme.isDark ? white : black,
                                             )),
                                         child: PopupMenuButton<int>(
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.more_vert_rounded,
                                             size: 20,
                                           ),
@@ -289,7 +293,7 @@ class _AllNotificationsState extends State<AllNotifications> {
                 },
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
           ],
@@ -307,7 +311,6 @@ class _AllNotificationsState extends State<AllNotifications> {
       case 1:
         break;
       case 2:
-        print("User Logged out");
         // Navigator.of(context).pushAndRemoveUntil(
         //     MaterialPageRoute(builder: (context) => LoginPage()),
         //         (route) => false);

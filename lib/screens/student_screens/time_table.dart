@@ -50,7 +50,12 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
     getUser();
     _selectedDateNotAppBBar = DateTime.now();
   }
-
+ @override
+  void dispose() {
+    // TODO: implement dispose
+   _calendarAgendaControllerNotAppBar.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeChanger>(context);
@@ -133,7 +138,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EmailLogin()));
+                              builder: (context) => const EmailLogin()));
                     },
                     child: Text(
                       "Logout",
@@ -160,8 +165,8 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
               fullCalendarDay: WeekDay.long,
               selectedDateColor: Colors.blue.shade900,
               initialDate: DateTime.now(),
-              firstDate: DateTime.now().subtract(Duration(days: 0)),
-              lastDate: DateTime.now().add(Duration(
+              firstDate: DateTime.now().subtract(const Duration(days: 0)),
+              lastDate: DateTime.now().add(const Duration(
                   days: 7)), // this line select specific months visible
               onDateSelected: (date) {
                 setState(() {
@@ -211,13 +216,13 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                 if (snapshot
                                     .data!.timeTable![index].day ==
                                     null) ...[
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 0,
                                   )
                                 ] else if (snapshot
                                     .data!.timeTable![index].day!
                                     .contains(
-                                    "${DateFormat('EEEE').format(_selectedDateNotAppBBar).toLowerCase()}")) ...[
+                                    DateFormat('EEEE').format(_selectedDateNotAppBBar).toLowerCase())) ...[
                                   Column(
                                     children: [
                                       Container(
@@ -228,7 +233,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                               ? cardColor
                                               : cardColorlight,
                                           // Set border width
-                                          borderRadius: BorderRadius.only(
+                                          borderRadius: const BorderRadius.only(
                                               topLeft:
                                               Radius.circular(15),
                                               bottomLeft:
@@ -243,7 +248,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                             Container(
                                               height: 40.h,
                                               width: double.infinity,
-                                              decoration: BoxDecoration(
+                                              decoration: const BoxDecoration(
                                                 color: purple,
                                                 // Set border width
                                                 borderRadius:
@@ -289,7 +294,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                             ),
                                             Center(
                                               child: Text(
-                                                "${snapshot.data!.timeTable![index].subjectName ?? ""}",
+                                                snapshot.data!.timeTable![index].subjectName ?? "",
                                                 style: TextStyle(
                                                     fontSize: 16.sp,
                                                     color: theme.isDark
@@ -330,7 +335,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                                     width: 5.w,
                                                   ),
                                                   Text(
-                                                    "${snapshot.data!.timeTable![index].teacher ?? ""}",
+                                                    snapshot.data!.timeTable![index].teacher ?? "",
                                                     style: TextStyle(
                                                         fontSize: 14.sp,
                                                         color:
@@ -401,10 +406,10 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                                   SizedBox(
                                                     width: 5.w,
                                                   ),
-                                                  Container(
+                                                  SizedBox(
                                                     width:250.w,
                                                     child: Text(
-                                                      "${snapshot.data!.timeTable![index].sectionName ?? ""}",
+                                                      snapshot.data!.timeTable![index].sectionName ?? "",
                                                       style: TextStyle(
                                                           fontSize: 14.sp,
                                                           color: blue,
@@ -424,7 +429,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                     ],
                                   )
                                 ] else ...[
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 0,
                                   )
                                 ]
@@ -441,7 +446,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
             ),
           ],
         ),
-      ) : NoInternetScreen(),
+      ) : const NoInternetScreen(),
     );
   }
 

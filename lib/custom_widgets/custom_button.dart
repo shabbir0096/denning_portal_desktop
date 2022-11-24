@@ -2,8 +2,6 @@ import 'package:denning_portal/custom_widgets/custom_textStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
-import '../screens/student_screens/otp_screens/otp_register.dart';
 import '../utils/colors.dart';
 import '../providers/theme.dart';
 

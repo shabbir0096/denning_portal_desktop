@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/colors.dart';
@@ -18,7 +17,7 @@ Widget noDataWidget(String message , BuildContext context ) {
         //   height: 20,
         // ),
         Text(
-          '$message',
+          message,
           style: TextStyle(
             fontFamily: 'Montserrat',
             fontWeight: FontWeight.w600,

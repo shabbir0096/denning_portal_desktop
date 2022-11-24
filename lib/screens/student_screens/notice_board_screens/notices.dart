@@ -43,10 +43,17 @@ class _NoticesState extends State<Notices> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
     final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
@@ -75,7 +82,7 @@ class _NoticesState extends State<Notices> {
         padding: EdgeInsets.only(left: 10.w, right: 10.w),
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -102,9 +109,9 @@ class _NoticesState extends State<Notices> {
                           color: theme.isDark ? white : black, width: 1.0),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    enabledBorder: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                      borderSide: new BorderSide(
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(
                           color: theme.isDark ? white : black, width: 1.0),
                     ),
                     border: InputBorder.none,
@@ -152,7 +159,7 @@ class _NoticesState extends State<Notices> {
                                                         [index])));
                                       },
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
+                                        borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(8.0),
                                           bottomRight: Radius.circular(8.0),
                                           bottomLeft: Radius.circular(8.0),
@@ -213,8 +220,8 @@ class _NoticesState extends State<Notices> {
                                                 SizedBox(
                                                   height: 5.h,
                                                 ),
-                                                snapshot.data!['notices'][index]['notice_date'] == null? SizedBox(height: 0,) :   Text(
-                                                  "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!['notices'][index]['notice_date']))}",
+                                                snapshot.data!['notices'][index]['notice_date'] == null? const SizedBox(height: 0,) :   Text(
+                                                  DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!['notices'][index]['notice_date'])),
                                                   style: TextStyle(
                                                       color:
                                                           theme.isDark == true
@@ -225,8 +232,8 @@ class _NoticesState extends State<Notices> {
                                                           "Poppins-Regular"),
                                                 ),
 
-                                                Spacer(),
-                                                if("${snapshot.data!['notices'][index]['notice']}" != null && "${snapshot.data!['notices'][index]['notice'] }" != "")
+                                                const Spacer(),
+                                                if("${snapshot.data!['notices'][index]['notice'] }" != "")
                                                 Text(
                                                   "Description :",
                                                   style: TextStyle(
@@ -286,7 +293,7 @@ class _NoticesState extends State<Notices> {
                                                         [index])));
                                       },
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
+                                        borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(8.0),
                                           bottomRight: Radius.circular(8.0),
                                           bottomLeft: Radius.circular(8.0),
@@ -347,8 +354,8 @@ class _NoticesState extends State<Notices> {
                                                 SizedBox(
                                                   height: 5.h,
                                                 ),
-                                                snapshot.data!['notices'][index]['notice_date'] == null? SizedBox(height: 0,) : Text(
-                                                  "${DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!['notices'][index]['notice_date']))}",
+                                                snapshot.data!['notices'][index]['notice_date'] == null? const SizedBox(height: 0,) : Text(
+                                                  DateFormat('dd MMM, yyyy').format(DateTime.parse(snapshot.data!['notices'][index]['notice_date'])),
                                                   style: TextStyle(
                                                       color:
                                                           theme.isDark == true
@@ -359,7 +366,7 @@ class _NoticesState extends State<Notices> {
                                                           "Poppins-Regular"),
                                                 ),
 
-                                                Spacer(),
+                                                const Spacer(),
                                                 Text(
                                                   "Description :",
                                                   style: TextStyle(
@@ -399,7 +406,7 @@ class _NoticesState extends State<Notices> {
                                   ],
                                 );
                               }
-                              return SizedBox(
+                              return const SizedBox(
                                 height: 0,
                               );
                             },
@@ -413,7 +420,7 @@ class _NoticesState extends State<Notices> {
             ),
           ],
         ),
-      ): NoInternetScreen(),
+      ): const NoInternetScreen(),
     );
   }
 

@@ -34,15 +34,15 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeChanger>(context);
-    final _height = MediaQuery
-        .of(context)
-        .size
-        .height -
-        MediaQuery
-            .of(context)
-            .padding
-            .top -
-        kToolbarHeight;
+    // final _height = MediaQuery
+    //     .of(context)
+    //     .size
+    //     .height -
+    //     MediaQuery
+    //         .of(context)
+    //         .padding
+    //         .top -
+    //     kToolbarHeight;
     final _width = MediaQuery
         .of(context)
         .size
@@ -62,24 +62,24 @@ class CustomTextField extends StatelessWidget {
           obscureText: isPassword,
           style: TextStyle(color: theme.isDark? white: black),
           decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 20),
+              contentPadding: const EdgeInsets.symmetric(vertical: 20),
               labelText: labelText,
               fillColor: white,
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: theme.isDark? white: black, width: 2.0),
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              enabledBorder: new OutlineInputBorder(
-                borderRadius: new BorderRadius.circular(10.0),
-                borderSide: new BorderSide(color: theme.isDark? white: black),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide(color: theme.isDark? white: black),
               ),
-              errorBorder: OutlineInputBorder(
+              errorBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   borderSide: BorderSide(
                     width: 1,
                     color: errorColor,
                   )),
-              focusedErrorBorder: OutlineInputBorder(
+              focusedErrorBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 borderSide: BorderSide(
                   width: 1,
@@ -89,7 +89,7 @@ class CustomTextField extends StatelessWidget {
 
 
               alignLabelWithHint: true,
-              errorStyle: TextStyle(color: errorColor),
+              errorStyle: const TextStyle(color: errorColor),
               border: InputBorder.none,
               prefixIcon: icon,
               suffixIcon: gestureDetector,

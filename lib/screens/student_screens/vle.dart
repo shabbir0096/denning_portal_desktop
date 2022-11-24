@@ -26,12 +26,9 @@ class Vle extends StatefulWidget {
 }
 
 class _VleState extends State<Vle> {
-  WebviewController _controller = WebviewController();
-
-  final textController = TextEditingController();
+  final WebviewController _controller = WebviewController();
   String email = '';
-  String url_link = '';
-  var subscription;
+  String urlLink = '';
   String connectionStatus = '';
 
 
@@ -43,9 +40,9 @@ class _VleState extends State<Vle> {
   }
 
   Future getUrl() async {
-    var convertedData;
+    dynamic convertedData;
     try {
-    Map data = {"user[email]": "${email}"};
+    Map data = {"user[email]": email};
     final response = await http.post(
       Uri.parse(
           "https://www.denningportal.com/vle/webservice/rest/server.php?wstoken=7ec7ce8f1b1afea19a63361b34a99dd8&wsfunction=auth_userkey_request_login_url&moodlewsrestformat=json"),
@@ -54,23 +51,23 @@ class _VleState extends State<Vle> {
     if (response.statusCode == 200) {
       convertedData = json.decode(response.body);
         if (convertedData != null) {
-          url_link = convertedData['loginurl'].toString();
+          urlLink = convertedData['loginurl'].toString();
           if (convertedData['loginurl'] == null) {
             CustomScaffoldWidget.buildErrorSnackbar(
-                context, "${convertedData['message']}"+"$data");
+                context, "${convertedData['message']}""$data");
           } else {
-            initPlatformState(url_link);
+            initPlatformState(urlLink);
           }
         }
       } else {
       AuthChecker.exceptionHandling(context, response.statusCode);
     }
-  } on TimeoutException catch (e) {
+  } on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
-    } on Error catch (e) {
+    } on Error {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
   }
@@ -89,7 +86,7 @@ class _VleState extends State<Vle> {
     await _controller.initialize();
     setState(()  {
       _controller.url.listen((url) {});
-      _controller.loadUrl(Uri.encodeFull(url_link));
+      _controller.loadUrl(Uri.encodeFull(urlLink));
       if (!mounted) return;
 
     });
@@ -106,7 +103,7 @@ class _VleState extends State<Vle> {
                   if (snapshot.hasData ) {
                     return   Expanded(child: Webview(_controller));
                   } else {
-                    return LinearProgressIndicator();
+                    return const LinearProgressIndicator();
                   }
                 }),
 
@@ -115,13 +112,18 @@ class _VleState extends State<Vle> {
       );
 
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        kToolbarHeight;
-    final _width = MediaQuery.of(context).size.width;
+    // final _height = MediaQuery.of(context).size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     kToolbarHeight;
+    // final _width = MediaQuery.of(context).size.width;
     final theme = Provider.of<ThemeChanger>(context);
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
 
@@ -164,7 +166,7 @@ class _VleState extends State<Vle> {
           // ),
           Theme(
             data: Theme.of(context).copyWith(
-              textTheme: TextTheme().apply(bodyColor: Colors.black),
+              textTheme: const TextTheme().apply(bodyColor: Colors.black),
               // iconTheme: IconThemeData(color: white, size: 28.sp),
             ),
             child: PopupMenuButton<int>(
@@ -214,7 +216,7 @@ class _VleState extends State<Vle> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          url_link == ''
+          urlLink == ''
               ? Center(
                   child:
                        CircularProgressIndicator(
@@ -222,7 +224,7 @@ class _VleState extends State<Vle> {
                         ))
               : Expanded(child: compositeView()),
         ],
-      ): NoInternetScreen(),
+      ): const NoInternetScreen(),
     );
   }
 
@@ -234,17 +236,14 @@ class _VleState extends State<Vle> {
             .push(MaterialPageRoute(builder: (context) => SettingScreen()));
         break;
       case 1:
-        print("New Broadcast Clicked");
         final pref = await SharedPreferences.getInstance();
-        String? token = await pref.getString("token");
         pref.remove("token");
         pref.remove("status");
         Navigator.pop(context);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => EmailLogin()));
+            context, MaterialPageRoute(builder: (context) => const EmailLogin()));
         break;
       case 2:
-        print("User Logged out");
         // Navigator.of(context).pushAndRemoveUntil(
         //     MaterialPageRoute(builder: (context) => LoginPage()),
         //         (route) => false);

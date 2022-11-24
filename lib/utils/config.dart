@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'colors.dart';
-
 const kReadOpacity = .3;
 const kBorderRadius = 15.0;
 const kBubblePadding = EdgeInsets.symmetric(

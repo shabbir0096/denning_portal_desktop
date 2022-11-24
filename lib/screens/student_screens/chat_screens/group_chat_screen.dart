@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../component/webview_display_desktop.dart';
+import '../../../component/webview_display_macos.dart';
 import '../../../custom_widgets/custom_textStyle.dart';
 import '../../../custom_widgets/scaffold_messenge_snackbar.dart';
 import '../../../providers/internet_checker.dart';
@@ -24,24 +25,25 @@ import '../../../services/utilities/basic_auth.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/config.dart';
 import '../../login_screens/email_login.dart';
+import 'dart:io' as Io;
 
 class GroupChatScreen extends StatefulWidget {
-  var data;
+  dynamic data;
 
-  GroupChatScreen(this.data);
+  GroupChatScreen(this.data, {Key? key}) : super(key: key);
 
   @override
   State<GroupChatScreen> createState() => _GroupChatScreenState();
 }
 
 class _GroupChatScreenState extends State<GroupChatScreen> {
-  ScrollController _scrollController =
+  final ScrollController _scrollController =
       ScrollController(initialScrollOffset: 99999999.0);
 
   String? token = "";
   String? studentId = "";
   String? status = "approved";
-  List<String> fileTypes_list = [
+  List<String> fileTypesList = [
     "JPG",
     "PNG",
     "JPEG",
@@ -61,12 +63,12 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   }
 
   Future getSpecificGroupChat() async {
-    var convertedData;
+    dynamic convertedData;
 
     try {
       final response = await http.get(
         Uri.parse(
-            "${AppUrl.baseUrl}messages_data?auth_token=${token}&student_id=${studentId}&type=group&group_message_thread_code=${widget.data[1] == null ? widget.data['group_message_thread_code'] : widget.data[1]}"),
+            "${AppUrl.baseUrl}messages_data?auth_token=$token&student_id=$studentId&type=group&group_message_thread_code=${widget.data[1] ?? widget.data['group_message_thread_code']}"),
         headers: <String, String>{'authorization': BasicAuth.basicAuth},
       );
 
@@ -94,7 +96,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
           Navigator.pop(context);
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => EmailLogin()));
+              context, MaterialPageRoute(builder: (context) => const EmailLogin()));
           CustomScaffoldWidget.buildErrorSnackbar(context,
               "Your Session has been expired, please try to login again");
         } else if (convertedData['status'] == 404) {
@@ -104,12 +106,12 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       } else {
         AuthChecker.exceptionHandling(context, response.statusCode);
       }
-    } on TimeoutException catch (e) {
+    } on TimeoutException {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Time out try again");
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomScaffoldWidget.buildErrorSnackbar(
           context, "Please enable your internet connection");
-    } on Error catch (e) {
+    } on Error {
       CustomScaffoldWidget.buildErrorSnackbar(context, "Something went wrong");
     }
   }
@@ -136,13 +138,17 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       getUser();
     }
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _scrollController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    var size, height, width;
+    var size, height;
     size = MediaQuery.of(context).size;
     height = size.height;
-    width = size.width;
     final theme = Provider.of<ThemeChanger>(context);
     final isOnline = Provider.of<ConnectivityService>(context).isOnline;
 
@@ -151,7 +157,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       appBar: AppBar(
         title: Text(
           // widget.data['group_name'] == '' ? widget.data[0] : "${widget.data['group_name']}",
-          "${widget.data[0] == null ? widget.data['group_name'] : widget.data[0]}",
+          "${widget.data[0] ?? widget.data['group_name']}",
           style: CustomTextStyle.AppBarHeading(
               context, theme.isDark ? white : black),
         ),
@@ -164,7 +170,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          new StudentBottomNavigation()),
+                          StudentBottomNavigation()),
                   (Route<dynamic> route) => false);
             },
             icon: Icon(
@@ -183,236 +189,241 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                     color: theme.isDark ? white : cardColor,
                   ));
                 } else {
-                  return Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        snapshot.data['messages'][0]['history'].isEmpty
-                            ? Center(
-                                child: Text(
-                                  "No data found",
-                                  style: TextStyle(
-                                      color: theme.isDark ? white : black,
-                                      fontFamily: "Poppins-Regular",
-                                      fontSize: 18.sp),
-                                ),
-                              )
-                            : Container(
-                                height: height / 1.14,
-                                child: ListView.builder(
-                                    controller: _scrollController,
-                                    itemCount: snapshot
-                                        .data['messages'][0]['history'].length,
-                                    itemBuilder: (context, int index) {
-                                      DateTime date = new DateTime
-                                          .fromMillisecondsSinceEpoch(int.parse(
-                                              snapshot.data['messages'][0]
-                                                      ['history'][index]
-                                                  ['timestamp']) *
-                                          1000);
-                                      var format =
-                                      new DateFormat("hh:mm a | d MMM, y");
-                                      var dateString = format.format(date);
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      snapshot.data['messages'][0]['history'].isEmpty
+                          ? Center(
+                              child: Text(
+                                "No data found",
+                                style: TextStyle(
+                                    color: theme.isDark ? white : black,
+                                    fontFamily: "Poppins-Regular",
+                                    fontSize: 18.sp),
+                              ),
+                            )
+                          : Container(
+                              height: height / 1.14,
+                              child: ListView.builder(
+                                  controller: _scrollController,
+                                  itemCount: snapshot
+                                      .data['messages'][0]['history'].length,
+                                  itemBuilder: (context, int index) {
+                                    DateTime date = DateTime
+                                        .fromMillisecondsSinceEpoch(int.parse(
+                                            snapshot.data['messages'][0]
+                                                    ['history'][index]
+                                                ['timestamp']) *
+                                        1000);
+                                    var format =
+                                    DateFormat("hh:mm a | d MMM, y");
+                                    var dateString = format.format(date);
 
-                                      return Column(
-                                        children: [
-                                          Column(
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Align(
-                                                  alignment: snapshot.data['messages']
-                                                                              [
-                                                                              0]
+                                    return Column(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Align(
+                                                alignment: snapshot.data['messages']
+                                                                            [
+                                                                            0]
+                                                                        [
+                                                                        'history']
+                                                                    [
+                                                                    index]
+                                                                [
+                                                                'sender_data']
+                                                            ['type'] ==
+                                                        'student'
+                                                    ? Alignment.centerRight
+                                                    : Alignment.centerLeft,
+                                                child: Container(
+                                                  padding: kBubblePadding,
+                                                  decoration: BoxDecoration(
+                                                    color: (snapshot.data['messages']
+                                                                            [
+                                                                            0]
+                                                                        [
+                                                                        'history']
+                                                                    [index][
+                                                                'sender_data']['type'] ==
+                                                            'student'
+                                                        ? black
+                                                        : lightPurple),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topLeft:
+                                                          const Radius.circular(
+                                                              kBorderRadius),
+                                                      topRight:
+                                                          const Radius.circular(
+                                                              kBorderRadius),
+                                                      bottomRight: Radius.circular(
+                                                          snapshot.data['messages'][0]['history'][index]
                                                                           [
-                                                                          'history']
+                                                                          'sender_data']
                                                                       [
-                                                                      index]
-                                                                  [
-                                                                  'sender_data']
-                                                              ['type'] ==
-                                                          'student'
-                                                      ? Alignment.centerRight
-                                                      : Alignment.centerLeft,
-                                                  child: Container(
-                                                    padding: kBubblePadding,
-                                                    decoration: BoxDecoration(
-                                                      color: (snapshot.data['messages']
-                                                                              [
-                                                                              0]
+                                                                      'type'] ==
+                                                                  'student'
+                                                              ? 0.0
+                                                              : kBorderRadius),
+                                                      bottomLeft: Radius.circular(
+                                                          snapshot.data['messages'][0]['history'][index]
+                                                                          [
+                                                                          'sender_data']
+                                                                      [
+                                                                      'type'] ==
+                                                                  'student'
+                                                              ? kBorderRadius
+                                                              : 0.0),
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    crossAxisAlignment: snapshot.data['messages'][0]
+                                                                            [
+                                                                            'history']
+                                                                        [
+                                                                        index]
+                                                                    [
+                                                                    'sender_data']
+                                                                ['type'] ==
+                                                            'student'
+                                                        ? CrossAxisAlignment
+                                                            .end
+                                                        : CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        "${widget.data['history'][index]['sender_data']['sender_name']}",
+                                                        style: const TextStyle(
+                                                          color: Colors
+                                                              .cyanAccent,
+                                                          fontSize: 12.0,
+                                                          fontFamily:
+                                                              "Poppins-Regular",
+                                                        ),
+                                                      ),
+                                                      Html(
+                                                          style: {
+                                                            "body": Style(
+                                                                color: theme
+                                                                        .isDark
+                                                                    ? white
+                                                                    : black),
+                                                          },
+                                                          data:
+                                                              "${snapshot.data['messages'][0]['history'][index]['message']}"),
+                                                      SizedBox(
+                                                        height: 5.h,
+                                                      ),
+                                                      snapshot.data['messages'][0]
                                                                           [
                                                                           'history']
                                                                       [index][
-                                                                  'sender_data']['type'] ==
-                                                              'student'
-                                                          ? black
-                                                          : lightPurple),
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                        topLeft:
-                                                            Radius.circular(
-                                                                kBorderRadius),
-                                                        topRight:
-                                                            Radius.circular(
-                                                                kBorderRadius),
-                                                        bottomRight: Radius.circular(
-                                                            snapshot.data['messages'][0]['history'][index]
-                                                                            [
-                                                                            'sender_data']
-                                                                        [
-                                                                        'type'] ==
-                                                                    'student'
-                                                                ? 0.0
-                                                                : kBorderRadius),
-                                                        bottomLeft: Radius.circular(
-                                                            snapshot.data['messages'][0]['history'][index]
-                                                                            [
-                                                                            'sender_data']
-                                                                        [
-                                                                        'type'] ==
-                                                                    'student'
-                                                                ? kBorderRadius
-                                                                : 0.0),
-                                                      ),
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      crossAxisAlignment: snapshot.data['messages'][0]
-                                                                              [
-                                                                              'history']
-                                                                          [
-                                                                          index]
-                                                                      [
-                                                                      'sender_data']
-                                                                  ['type'] ==
-                                                              'student'
-                                                          ? CrossAxisAlignment
-                                                              .end
-                                                          : CrossAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          "${widget.data['history'][index]['sender_data']['sender_name']}",
-                                                          style: TextStyle(
-                                                            color: Colors
-                                                                .cyanAccent,
-                                                            fontSize: 12.0,
-                                                            fontFamily:
-                                                                "Poppins-Regular",
-                                                          ),
-                                                        ),
-                                                        Html(
-                                                            style: {
-                                                              "body": Style(
-                                                                  color: theme
-                                                                          .isDark
-                                                                      ? white
-                                                                      : black),
-                                                            },
-                                                            data:
-                                                                "${snapshot.data['messages'][0]['history'][index]['message']}"),
-                                                        SizedBox(
-                                                          height: 5.h,
-                                                        ),
-                                                        snapshot.data['messages'][0]
-                                                                            [
-                                                                            'history']
-                                                                        [index][
-                                                                    'attached_file_name'] ==
-                                                                null
-                                                            ? SizedBox(
-                                                                height: 0,
-                                                              )
-                                                            : GestureDetector(
-                                                                onTap: () {
-                                                                  // final Uri _url = Uri.parse('${Uri.encodeFull(widget.data['history'][index]['attached_file_name'])}');
-                                                                  // _launchInBrowser(_url);
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              WebviewDsiplayDesktop('${Uri.encodeFull(widget.data['history'][index]['attached_file_name'])}')));
-                                                                },
-                                                                child:
-                                                                    Container(
+                                                                  'attached_file_name'] ==
+                                                              null
+                                                          ? const SizedBox(
+                                                              height: 0,
+                                                            )
+                                                          : GestureDetector(
+                                                              onTap: () {
 
-                                                                  height: 100.h,
-                                                                  width: 80.w,
-                                                                  child:
-                                                                      ClipRRect(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10.0),
-                                                                    child: fileTypes_list.contains(
-                                                                            "${snapshot.data['messages'][0]['history'][index]['attached_file_type']}")
-                                                                        ? Image
-                                                                            .network(
-                                                                            "${snapshot.data['messages'][0]['history'][index]['attached_file_name']}",
-                                                                            fit:
-                                                                                BoxFit.contain,
-                                                                          )
-                                                                        : Column(
-                                                                            children: [
-                                                                              Container(
-                                                                                height: 50.h,
-                                                                                width: 100.w,
-                                                                                child: Image.asset(
-                                                                                  "assets/images/pdf_icon.png",
-                                                                                  fit: BoxFit.contain,
-                                                                                ),
+                                                                Io.Platform.isWindows ? Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) =>
+                                                                            WebviewDsiplayDesktop(Uri.encodeFull(widget.data['history'][index]['attached_file_name']))))
+                                                               : Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) =>
+                                                                            WebviewDisplayMacos(
+                                                                                Uri.encodeFull(widget.data['history'][index]['attached_file_name']))));
+
+
+
+                                                              },
+                                                              child:
+                                                                  Container(
+                                                                height: 100.h,
+                                                                width: 80.w,
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          10.0),
+                                                                  child: fileTypesList.contains(
+                                                                          "${snapshot.data['messages'][0]['history'][index]['attached_file_type']}")
+                                                                      ? Image
+                                                                          .network(
+                                                                          "${snapshot.data['messages'][0]['history'][index]['attached_file_name']}",
+                                                                          fit:
+                                                                              BoxFit.contain,
+                                                                        )
+                                                                      : Column(
+                                                                          children: [
+                                                                            Container(
+                                                                              height: 50.h,
+                                                                              width: 100.w,
+                                                                              child: Image.asset(
+                                                                                "assets/images/pdf_icon.png",
+                                                                                fit: BoxFit.contain,
                                                                               ),
-                                                                            ],
-                                                                          ),
-                                                                  ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
                                                                 ),
                                                               ),
-                                                        SizedBox(
-                                                          height: 5.h,
-                                                        ),
-                                                        Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: <Widget>[
-                                                            Text(
-                                                              "$dateString",
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      kBubbleMetaFontSize,
-                                                                  color: theme
-                                                                          .isDark
-                                                                      ? white
-                                                                      : black),
                                                             ),
-                                                            // if (entry.read) ...[
-                                                            //   const SizedBox(width: 5),
-                                                            //   Icon(
-                                                            //     Icons.done,
-                                                            //     size: kBubbleMetaFontSize,
-                                                            //     color: Colors.white,
-                                                            //   )
-                                                            // ]
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
+                                                      SizedBox(
+                                                        height: 5.h,
+                                                      ),
+                                                      Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            dateString,
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    kBubbleMetaFontSize,
+                                                                color: theme
+                                                                        .isDark
+                                                                    ? white
+                                                                    : black),
+                                                          ),
+                                                          // if (entry.read) ...[
+                                                          //   const SizedBox(width: 5),
+                                                          //   Icon(
+                                                          //     Icons.done,
+                                                          //     size: kBubbleMetaFontSize,
+                                                          //     color: Colors.white,
+                                                          //   )
+                                                          // ]
+                                                        ],
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ),
-                                            ],
-                                          )
-                                        ],
-                                      );
-                                    }),
-                              ),
-                      ],
-                    ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    );
+                                  }),
+                            ),
+                    ],
                   );
                 }
               })
-          : NoInternetScreen(),
+          : const NoInternetScreen(),
     );
   }
 }
